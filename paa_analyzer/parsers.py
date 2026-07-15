@@ -159,7 +159,7 @@ def gateway_list(text: str, **_) -> dict:
                     if len(parts) >= 4 and parts[-3].isdigit()
                     else None
                 )
-            except (ValueError, IndexError):  # fmt: skip  # ruff@0.15 py314 miscompiles tuple-except
+            except (ValueError, IndexError):
                 prio = None
             if prio is not None:
                 name = line[:24].strip()
@@ -596,7 +596,7 @@ def _try_parse_json(text: str) -> dict | list | None:
         parsed = json.loads(text)
         if isinstance(parsed, (dict, list)):
             return parsed
-    except (json.JSONDecodeError, ValueError):  # fmt: skip  # ruff@0.15 py314 miscompiles tuple-except
+    except (json.JSONDecodeError, ValueError):
         pass
     # Escaped JSON (\" → ")
     if '\\"' in text:
@@ -605,7 +605,7 @@ def _try_parse_json(text: str) -> dict | list | None:
             parsed = json.loads(unescaped)
             if isinstance(parsed, (dict, list)):
                 return parsed
-        except (json.JSONDecodeError, ValueError):  # fmt: skip  # ruff@0.15 py314 miscompiles tuple-except
+        except (json.JSONDecodeError, ValueError):
             pass
     # Python dict literal ({'key': 'value'})
     if "'" in text:
@@ -613,7 +613,7 @@ def _try_parse_json(text: str) -> dict | list | None:
             parsed = ast.literal_eval(text)
             if isinstance(parsed, dict):
                 return parsed
-        except (ValueError, SyntaxError):  # fmt: skip  # ruff@0.15 py314 miscompiles tuple-except
+        except (ValueError, SyntaxError):
             pass
     return None
 

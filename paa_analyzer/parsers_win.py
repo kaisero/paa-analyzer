@@ -699,7 +699,7 @@ def chromium_log(text: str, source: str = "", source_file: str = "", **_) -> lis
                 # Use 2026 as reasonable default
                 dt = datetime(2026, month, day, hour, minute, sec, ms * 1000, tzinfo=UTC)
                 ts = dt.timestamp()
-            except (ValueError, IndexError):  # fmt: skip  # ruff@0.15 py314 miscompiles tuple-except
+            except (ValueError, IndexError):
                 ts = None
 
             # Normalize level
