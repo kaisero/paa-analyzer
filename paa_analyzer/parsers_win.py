@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
+import contextlib
 import json
 import re
 import sys
 import xml.etree.ElementTree as ET
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
-from paa_analyzer.parsers import parse_ts, format_ts
-
+from paa_analyzer.parsers import format_ts, parse_ts
 
 # ── Machine Info state parsers ────────────────────────────────────────────
 
@@ -134,11 +134,13 @@ def win_routing_table(text: str, **_) -> dict:
                 pending_ipv6 = None
             section = "ipv6"
             continue
-        elif "Active Routes:" in stripped or "Persistent Routes:" in stripped:
-            continue
-        elif stripped.startswith("Network Destination") or stripped.startswith("If Metric"):
-            continue
-        elif stripped == "None":
+        elif (
+            "Active Routes:" in stripped
+            or "Persistent Routes:" in stripped
+            or stripped.startswith("Network Destination")
+            or stripped.startswith("If Metric")
+            or stripped == "None"
+        ):
             continue
 
         if section == "interfaces":
@@ -289,7 +291,7 @@ def win_installed_drivers(text: str, **_) -> list[dict]:
 
         if col_positions and len(col_positions) >= 7:
 
-            def _col(idx: int) -> str:
+            def _col(idx: int, line: str = line) -> str:
                 if idx < len(col_positions):
                     start, end = col_positions[idx]
                     return line[start:end].strip() if start < len(line) else ""
@@ -497,7 +499,7 @@ def win_power_history(text: str, **_) -> list[dict]:
             ts_str = m.group(1)
             try:
                 dt = datetime.strptime(ts_str, "%m/%d/%Y %I:%M:%S %p")
-                ts = dt.replace(tzinfo=timezone.utc).timestamp()
+                ts = dt.replace(tzinfo=UTC).timestamp()
             except ValueError:
                 ts = None
             events.append(
@@ -584,10 +586,8 @@ def win_event_viewer(text: str, **_) -> list[dict]:
             if name == "Message":
                 event["message"] = value.strip()
             elif name == "Id":
-                try:
+                with contextlib.suppress(ValueError):
                     event["event_id"] = int(value)
-                except ValueError:
-                    pass
             elif name == "Level":
                 # Level is numeric in XML: 1=Critical, 2=Error, 3=Warning, 4=Information
                 try:
@@ -638,9 +638,9 @@ def win_paui_log(text: str, tz=None, source: str = "", source_file: str = "", **
 
                         ts = dt.replace(tzinfo=tz_cls(off)).timestamp()
                     else:
-                        ts = dt.replace(tzinfo=timezone.utc).timestamp()
+                        ts = dt.replace(tzinfo=UTC).timestamp()
                 else:
-                    ts = dt.replace(tzinfo=timezone.utc).timestamp()
+                    ts = dt.replace(tzinfo=UTC).timestamp()
             except ValueError:
                 ts = None
             entries.append({"timestamp": ts, "level": sys.intern(level), "message": msg})
@@ -697,9 +697,9 @@ def chromium_log(text: str, source: str = "", source_file: str = "", **_) -> lis
                 sec = int(time_part[4:6])
                 ms = int(time_part[7:10]) if len(time_part) > 6 else 0
                 # Use 2026 as reasonable default
-                dt = datetime(2026, month, day, hour, minute, sec, ms * 1000, tzinfo=timezone.utc)
+                dt = datetime(2026, month, day, hour, minute, sec, ms * 1000, tzinfo=UTC)
                 ts = dt.timestamp()
-            except (ValueError, IndexError):
+            except (ValueError, IndexError):  # fmt: skip  # ruff@0.15 py314 miscompiles tuple-except
                 ts = None
 
             # Normalize level

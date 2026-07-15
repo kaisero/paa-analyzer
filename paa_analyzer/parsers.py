@@ -6,8 +6,7 @@ import ast
 import json
 import re
 import sys
-from datetime import datetime, timedelta, timezone
-
+from datetime import UTC, datetime, timedelta, timezone
 
 # ── Timestamp parsing ──────────────────────────────────────────────────────
 
@@ -73,7 +72,7 @@ def format_ts(epoch: float | None) -> str | None:
     """Format epoch float → ISO-8601 UTC string for API responses."""
     if epoch is None:
         return None
-    return datetime.fromtimestamp(epoch, tz=timezone.utc).isoformat()
+    return datetime.fromtimestamp(epoch, tz=UTC).isoformat()
 
 
 def _apply_offset(dt: datetime, offset_str: str | None) -> float:
@@ -84,7 +83,7 @@ def _apply_offset(dt: datetime, offset_str: str | None) -> float:
             if m.group(1) == "-":
                 off = -off
             return dt.replace(tzinfo=timezone(off)).timestamp()
-    return dt.replace(tzinfo=timezone.utc).timestamp()
+    return dt.replace(tzinfo=UTC).timestamp()
 
 
 def extract_tz_offset(text: str) -> str | None:
@@ -160,7 +159,7 @@ def gateway_list(text: str, **_) -> dict:
                     if len(parts) >= 4 and parts[-3].isdigit()
                     else None
                 )
-            except (ValueError, IndexError):
+            except (ValueError, IndexError):  # fmt: skip  # ruff@0.15 py314 miscompiles tuple-except
                 prio = None
             if prio is not None:
                 name = line[:24].strip()
@@ -472,7 +471,7 @@ def connection_history(text: str, tz=None, source="ConnectionHistory", source_fi
         if gateway:
             conn_label += f" [{gateway}]"
         conn_label += f" ({outcome})"
-        for i, s in enumerate(steps):
+        for s in steps:
             entries.append(
                 {
                     "timestamp": s["timestamp"],
@@ -597,7 +596,7 @@ def _try_parse_json(text: str) -> dict | list | None:
         parsed = json.loads(text)
         if isinstance(parsed, (dict, list)):
             return parsed
-    except (json.JSONDecodeError, ValueError):
+    except (json.JSONDecodeError, ValueError):  # fmt: skip  # ruff@0.15 py314 miscompiles tuple-except
         pass
     # Escaped JSON (\" → ")
     if '\\"' in text:
@@ -606,7 +605,7 @@ def _try_parse_json(text: str) -> dict | list | None:
             parsed = json.loads(unescaped)
             if isinstance(parsed, (dict, list)):
                 return parsed
-        except (json.JSONDecodeError, ValueError):
+        except (json.JSONDecodeError, ValueError):  # fmt: skip  # ruff@0.15 py314 miscompiles tuple-except
             pass
     # Python dict literal ({'key': 'value'})
     if "'" in text:
@@ -614,7 +613,7 @@ def _try_parse_json(text: str) -> dict | list | None:
             parsed = ast.literal_eval(text)
             if isinstance(parsed, dict):
                 return parsed
-        except (ValueError, SyntaxError):
+        except (ValueError, SyntaxError):  # fmt: skip  # ruff@0.15 py314 miscompiles tuple-except
             pass
     return None
 

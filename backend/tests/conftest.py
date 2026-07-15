@@ -13,7 +13,6 @@ from backend.main import create_app
 from backend.pipeline import parse_zip
 from backend.store import store as global_store
 
-
 # ── Sample data ───────────────────────────────────────────────────────────
 
 SAMPLE_PACLI_STATUS = """\

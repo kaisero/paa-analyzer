@@ -118,12 +118,10 @@ class SessionStore:
             sd["total"] += count
             if level:
                 sd["levels"][level] = count
-            if min_ts is not None:
-                if sd["min_ts"] is None or min_ts < sd["min_ts"]:
-                    sd["min_ts"] = min_ts
-            if max_ts is not None:
-                if sd["max_ts"] is None or max_ts > sd["max_ts"]:
-                    sd["max_ts"] = max_ts
+            if min_ts is not None and (sd["min_ts"] is None or min_ts < sd["min_ts"]):
+                sd["min_ts"] = min_ts
+            if max_ts is not None and (sd["max_ts"] is None or max_ts > sd["max_ts"]):
+                sd["max_ts"] = max_ts
 
         sources = []
         for key, sd in source_data.items():
@@ -204,7 +202,7 @@ class SessionStore:
             offset = (page - 1) * page_size
             rows = conn.execute(
                 f"SELECT * FROM logs WHERE {where_sql} ORDER BY timestamp {order_sql} LIMIT ? OFFSET ?",
-                params + [page_size, offset],
+                [*params, page_size, offset],
             ).fetchall()
 
         # Convert rows to dicts for API response

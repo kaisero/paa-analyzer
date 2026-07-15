@@ -11,12 +11,12 @@ from pathlib import Path
 
 from paa_analyzer import parsers, parsers_win
 from paa_analyzer.taxonomy import (
-    PACLI_FILES,
-    SYSTEM_INFO_FILES,
     LOG_SOURCES,
-    SPECIAL_FILES,
+    PACLI_FILES,
     SKIP_EXTENSIONS,
     SKIP_PREFIXES,
+    SPECIAL_FILES,
+    SYSTEM_INFO_FILES,
 )
 
 # Type alias for progress callbacks

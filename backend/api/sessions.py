@@ -50,7 +50,7 @@ async def create_session_stream(file: UploadFile) -> StreamingResponse:
             try:
                 event = await asyncio.wait_for(queue.get(), timeout=0.1)
                 yield f"data: {json.dumps(event)}\n\n"
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 continue
 
         # Drain remaining queued events
@@ -78,7 +78,13 @@ async def create_session_stream(file: UploadFile) -> StreamingResponse:
         session.total_state_files = manifest["total_state_files"]
         store.add_session(session.model_dump(mode="json"), result["logs"], result["state"])
 
-        yield f"data: {json.dumps({'stage': 'complete', 'progress': 100, 'detail': 'Done', 'session': session.model_dump(mode='json')})}\n\n"
+        complete_event = {
+            "stage": "complete",
+            "progress": 100,
+            "detail": "Done",
+            "session": session.model_dump(mode="json"),
+        }
+        yield f"data: {json.dumps(complete_event)}\n\n"
 
     return StreamingResponse(
         event_stream(),

@@ -9,7 +9,6 @@ import pytest
 from backend.main import create_app
 from backend.store import store as global_store
 
-
 pytestmark = [pytest.mark.e2e, pytest.mark.slow]
 
 

@@ -3,6 +3,7 @@
 One source of truth for the checks run both locally and in CI. Run everything
 with `uv run nox` or a single session with `uv run nox -s tests`.
 """
+
 from __future__ import annotations
 
 import os

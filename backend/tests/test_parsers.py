@@ -1,12 +1,12 @@
 """Unit tests for paa_analyzer.parsers."""
 
 import json
+from datetime import UTC
 
 import pytest
 
 from paa_analyzer import parsers
 from paa_analyzer.parsers import beautify_message
-
 
 # ── Timestamp parsing ────────────────────────────────────────────────────
 
@@ -104,9 +104,9 @@ class TestParseTs:
         """All formats should return UTC-normalized epoch floats."""
         # 2026-04-03T09:24:40+02:00 in UTC is 07:24:40
         result = parsers.parse_ts("2026-04-03T09:24:40.000+02:00")
-        from datetime import datetime, timezone
+        from datetime import datetime
 
-        dt = datetime.fromtimestamp(result, tz=timezone.utc)
+        dt = datetime.fromtimestamp(result, tz=UTC)
         assert dt.hour == 7
         assert dt.minute == 24
 
@@ -692,7 +692,7 @@ Connection #99:
 
     def test_total_entries(self):
         result = parsers.connection_history(self.SAMPLE)
-        assert len(result) == 6  # 3 steps per connection × 2 connections
+        assert len(result) == 6  # 3 steps per connection x 2 connections
 
     def test_empty_text(self):
         assert parsers.connection_history("") == []
