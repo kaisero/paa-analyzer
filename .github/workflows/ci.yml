@@ -66,3 +66,19 @@ jobs:
         run: uv lock --check
       - name: Run tests
         run: uv run nox -s tests-3.14
+
+  docs:
+    name: Docs
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: true
+      - name: Lock file up to date
+        run: uv lock --check
+      - name: Build docs
+        run: uv run nox -s docs
