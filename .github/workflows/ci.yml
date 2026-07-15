@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: true
+      # Runs BEFORE any `uv run` — a plain `uv run` would silently refresh the
+      # lock first and mask drift. `uv lock --check` fails if uv.lock is stale.
+      - name: Lock file up to date
+        run: uv lock --check
+      - name: Lint
+        run: uv run nox -s lint
+
+  type-check:
+    name: Type-check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # NON-blocking for now: mypy is not yet green. Task 9 will make this job
+    # blocking by removing `continue-on-error` once the type errors are fixed.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: true
+      - name: Lock file up to date
+        run: uv lock --check
+      - name: Type-check
+        run: uv run nox -s type_check
+
+  tests:
+    name: Tests (Python 3.14)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: true
+          python-version: "3.14"
+      - name: Lock file up to date
+        run: uv lock --check
+      - name: Run tests
+        run: uv run nox -s tests-3.14
