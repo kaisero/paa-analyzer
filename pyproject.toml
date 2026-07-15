@@ -2,7 +2,7 @@
 name = "paa-analyzer"
 version = "0.0.1"
 description = "Prisma Access Agent troubleshooting bundle analyzer — backend + web UI"
-requires-python = ">=3.11"
+requires-python = ">=3.14"
 dependencies = [
     "fastapi>=0.115",
     "uvicorn[standard]>=0.34",
@@ -16,11 +16,19 @@ paa-parse = "paa_analyzer.cli:main"
 paa-server = "backend.main:run"
 
 [dependency-groups]
+test = ["pytest>=8", "pytest-cov>=6", "httpx>=0.27"]
+typecheck = ["mypy>=1.11", { include-group = "test" }]
+lint = ["ruff>=0.11", "codespell>=2.3"]
+audit = ["pip-audit>=2.7"]
+docs = ["mkdocs-material>=9.5"]
 dev = [
-    "pytest>=8.0",
-    "pytest-cov>=6.0",
-    "httpx>=0.27",
-    "ruff>=0.11",
+    "nox>=2024.4",
+    "pre-commit>=3.7",
+    { include-group = "test" },
+    { include-group = "typecheck" },
+    { include-group = "lint" },
+    { include-group = "audit" },
+    { include-group = "docs" },
 ]
 
 [tool.pytest.ini_options]
@@ -44,15 +52,37 @@ omit = ["backend/tests/*", "backend/main.py"]
 
 [tool.coverage.report]
 show_missing = true
-fail_under = 70
+fail_under = 85
 exclude_lines = [
     "if __name__",
     "pragma: no cover",
 ]
 
 [tool.ruff]
-target-version = "py311"
+target-version = "py314"
 line-length = 120
+
+[tool.ruff.lint]
+select = ["E","W","F","I","N","UP","B","C4","SIM","S","ASYNC","PTH","RUF"]
+
+[tool.ruff.lint.per-file-ignores]
+"backend/tests/**" = ["S101", "S105", "S106", "S107"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["paa_analyzer", "backend"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.mypy]
+python_version = "3.14"
+strict = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+show_error_codes = true
+plugins = ["pydantic.mypy"]
+files = ["paa_analyzer", "backend"]
 
 [build-system]
 requires = ["hatchling"]
