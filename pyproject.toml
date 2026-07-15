@@ -1,0 +1,62 @@
+[project]
+name = "paa-analyzer"
+version = "0.0.1"
+description = "Prisma Access Agent troubleshooting bundle analyzer — backend + web UI"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.34",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.6",
+    "python-multipart>=0.0.18",
+]
+
+[project.scripts]
+paa-parse = "paa_analyzer.cli:main"
+paa-server = "backend.main:run"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=6.0",
+    "httpx>=0.27",
+    "ruff>=0.11",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+markers = [
+    "unit: Pure function tests, no I/O",
+    "integration: Tests that use ZIP parsing or SQLite",
+    "api: Tests that use the FastAPI TestClient",
+    "e2e: End-to-end tests using real example data",
+    "slow: Tests that take more than 1 second",
+]
+addopts = [
+    "--strict-markers",
+    "--tb=short",
+    "-q",
+]
+
+[tool.coverage.run]
+source = ["paa_analyzer", "backend"]
+omit = ["backend/tests/*", "backend/main.py"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 70
+exclude_lines = [
+    "if __name__",
+    "pragma: no cover",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["paa_analyzer", "backend"]

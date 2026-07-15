@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --bg: #0a0e14;
+  --surface: #111820;
+  --elevated: #1a2332;
+  --hover: #1e2a3a;
+  --border: #1e2a3a;
+  --focus: #00c8e5;
+  --text: #e6edf3;
+  --text2: #8b949e;
+  --text3: #565e67;
+  --blue: #00c8e5;
+  --orange: #fa582d;
+  --green: #00cc66;
+  --yellow: #ffcb06;
+  --red: #f85149;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+
+/* Upload page animations */
+@keyframes upload-glow {
+  0%, 100% { box-shadow: 0 0 0 1px var(--border); }
+  50% { box-shadow: 0 0 24px rgba(0, 200, 229, 0.12), 0 0 0 1px rgba(0, 200, 229, 0.4); }
+}
+
+@keyframes progress-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(0, 200, 229, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(0, 200, 229, 0.5); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out;
+}
+
+/* Ant Design overrides not handled by ConfigProvider */
+.ant-layout-sider {
+  background: var(--surface) !important;
+}
