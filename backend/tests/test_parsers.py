@@ -54,6 +54,8 @@ class TestParseTs:
     def test_gmt_offset_values_differ(self):
         pos = parsers.parse_ts("2026-04-04 22:18:34, GMT+0200")
         neg = parsers.parse_ts("2026-04-04 22:18:34, GMT-0500")
+        assert pos is not None
+        assert neg is not None
         # +0200 is ahead of UTC, -0500 is behind → UTC epoch for +0200 is smaller
         assert pos < neg
 
@@ -64,6 +66,8 @@ class TestParseTs:
     def test_dlp_format_with_default_offset(self):
         without = parsers.parse_ts("2026/01/08 16:27:19:278")
         with_offset = parsers.parse_ts("2026/01/08 16:27:19:278", default_offset="+0200")
+        assert without is not None
+        assert with_offset is not None
         # With +0200, the UTC epoch should be smaller (timestamp is local time ahead of UTC)
         assert with_offset < without
 
@@ -74,6 +78,8 @@ class TestParseTs:
     def test_bracketed_with_default_offset(self):
         without = parsers.parse_ts("[2026-03-31 09:24:58]")
         with_offset = parsers.parse_ts("[2026-03-31 09:24:58]", default_offset="+0200")
+        assert without is not None
+        assert with_offset is not None
         assert with_offset < without
 
     def test_bare_datetime(self):
@@ -83,6 +89,8 @@ class TestParseTs:
     def test_bare_datetime_with_default_offset(self):
         without = parsers.parse_ts("2026-04-03 09:24:40")
         with_offset = parsers.parse_ts("2026-04-03 09:24:40", default_offset="+0200")
+        assert without is not None
+        assert with_offset is not None
         assert with_offset < without
 
     def test_empty_string_returns_none(self):
@@ -106,6 +114,7 @@ class TestParseTs:
         result = parsers.parse_ts("2026-04-03T09:24:40.000+02:00")
         from datetime import datetime
 
+        assert result is not None
         dt = datetime.fromtimestamp(result, tz=UTC)
         assert dt.hour == 7
         assert dt.minute == 24
@@ -132,6 +141,7 @@ class TestFormatTs:
         original = "2026-04-03T09:24:40.100+02:00"
         epoch = parsers.parse_ts(original)
         formatted = parsers.format_ts(epoch)
+        assert formatted is not None
         assert "2026-04-03" in formatted
 
 

@@ -8,6 +8,7 @@ import zipfile
 from collections.abc import Callable
 from io import BytesIO
 from pathlib import Path
+from typing import Any
 
 from paa_analyzer import parsers, parsers_win
 from paa_analyzer.taxonomy import (
@@ -30,14 +31,14 @@ def _noop_progress(_stage: str, _pct: int, _detail: str) -> None:
     pass
 
 
-def parse_zip(data: bytes, on_progress: ProgressCallback | None = None) -> dict:
+def parse_zip(data: bytes, on_progress: ProgressCallback | None = None) -> dict[str, Any]:
     """Parse a troubleshooting ZIP from raw bytes. Returns {state: {}, logs: {}, manifest: {}}."""
     progress = on_progress or _noop_progress
     start = time.monotonic()
-    all_state: dict[str, dict] = {}
-    all_logs: dict[str, dict] = {}
+    all_state: dict[str, dict[str, Any]] = {}
+    all_logs: dict[str, dict[str, Any]] = {}
     skipped: list[str] = []
-    errors: list[dict] = []
+    errors: list[dict[str, str]] = []
 
     progress("extracting", 0, "Opening ZIP...")
 
@@ -83,7 +84,7 @@ def parse_zip(data: bytes, on_progress: ProgressCallback | None = None) -> dict:
 
             if data_type == "state":
                 key = f"{module}.{component}.{name}"
-                entry: dict = {
+                entry: dict[str, Any] = {
                     "_meta": {
                         "type": "state",
                         "module": module,
@@ -136,7 +137,9 @@ def parse_zip(data: bytes, on_progress: ProgressCallback | None = None) -> dict:
     return {"state": all_state, "logs": all_logs, "manifest": manifest}
 
 
-def _parse_file(path: str, filename: str, text: str, tz: str | None):
+def _parse_file(
+    path: str, filename: str, text: str, tz: str | None
+) -> tuple[str, str, str, str, object, str | None] | None:
     """Route a file to its parser. Returns (data_type, module, component, name, parsed, raw_text) or None."""
 
     # Pacli Output files
@@ -269,7 +272,7 @@ def _parse_file(path: str, filename: str, text: str, tz: str | None):
     return None
 
 
-def _run_parser(parser_name: str, text: str, **kwargs):
+def _run_parser(parser_name: str, text: str, **kwargs: Any) -> object:
     fn = getattr(parsers, parser_name, None) or getattr(parsers_win, parser_name, None)
     if fn is None:
         return text

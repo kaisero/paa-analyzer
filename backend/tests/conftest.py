@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import json
 import zipfile
+from collections.abc import Iterator
 from io import BytesIO
+from typing import Any
 
 import pytest
 from starlette.testclient import TestClient
@@ -326,13 +328,13 @@ def sample_zip_bytes() -> bytes:
 
 
 @pytest.fixture
-def parsed_result(sample_zip_bytes: bytes) -> dict:
+def parsed_result(sample_zip_bytes: bytes) -> dict[str, Any]:
     """Run parse_zip directly and return the result."""
     return parse_zip(sample_zip_bytes)
 
 
 @pytest.fixture
-def app_client() -> TestClient:
+def app_client() -> Iterator[TestClient]:
     """Fresh FastAPI test client with a clean store."""
     app = create_app()
     yield TestClient(app)
@@ -353,4 +355,5 @@ def session_id(app_client: TestClient, sample_zip_bytes: bytes) -> str:
         files={"file": ("test.zip", sample_zip_bytes, "application/zip")},
     )
     assert resp.status_code == 201
-    return resp.json()["data"]["id"]
+    session_id: str = resp.json()["data"]["id"]
+    return session_id

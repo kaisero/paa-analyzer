@@ -101,6 +101,16 @@ show_error_codes = true
 plugins = ["pydantic.mypy"]
 files = ["paa_analyzer", "backend"]
 
+# Tests are still type-checked for real errors, but not forced to annotate every
+# fixture/helper: the value of full signature annotations on test functions is low
+# and would add ~530 no-untyped-def/-call lines of noise. Source stays fully strict.
+[[tool.mypy.overrides]]
+module = "backend.tests.*"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+disallow_untyped_calls = false
+disallow_untyped_decorators = false
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

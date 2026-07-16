@@ -44,7 +44,7 @@ def create_app() -> FastAPI:
 app = create_app()
 
 
-def run():
+def run() -> None:
     import uvicorn
 
     # Bind on all interfaces so the diagnostic web UI is reachable from the host.

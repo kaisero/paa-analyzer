@@ -5,6 +5,8 @@ from __future__ import annotations
 import asyncio
 import json
 import uuid
+from collections.abc import AsyncIterator
+from typing import Any
 
 from fastapi import APIRouter, HTTPException, UploadFile
 from fastapi.responses import StreamingResponse
@@ -33,14 +35,14 @@ async def create_session_stream(file: UploadFile) -> StreamingResponse:
     sid = uuid.uuid4().hex[:12]
     session = Session(id=sid, filename=file.filename or "unknown.zip", file_size=len(data), parse_status="parsing")
 
-    async def event_stream():
-        queue: asyncio.Queue[dict] = asyncio.Queue()
+    async def event_stream() -> AsyncIterator[str]:
+        queue: asyncio.Queue[dict[str, Any]] = asyncio.Queue()
         loop = asyncio.get_event_loop()
 
-        def on_progress(stage: str, pct: int, detail: str):
+        def on_progress(stage: str, pct: int, detail: str) -> None:
             loop.call_soon_threadsafe(queue.put_nowait, {"stage": stage, "progress": pct, "detail": detail})
 
-        def run_pipeline():
+        def run_pipeline() -> dict[str, Any]:
             return parse_zip(data, on_progress=on_progress)
 
         future = loop.run_in_executor(None, run_pipeline)

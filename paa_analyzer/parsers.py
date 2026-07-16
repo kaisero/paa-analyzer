@@ -7,6 +7,13 @@ import json
 import re
 import sys
 from datetime import UTC, datetime, timedelta, timezone
+from typing import Any
+
+# Parsed bundle data is heterogeneous (ints, strings, bools, nested lists), so a
+# parsed record is a dict of dynamic values and a parsed log/state file is one of
+# these records or a list of them.
+Record = dict[str, Any]
+LogEntry = dict[str, Any]
 
 # ── Timestamp parsing ──────────────────────────────────────────────────────
 
@@ -94,9 +101,9 @@ def extract_tz_offset(text: str) -> str | None:
 # ── State parsers ──────────────────────────────────────────────────────────
 
 
-def key_value(text: str, **_) -> dict:
+def key_value(text: str, **_: Any) -> Record:
     """Parse Key: Value lines into a dict."""
-    data = {}
+    data: Record = {}
     for line in text.splitlines():
         line = line.strip()
         if not line:
@@ -105,14 +112,15 @@ def key_value(text: str, **_) -> dict:
             if not data:
                 data["value"] = line
             continue
-        key, _, val = line.partition(":")
+        key, _sep, val = line.partition(":")
         normalized = re.sub(r"[^a-z0-9]+", "_", key.lower()).strip("_")
         data[normalized] = val.strip()
     return data
 
 
-def forwarding_profile(text: str, **_) -> dict:
-    rules, flags = [], []
+def forwarding_profile(text: str, **_: Any) -> Record:
+    rules: list[Record] = []
+    flags: list[str] = []
     for line in text.splitlines():
         m = re.match(r"^\s*\|\s*(.+?)\s*\|\s*$", line)
         if m:
@@ -140,9 +148,9 @@ def forwarding_profile(text: str, **_) -> dict:
     return {"rules": rules, "flags": flags}
 
 
-def gateway_list(text: str, **_) -> dict:
+def gateway_list(text: str, **_: Any) -> Record:
     location = ""
-    gateways = []
+    gateways: list[Record] = []
     m = re.search(r"Agent Location:\s*(\S+)", text)
     if m:
         location = m.group(1)
@@ -168,8 +176,8 @@ def gateway_list(text: str, **_) -> dict:
     return {"agent_location": location, "gateways": gateways}
 
 
-def hip_status(text: str, tz=None, **_) -> dict:
-    data = {"collection": "", "next_check": None, "gateways": []}
+def hip_status(text: str, tz: str | None = None, **_: Any) -> Record:
+    data: Record = {"collection": "", "next_check": None, "gateways": []}
     in_table = False
     for line in text.splitlines():
         if line.startswith("HIP Collection:"):
@@ -186,8 +194,8 @@ def hip_status(text: str, tz=None, **_) -> dict:
     return data
 
 
-def protection(text: str, **_) -> list[dict]:
-    items = []
+def protection(text: str, **_: Any) -> list[Record]:
+    items: list[Record] = []
     for line in text.splitlines():
         if re.match(r"^-{3,}|^Protection|^$", line):
             continue
@@ -197,8 +205,8 @@ def protection(text: str, **_) -> list[dict]:
     return items
 
 
-def epm_commands(text: str, tz=None, **_) -> list[dict]:
-    cmds = []
+def epm_commands(text: str, tz: str | None = None, **_: Any) -> list[Record]:
+    cmds: list[Record] = []
     uuid_re = re.compile(r"^[0-9a-f]{8}-")
     for line in text.splitlines():
         if not uuid_re.match(line.strip()):
@@ -217,7 +225,7 @@ def epm_commands(text: str, tz=None, **_) -> list[dict]:
     return cmds
 
 
-def traffic_rdns(text: str, **_) -> dict:
+def traffic_rdns(text: str, **_: Any) -> Record:
     try:
         raw = json.loads(text)
         cache = raw.get("ReverseDnsCache", {})
@@ -226,12 +234,12 @@ def traffic_rdns(text: str, **_) -> dict:
         return {"error": "Invalid JSON"}
 
 
-def system_info(text: str, filename: str = "", **_) -> dict:
+def system_info(text: str, filename: str = "", **_: Any) -> Record:
     if filename == "sw_vers.txt":
-        d = {}
+        d: Record = {}
         for line in text.splitlines():
             if ":" in line:
-                k, _, v = line.partition(":")
+                k, _sep, v = line.partition(":")
                 d[k.strip().lower().replace(" ", "_")] = v.strip()
         return d
     if filename == "uname.txt":
@@ -250,8 +258,8 @@ def system_info(text: str, filename: str = "", **_) -> dict:
     return {"value": text.strip()}
 
 
-def system_extensions(text: str, **_) -> list[dict]:
-    exts = []
+def system_extensions(text: str, **_: Any) -> list[Record]:
+    exts: list[Record] = []
     category = ""
     for line in text.splitlines():
         if "network_extension" in line:
@@ -279,10 +287,10 @@ def system_extensions(text: str, **_) -> list[dict]:
     return exts
 
 
-def routing_table(text: str, **_) -> dict:
+def routing_table(text: str, **_: Any) -> Record:
     """Parse netstat -rn style routing table into structured records."""
-    result: dict[str, list[dict]] = {"ipv4": [], "ipv6": []}
-    current: list[dict] | None = None
+    result: dict[str, list[Record]] = {"ipv4": [], "ipv6": []}
+    current: list[Record] | None = None
     for line in text.splitlines():
         stripped = line.strip()
         if not stripped:
@@ -309,9 +317,9 @@ def routing_table(text: str, **_) -> dict:
     return result
 
 
-def launchctl_list(text: str, **_) -> list[dict]:
+def launchctl_list(text: str, **_: Any) -> list[Record]:
     """Parse launchctl list output into structured records."""
-    items: list[dict] = []
+    items: list[Record] = []
     for line in text.splitlines():
         stripped = line.strip()
         if not stripped or stripped.startswith("PID"):
@@ -333,11 +341,11 @@ def launchctl_list(text: str, **_) -> list[dict]:
     return items
 
 
-def app_list(text: str, **_) -> list[str]:
+def app_list(text: str, **_: Any) -> list[str]:
     return [line.strip() for line in text.splitlines() if line.strip()]
 
 
-def raw_text(text: str, **_) -> str:
+def raw_text(text: str, **_: Any) -> str:
     return text
 
 
@@ -348,10 +356,10 @@ _STRUCT_LOG = re.compile(
 )
 
 
-def structured_log(text: str, source: str = "", source_file: str = "", **_) -> list[dict]:
+def structured_log(text: str, source: str = "", source_file: str = "", **_: Any) -> list[LogEntry]:
     """Parse ISO-8601 structured log files (PAS, SecurityExtension, etc.)."""
-    entries = []
-    current = None
+    entries: list[LogEntry] = []
+    current: LogEntry | None = None
     for line in text.split("\n"):
         line = line.rstrip("\r")
         m = _STRUCT_LOG.match(line)
@@ -377,9 +385,9 @@ def structured_log(text: str, source: str = "", source_file: str = "", **_) -> l
 _DEM_LOG = re.compile(r"^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}[+-]\d{4})\s+-\s+(\w+):\s*(.*)")
 
 
-def dem_log(text: str, source: str = "", source_file: str = "", **_) -> list[dict]:
-    entries = []
-    current = None
+def dem_log(text: str, source: str = "", source_file: str = "", **_: Any) -> list[LogEntry]:
+    entries: list[LogEntry] = []
+    current: LogEntry | None = None
     for line in text.split("\n"):
         line = line.rstrip("\r")
         m = _DEM_LOG.match(line)
@@ -402,8 +410,8 @@ _DLP_LOG = re.compile(r"^(\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}:\d{3})\s+(.*)")
 _DLP_NETFILTER = re.compile(r"^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\]\s+\[(\w+)\]\s+(?:\[.*?\]\s+)?(.*)")
 
 
-def dlp_log(text: str, source: str = "DLP", source_file: str = "", tz=None, **_) -> list[dict]:
-    entries = []
+def dlp_log(text: str, source: str = "DLP", source_file: str = "", tz: str | None = None, **_: Any) -> list[LogEntry]:
+    entries: list[LogEntry] = []
     for line in text.splitlines():
         m = _DLP_LOG.match(line)
         if m:
@@ -411,8 +419,10 @@ def dlp_log(text: str, source: str = "DLP", source_file: str = "", tz=None, **_)
     return entries
 
 
-def dlp_netfilter(text: str, source: str = "DLP.NetFilter", source_file: str = "", tz=None, **_) -> list[dict]:
-    entries = []
+def dlp_netfilter(
+    text: str, source: str = "DLP.NetFilter", source_file: str = "", tz: str | None = None, **_: Any
+) -> list[LogEntry]:
+    entries: list[LogEntry] = []
     for line in text.splitlines():
         m = _DLP_NETFILTER.match(line)
         if m:
@@ -426,11 +436,13 @@ def dlp_netfilter(text: str, source: str = "DLP.NetFilter", source_file: str = "
     return entries
 
 
-def connection_history(text: str, tz=None, source="ConnectionHistory", source_file="", **_) -> list[dict]:
+def connection_history(
+    text: str, tz: str | None = None, source: str = "ConnectionHistory", source_file: str = "", **_: Any
+) -> list[LogEntry]:
     """Parse connection history into flat log entries (one per step)."""
     # First pass: group steps by connection
-    conns: list[dict] = []
-    current = None
+    conns: list[Record] = []
+    current: Record | None = None
     for line in text.splitlines():
         m = re.match(r"^Connection #(\d+):", line)
         if m:
@@ -445,7 +457,7 @@ def connection_history(text: str, tz=None, source="ConnectionHistory", source_fi
         conns.append(current)
 
     # Derive outcome per connection and flatten into log entries
-    entries: list[dict] = []
+    entries: list[LogEntry] = []
     for c in conns:
         steps = c["steps"]
         if not steps:
@@ -482,8 +494,8 @@ def connection_history(text: str, tz=None, source="ConnectionHistory", source_fi
     return entries
 
 
-def event_table(text: str, tz=None, source: str = "", source_file: str = "", **_) -> list[dict]:
-    events = []
+def event_table(text: str, tz: str | None = None, source: str = "", source_file: str = "", **_: Any) -> list[LogEntry]:
+    events: list[LogEntry] = []
     data_re = re.compile(r"^(\d+)\s{2,}(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\s{2,}(\S.+?\S)\s{2,}(.+)$")
     for line in text.splitlines():
         m = data_re.match(line)
@@ -502,7 +514,7 @@ def event_table(text: str, tz=None, source: str = "", source_file: str = "", **_
     return events
 
 
-def traffic_json(text: str, tz=None, source: str = "", source_file: str = "", **_) -> list[dict]:
+def traffic_json(text: str, tz: str | None = None, source: str = "", source_file: str = "", **_: Any) -> list[LogEntry]:
     start = text.find("[")
     if start < 0:
         return []
@@ -510,7 +522,7 @@ def traffic_json(text: str, tz=None, source: str = "", source_file: str = "", **
         raw = json.loads(text[start:])
     except json.JSONDecodeError:
         return []
-    entries = []
+    entries: list[LogEntry] = []
     for r in raw:
         verdict = r.get("verdict", "")
         protocol = r.get("protocol", "")
@@ -536,8 +548,8 @@ def traffic_json(text: str, tz=None, source: str = "", source_file: str = "", **
     return entries
 
 
-def remote_shell(text: str, source_file: str = "", **_) -> list[dict]:
-    entries = []
+def remote_shell(text: str, source_file: str = "", **_: Any) -> list[LogEntry]:
+    entries: list[LogEntry] = []
     for line in text.splitlines():
         parts = line.split("|")
         if len(parts) >= 6:
@@ -556,7 +568,7 @@ def remote_shell(text: str, source_file: str = "", **_) -> list[dict]:
 
 def _find_json_spans(text: str) -> list[tuple[int, int]]:
     """Find (start, end) spans of potential JSON objects in text."""
-    spans = []
+    spans: list[tuple[int, int]] = []
     i = 0
     while i < len(text):
         if text[i] == "{":
@@ -589,7 +601,7 @@ def _find_json_spans(text: str) -> list[tuple[int, int]]:
     return spans
 
 
-def _try_parse_json(text: str) -> dict | list | None:
+def _try_parse_json(text: str) -> dict[str, Any] | list[Any] | None:
     """Try parsing text as JSON, escaped JSON, or Python dict."""
     # Standard JSON
     try:

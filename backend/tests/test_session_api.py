@@ -3,17 +3,18 @@
 import json
 import zipfile
 from io import BytesIO
+from typing import Any
 
 import pytest
 
 
-def _parse_sse_events(body: str) -> list[dict]:
+def _parse_sse_events(body: str) -> list[dict[str, Any]]:
     """Split an SSE ``text/event-stream`` body into decoded JSON payloads.
 
     TestClient is synchronous, so ``resp.text`` holds the fully materialized
     stream of ``data: {json}\\n\\n`` events.
     """
-    events = []
+    events: list[dict[str, Any]] = []
     for block in body.split("\n\n"):
         block = block.strip()
         if not block.startswith("data:"):
@@ -136,9 +137,7 @@ class TestSessionUploadStream:
         # Every progress event (if any survive the race — see below) carries the
         # stage/progress/detail shape the frontend relies on.
         progress_events = [e for e in events if e.get("stage") != "complete"]
-        assert all(
-            {"stage", "progress", "detail"} <= e.keys() for e in progress_events
-        )
+        assert all({"stage", "progress", "detail"} <= e.keys() for e in progress_events)
 
         # Terminal event is the completion event with the stored session.
         final = events[-1]
@@ -242,9 +241,7 @@ class TestUploadSizeGuard:
     def test_within_limit_is_not_rejected(self, app_client, monkeypatch, sample_zip_bytes):
         # A payload at/under the limit must not hit the size guard, proving the
         # 400 above comes from the size check and not the monkeypatch itself.
-        monkeypatch.setattr(
-            "backend.api.sessions.settings.max_upload_bytes", len(sample_zip_bytes)
-        )
+        monkeypatch.setattr("backend.api.sessions.settings.max_upload_bytes", len(sample_zip_bytes))
         resp = app_client.post(
             "/api/v1/sessions",
             files={"file": ("test.zip", sample_zip_bytes, "application/zip")},

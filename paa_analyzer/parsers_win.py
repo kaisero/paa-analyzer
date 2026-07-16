@@ -8,13 +8,14 @@ import re
 import sys
 import xml.etree.ElementTree as ET
 from datetime import UTC, datetime
+from typing import Any
 
-from paa_analyzer.parsers import format_ts, parse_ts
+from paa_analyzer.parsers import LogEntry, Record, format_ts, parse_ts
 
 # ── Machine Info state parsers ────────────────────────────────────────────
 
 
-def systeminfo(text: str, **_) -> dict:
+def systeminfo(text: str, **_: Any) -> Record:
     """Parse Windows `systeminfo` output into key-value dict.
 
     Handles multi-line indented continuations (e.g., Processor(s), Hotfix(s), Network Card(s)).
@@ -43,9 +44,9 @@ def systeminfo(text: str, **_) -> dict:
             if item.startswith("["):
                 # Numbered list item like [01]: KB5074828
                 list_items.append(item)
-            elif current_key and isinstance(data.get(current_key), str):
+            elif current_key and isinstance((existing := data.get(current_key)), str):
                 # Multi-line value continuation (e.g., NIC details)
-                data[current_key] = data[current_key] + " " + item if data[current_key] else item
+                data[current_key] = existing + " " + item if existing else item
 
     if list_items and current_key:
         data[current_key] = list_items
@@ -53,10 +54,10 @@ def systeminfo(text: str, **_) -> dict:
     return data
 
 
-def ipconfig(text: str, **_) -> dict:
+def ipconfig(text: str, **_: Any) -> Record:
     """Parse Windows `ipconfig /all` output into structured sections."""
-    result: dict = {"global": {}, "adapters": []}
-    current_adapter: dict | None = None
+    result: Record = {"global": {}, "adapters": []}
+    current_adapter: Record | None = None
 
     for line in text.splitlines():
         stripped = line.strip()
@@ -99,19 +100,19 @@ def ipconfig(text: str, **_) -> dict:
     return result
 
 
-def win_routing_table(text: str, **_) -> dict:
+def win_routing_table(text: str, **_: Any) -> Record:
     """Parse Windows `route print` output.
 
     IPv4 format: Network Destination  Netmask  Gateway  Interface  Metric
     IPv6 format: If  Metric  Network Destination  Gateway
     IPv6 entries can span two lines when the destination is long.
     """
-    result: dict = {"interfaces": [], "ipv4": [], "ipv6": []}
+    result: Record = {"interfaces": [], "ipv4": [], "ipv6": []}
     section = ""
     # Build interface index → name lookup
     iface_names: dict[int, str] = {}
     # For IPv6 multi-line continuation
-    pending_ipv6: dict | None = None
+    pending_ipv6: Record | None = None
 
     for line in text.splitlines():
         stripped = line.strip()
@@ -240,7 +241,7 @@ def win_routing_table(text: str, **_) -> dict:
     return result
 
 
-def win_firewall_rules(text: str, **_) -> dict:
+def win_firewall_rules(text: str, **_: Any) -> Record:
     """Parse Windows firewall rules JSON export."""
     try:
         data = json.loads(text)
@@ -255,9 +256,9 @@ def win_firewall_rules(text: str, **_) -> dict:
         return {"error": "Invalid JSON", "rules": []}
 
 
-def win_installed_apps(text: str, **_) -> list[dict]:
+def win_installed_apps(text: str, **_: Any) -> list[Record]:
     """Parse PowerShell Get-Package table output."""
-    apps = []
+    apps: list[Record] = []
     for line in text.splitlines():
         stripped = line.strip()
         if not stripped or stripped.startswith("Name") or stripped.startswith("----"):
@@ -269,9 +270,9 @@ def win_installed_apps(text: str, **_) -> list[dict]:
     return apps
 
 
-def win_installed_drivers(text: str, **_) -> list[dict]:
+def win_installed_drivers(text: str, **_: Any) -> list[Record]:
     """Parse `driverquery /v` fixed-width output using separator line for column positions."""
-    drivers = []
+    drivers: list[Record] = []
     col_positions: list[tuple[int, int]] = []
 
     for line in text.splitlines():
@@ -312,10 +313,10 @@ def win_installed_drivers(text: str, **_) -> list[dict]:
     return drivers
 
 
-def win_netstat(text: str, **_) -> dict:
+def win_netstat(text: str, **_: Any) -> Record:
     """Parse Windows `netstat -ab` output with process names."""
-    connections: list[dict] = []
-    current: dict | None = None
+    connections: list[Record] = []
+    current: Record | None = None
 
     for line in text.splitlines():
         stripped = line.strip()
@@ -351,10 +352,10 @@ def win_netstat(text: str, **_) -> dict:
     return {"connections": connections}
 
 
-def win_dns_cache(text: str, **_) -> list[dict]:
+def win_dns_cache(text: str, **_: Any) -> list[Record]:
     """Parse `ipconfig /displaydns` output into DNS record entries."""
-    records: list[dict] = []
-    current: dict = {}
+    records: list[Record] = []
+    current: Record = {}
 
     for line in text.splitlines():
         stripped = line.strip()
@@ -379,9 +380,9 @@ def win_dns_cache(text: str, **_) -> list[dict]:
     return records
 
 
-def win_user_groups(text: str, **_) -> list[dict]:
+def win_user_groups(text: str, **_: Any) -> list[Record]:
     """Parse `whoami /groups` table output."""
-    groups: list[dict] = []
+    groups: list[Record] = []
     for line in text.splitlines():
         stripped = line.strip()
         if not stripped or stripped.startswith("GROUP") or stripped.startswith("=") or stripped.startswith("---"):
@@ -401,9 +402,9 @@ def win_user_groups(text: str, **_) -> list[dict]:
     return groups
 
 
-def win_user_sessions(text: str, **_) -> list[dict]:
+def win_user_sessions(text: str, **_: Any) -> list[Record]:
     """Parse `query session` output."""
-    sessions: list[dict] = []
+    sessions: list[Record] = []
     for line in text.splitlines():
         stripped = line.lstrip(">").strip()
         if not stripped or stripped.startswith("SESSIONNAME"):
@@ -425,9 +426,9 @@ def win_user_sessions(text: str, **_) -> list[dict]:
     return sessions
 
 
-def win_powercfg(text: str, **_) -> dict:
+def win_powercfg(text: str, **_: Any) -> Record:
     """Parse `powercfg /availablesleepstates` output."""
-    states: list[dict] = []
+    states: list[Record] = []
     current_state = ""
     reasons: list[str] = []
 
@@ -451,10 +452,10 @@ def win_powercfg(text: str, **_) -> dict:
     return {"sleep_states": states}
 
 
-def win_powercfg_query(text: str, **_) -> dict:
+def win_powercfg_query(text: str, **_: Any) -> Record:
     """Parse `powercfg /query` power scheme output."""
-    result: dict = {"scheme_name": "", "scheme_guid": "", "subgroups": []}
-    current_subgroup: dict | None = None
+    result: Record = {"scheme_name": "", "scheme_guid": "", "subgroups": []}
+    current_subgroup: Record | None = None
 
     for line in text.splitlines():
         stripped = line.strip()
@@ -478,9 +479,9 @@ def win_powercfg_query(text: str, **_) -> dict:
     return result
 
 
-def win_power_history(text: str, **_) -> list[dict]:
+def win_power_history(text: str, **_: Any) -> list[Record]:
     """Parse PowerShell event log export (Get-WinEvent style)."""
-    events: list[dict] = []
+    events: list[Record] = []
     current_provider = ""
 
     for line in text.splitlines():
@@ -514,9 +515,9 @@ def win_power_history(text: str, **_) -> list[dict]:
     return events
 
 
-def win_nslookup(text: str, **_) -> dict:
+def win_nslookup(text: str, **_: Any) -> Record:
     """Parse nslookup output."""
-    result: dict = {"server": "", "server_address": "", "name": "", "addresses": []}
+    result: Record = {"server": "", "server_address": "", "name": "", "addresses": []}
     in_answer = False
 
     for line in text.splitlines():
@@ -538,9 +539,9 @@ def win_nslookup(text: str, **_) -> dict:
     return result
 
 
-def win_ping(text: str, **_) -> dict:
+def win_ping(text: str, **_: Any) -> Record:
     """Parse Windows ping output."""
-    result: dict = {"target": "", "replies": [], "stats": {}}
+    result: Record = {"target": "", "replies": [], "stats": {}}
 
     for line in text.splitlines():
         stripped = line.strip()
@@ -570,16 +571,16 @@ def win_ping(text: str, **_) -> dict:
     return result
 
 
-def win_event_viewer(text: str, **_) -> list[dict]:
+def win_event_viewer(text: str, **_: Any) -> list[Record]:
     """Parse PowerShell XML event log export (CLIXML Objects format)."""
-    events: list[dict] = []
+    events: list[Record] = []
     try:
         root = ET.fromstring(text)
     except ET.ParseError:
         return events
 
     for obj in root.iter("Object"):
-        event: dict = {}
+        event: Record = {}
         for prop in obj.findall("Property"):
             name = prop.get("Name", "")
             value = prop.text or ""
@@ -613,9 +614,9 @@ def win_event_viewer(text: str, **_) -> list[dict]:
 _WIN_PAUI = re.compile(r"^PAUI\s+(\w+):\s+\d+\s+:\s+(\d{2}/\d{2}/\d{4}\s+\d{2}:\d{2}:\d{2})\s+(.*)")
 
 
-def win_paui_log(text: str, tz=None, source: str = "", source_file: str = "", **_) -> list[dict]:
+def win_paui_log(text: str, tz: str | None = None, source: str = "", source_file: str = "", **_: Any) -> list[LogEntry]:
     """Parse Windows PAUI log format: 'PAUI Level: N : MM/DD/YYYY HH:MM:SS message'."""
-    entries: list[dict] = []
+    entries: list[LogEntry] = []
     for line in text.splitlines():
         m = _WIN_PAUI.match(line)
         if m:
@@ -650,10 +651,10 @@ def win_paui_log(text: str, tz=None, source: str = "", source_file: str = "", **
 _WIN_DEM = re.compile(r"^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3})\]\s+\[(\w+)\]\s+\[(\w+)\]\s+(.*)")
 
 
-def win_dem_log(text: str, source: str = "", source_file: str = "", **_) -> list[dict]:
+def win_dem_log(text: str, source: str = "", source_file: str = "", **_: Any) -> list[LogEntry]:
     """Parse Windows DEM log: '[YYYY-MM-DD HH:MM:SS.mmm] [source] [level] message'."""
-    entries: list[dict] = []
-    current: dict | None = None
+    entries: list[LogEntry] = []
+    current: LogEntry | None = None
     for line in text.split("\n"):
         line = line.rstrip("\r")
         m = _WIN_DEM.match(line)
@@ -676,9 +677,9 @@ def win_dem_log(text: str, source: str = "", source_file: str = "", **_) -> list
 _CHROMIUM_LOG = re.compile(r"^\[(\d+:\d+:(\d{4})/(\d{6}\.\d{3})):(\w+\d?):(.+?)\]\s*(.*)")
 
 
-def chromium_log(text: str, source: str = "", source_file: str = "", **_) -> list[dict]:
+def chromium_log(text: str, source: str = "", source_file: str = "", **_: Any) -> list[LogEntry]:
     """Parse Chromium log: '[pid:tid:MMDD/HHMMSS.ms:LEVEL:file.cc(line)] message'."""
-    entries: list[dict] = []
+    entries: list[LogEntry] = []
     for line in text.splitlines():
         m = _CHROMIUM_LOG.match(line)
         if m:
