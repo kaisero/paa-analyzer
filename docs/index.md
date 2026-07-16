@@ -9,18 +9,15 @@ renders the results.
 
 ## Features
 
-- **Multi-OS support** — macOS and Windows troubleshooting bundles are
-  auto-detected from directory structure.
-- **Log Viewer** — filterable by source, level, and date range, with search,
-  resizable columns, and expandable rows showing raw or beautified JSON.
-- **Agent Status** — overview cards, module status badges, and a forwarding
-  profile with hitcount links.
-- **System Details** — OS-adaptive tabs for macOS (System Extensions, autostart
-  programs, routing table) and Windows (network config, firewall rules,
-  installed drivers, netstat, and more).
-- **PaCli terminal** — interactive command replay with autocomplete.
-- **Upload with progress** — parse progress is streamed to the browser over SSE.
-- **CLI tool** — `paa-parse` parses a bundle to JSON files with no server needed.
+- **Log Viewer**: filterable by source, level, date range, and search; resizable columns; expandable rows with raw/beautified JSON
+![logviewer.png](img/logviewer.png)
+- **Agent Status**: overview cards, module status badges, forwarding profile with hitcount links
+![agent-status.png](img/agent-status.png)
+- **System Details** -- OS-adaptive tabs (macOS: System Extensions, Launchctl; Windows: Firewall Rules, Installed Drivers, Network Config, Netstat)
+![system-details.png](img/system-details.png)
+- **PACli Terminal** -- interactive command replay with autocomplete
+![pacli.png](img/pacli.png)
+- **Multi-OS support** -- macOS and Windows troubleshooting bundles auto-detected
 
 ## Requirements
 
