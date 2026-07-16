@@ -18,14 +18,24 @@ repos:
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
+    # Frontend is out of scope and has its own toolchain; keep these generic
+    # hygiene hooks off frontend/ so they don't fight it. (gitleaks stays
+    # repo-wide — secrets can live anywhere.)
     hooks:
       - id: check-added-large-files
+        exclude: ^frontend/
       - id: check-merge-conflict
+        exclude: ^frontend/
       - id: check-toml
+        exclude: ^frontend/
       - id: check-yaml
+        exclude: ^frontend/
       - id: end-of-file-fixer
+        exclude: ^frontend/
       - id: mixed-line-ending
+        exclude: ^frontend/
       - id: trailing-whitespace
+        exclude: ^frontend/
 
   # Keep uv.lock in sync with pyproject.toml.
   - repo: https://github.com/astral-sh/uv-pre-commit
