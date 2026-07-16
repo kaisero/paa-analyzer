@@ -1,0 +1,78 @@
+# Pre-commit hooks for paa-analyzer.
+# Install with: uv run pre-commit install
+# Run on all files: uv run pre-commit run --all-files
+#
+# The project's own tools (ruff, mypy, codespell) run as LOCAL hooks that shell
+# out to `uv run`, so their versions match nox/CI exactly and mypy sees the real
+# project environment (strict mode + the pydantic plugin need the project deps,
+# which an isolated pre-commit env cannot provide reliably).
+default_language_version:
+  python: python3.14
+
+repos:
+  # Secrets scanning: block hardcoded credentials/API keys from being committed.
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    # Frontend is out of scope and has its own toolchain; keep these generic
+    # hygiene hooks off frontend/ so they don't fight it. (gitleaks stays
+    # repo-wide — secrets can live anywhere.)
+    hooks:
+      - id: check-added-large-files
+        exclude: ^frontend/
+      - id: check-merge-conflict
+        exclude: ^frontend/
+      - id: check-toml
+        exclude: ^frontend/
+      - id: check-yaml
+        exclude: ^frontend/
+        # --unsafe: parse structure but tolerate custom tags. mkdocs.yml uses
+        # `!!python/name:pymdownx.superfences.fence_code_format` for mermaid, which
+        # the safe loader rejects. mkdocs.yml is still fully validated by the
+        # strict docs build (nox -s docs) in CI.
+        args: [--unsafe]
+      - id: end-of-file-fixer
+        exclude: ^frontend/
+      - id: mixed-line-ending
+        exclude: ^frontend/
+      - id: trailing-whitespace
+        exclude: ^frontend/
+
+  # Keep uv.lock in sync with pyproject.toml.
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.5.18
+    hooks:
+      - id: uv-lock
+
+  # Project tools run locally via `uv run` so versions match nox/CI exactly.
+  - repo: local
+    hooks:
+      - id: ruff
+        name: ruff (uv run)
+        entry: uv run ruff check --fix
+        language: system
+        types_or: [python, pyi]
+        require_serial: true
+      - id: ruff-format
+        name: ruff-format (uv run)
+        entry: uv run ruff format
+        language: system
+        types_or: [python, pyi]
+        require_serial: true
+      - id: mypy
+        name: mypy (uv run)
+        entry: uv run mypy
+        language: system
+        types_or: [python, pyi]
+        pass_filenames: false
+        require_serial: true
+      - id: codespell
+        name: codespell (uv run)
+        entry: uv run codespell
+        language: system
+        pass_filenames: false
+        require_serial: true

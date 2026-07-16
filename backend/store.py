@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import sqlite3
 from datetime import datetime
+from typing import Any
 
 from backend.models.session import LogSource
 from paa_analyzer.parsers import beautify_message, format_ts
@@ -15,13 +16,13 @@ _STANDARD_FIELDS = {"timestamp", "level", "message", "host", "pid", "beautified"
 
 
 class SessionStore:
-    def __init__(self):
-        self._sessions: dict[str, dict] = {}
+    def __init__(self) -> None:
+        self._sessions: dict[str, dict[str, Any]] = {}
         self._dbs: dict[str, sqlite3.Connection] = {}  # session -> SQLite connection
-        self._log_meta: dict[str, dict[str, dict]] = {}  # session -> source_key -> {module, component, name}
-        self._state: dict[str, dict[str, dict]] = {}  # session -> state_key -> data
+        self._log_meta: dict[str, dict[str, dict[str, Any]]] = {}  # session -> source_key -> {module, component, name}
+        self._state: dict[str, dict[str, dict[str, Any]]] = {}  # session -> state_key -> data
 
-    def add_session(self, session_dict: dict, logs: dict, state: dict):
+    def add_session(self, session_dict: dict[str, Any], logs: dict[str, Any], state: dict[str, dict[str, Any]]) -> None:
         sid = session_dict["id"]
         self._sessions[sid] = session_dict
         self._state[sid] = state
@@ -80,10 +81,10 @@ class SessionStore:
         conn.commit()
         self._dbs[sid] = conn
 
-    def get_session(self, sid: str) -> dict | None:
+    def get_session(self, sid: str) -> dict[str, Any] | None:
         return self._sessions.get(sid)
 
-    def list_sessions(self) -> list[dict]:
+    def list_sessions(self) -> list[dict[str, Any]]:
         return list(self._sessions.values())
 
     def delete_session(self, sid: str) -> bool:
@@ -110,7 +111,7 @@ class SessionStore:
         """).fetchall()
 
         # Build per-source aggregates
-        source_data: dict[str, dict] = {}
+        source_data: dict[str, dict[str, Any]] = {}
         for source_key, level, count, min_ts, max_ts in rows:
             if source_key not in source_data:
                 source_data[source_key] = {"total": 0, "levels": {}, "min_ts": None, "max_ts": None}
@@ -118,14 +119,12 @@ class SessionStore:
             sd["total"] += count
             if level:
                 sd["levels"][level] = count
-            if min_ts is not None:
-                if sd["min_ts"] is None or min_ts < sd["min_ts"]:
-                    sd["min_ts"] = min_ts
-            if max_ts is not None:
-                if sd["max_ts"] is None or max_ts > sd["max_ts"]:
-                    sd["max_ts"] = max_ts
+            if min_ts is not None and (sd["min_ts"] is None or min_ts < sd["min_ts"]):
+                sd["min_ts"] = min_ts
+            if max_ts is not None and (sd["max_ts"] is None or max_ts > sd["max_ts"]):
+                sd["max_ts"] = max_ts
 
-        sources = []
+        sources: list[LogSource] = []
         for key, sd in source_data.items():
             meta = self._log_meta.get(sid, {}).get(key, {})
             sources.append(
@@ -154,14 +153,14 @@ class SessionStore:
         sort: str = "desc",
         page: int = 1,
         page_size: int = 100,
-    ) -> tuple[list[dict], int]:
+    ) -> tuple[list[dict[str, Any]], int]:
         """Return (page_entries, total_matching). page_size=0 means all."""
         conn = self._dbs.get(sid)
         if not conn:
             return [], 0
 
         where_clauses: list[str] = []
-        params: list = []
+        params: list[Any] = []
 
         if source:
             keys = [s.strip() for s in source.split(",")]
@@ -204,15 +203,15 @@ class SessionStore:
             offset = (page - 1) * page_size
             rows = conn.execute(
                 f"SELECT * FROM logs WHERE {where_sql} ORDER BY timestamp {order_sql} LIMIT ? OFFSET ?",
-                params + [page_size, offset],
+                [*params, page_size, offset],
             ).fetchall()
 
         # Convert rows to dicts for API response
-        result = []
+        result: list[dict[str, Any]] = []
         for row in rows:
             # row: (id, source_key, timestamp, level, message, host, pid, extra)
             source_key = row[1]
-            entry: dict = {
+            entry: dict[str, Any] = {
                 "timestamp": format_ts(row[2]),
                 "level": row[3] or "",
                 "message": row[4] or "",
@@ -233,24 +232,24 @@ class SessionStore:
             result.append(entry)
         return result, total
 
-    def get_log_entries(self, sid: str, source_key: str) -> list[dict]:
+    def get_log_entries(self, sid: str, source_key: str) -> list[dict[str, Any]]:
         """Return log entries for a given source key (used by forwarding-profile)."""
         conn = self._dbs.get(sid)
         if not conn:
             return []
         rows = conn.execute("SELECT message, extra FROM logs WHERE source_key = ?", (source_key,)).fetchall()
-        entries = []
+        entries: list[dict[str, Any]] = []
         for msg, extra in rows:
-            e: dict = {"message": msg or ""}
+            e: dict[str, Any] = {"message": msg or ""}
             if extra:
                 e.update(json.loads(extra))
             entries.append(e)
         return entries
 
-    def get_state_keys(self, sid: str) -> list[dict]:
+    def get_state_keys(self, sid: str) -> list[dict[str, Any]]:
         if sid not in self._state:
             return []
-        result = []
+        result: list[dict[str, Any]] = []
         for key, data in self._state[sid].items():
             meta = data.get("_meta", {})
             result.append(
@@ -264,7 +263,7 @@ class SessionStore:
             )
         return result
 
-    def get_state(self, sid: str, key: str) -> dict | None:
+    def get_state(self, sid: str, key: str) -> dict[str, Any] | None:
         return self._state.get(sid, {}).get(key)
 
 

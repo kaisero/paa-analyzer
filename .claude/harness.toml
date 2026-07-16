@@ -1,0 +1,10 @@
+# Quality-harness config — single source for the .claude/hooks/ scripts.
+# Reuse in another repo = copy .claude/hooks + this file, adjust values.
+
+# Offline gate the Stop hook runs on every main-loop stop.
+fast_gate_command = ["uv", "run", "nox", "-s", "gate"]
+fast_gate_enabled = true
+
+# Loop guard: after this many consecutive blocked stops, allow with a loud
+# warning instead of blocking forever (CI still catches the red state).
+max_consecutive_blocks = 3

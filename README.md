@@ -2,25 +2,18 @@
 
 A full-stack diagnostic tool for analyzing **Prisma Access Agent** troubleshooting bundles. Upload a ZIP collected from a macOS or Windows endpoint, and instantly explore parsed logs, agent state, and system details through an interactive web UI.
 
-## Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| **Backend** | Python 3.14, FastAPI, uvicorn, Pydantic |
-| **Parser Engine** | `paa_analyzer/` package with 46 parsers (27 cross-platform + 19 Windows) |
-| **Data Store** | SQLite in-memory (per session, no persistence) |
-| **Frontend** | React 19, TypeScript, Vite, Ant Design, TanStack Query |
-| **Testing** | pytest (403 tests, 92% coverage), Vitest + React Testing Library + MSW (65 tests) |
-
 ## Features
 
-- **Multi-OS support** -- macOS and Windows troubleshooting bundles auto-detected
-- **Log Viewer** -- filterable by source, level, date range, and search; resizable columns; expandable rows with raw/beautified JSON
-- **Agent Status** -- overview cards, module status badges, forwarding profile with hitcount links
+- **Log Viewer**: filterable by source, level, date range, and search; resizable columns; expandable rows with raw/beautified JSON
+![logviewer.png](docs/img/logviewer.png)
+- **Agent Status**: overview cards, module status badges, forwarding profile with hitcount links
+![agent-status.png](docs/img/agent-status.png)
 - **System Details** -- OS-adaptive tabs (macOS: System Extensions, Launchctl; Windows: Firewall Rules, Installed Drivers, Network Config, Netstat)
-- **PaCli Terminal** -- interactive command replay with autocomplete
-- **Upload with progress** -- SSE streaming of parse progress to the browser
-- **CLI tool** -- `paa-parse` for offline parsing to JSON files
+![system-details.png](docs/img/system-details.png)
+- **PACli Terminal** -- interactive command replay with autocomplete
+![pacli.png](docs/img/pacli.png)
+- **Multi-OS support** -- macOS and Windows troubleshooting bundles auto-detected
+
 
 ## Architecture
 
@@ -29,10 +22,10 @@ troubleshooting.zip
         |
         v
   +------------------+     +------------------+
-  |  paa_analyzer/    |     |   backend/       |
-  |  parsers.py       |---->|   pipeline.py    |
-  |  parsers_win.py   |     |   store.py       |
-  |  taxonomy.py      |     |   api/           |
+  |  paa_analyzer/    |    |   backend/       |
+  |  parsers.py       |--->|   pipeline.py    |
+  |  parsers_win.py   |    |   store.py       |
+  |  taxonomy.py      |    |   api/           |
   +------------------+     +------------------+
                                     |
                               REST API
@@ -46,15 +39,30 @@ troubleshooting.zip
                            +------------------+
 ```
 
-**Data flow:** ZIP bytes are parsed by `paa_analyzer` into state (key-value snapshots) and log (time-series entries) categories. The backend stores state in Python dicts and logs in per-session SQLite `:memory:` databases with indexes for fast filtering. The frontend queries via TanStack Query hooks.
+**Data flow:** Troubleshooting files are parsed by `paa_analyzer` into state (key-value snapshots) and log (time-series entries) categories. The backend stores state in Python dicts and logs in per-session SQLite `:memory:` databases with indexes for fast filtering. The frontend queries via TanStack Query hooks.
 
 **Parser architecture:** Files are routed by `taxonomy.py` which maps filenames to `(data_type, module, component, parser)` tuples. The pipeline dispatches to parser functions in `parsers.py` (cross-platform) or `parsers_win.py` (Windows-specific). New file types are added by extending the taxonomy and writing a parser function.
 
 ## Getting Started
 
+### Run with Docker (recommended)
+
+The quickest way to run PAA Analyzer — you only need Docker. This builds a single
+image containing both the frontend and backend and serves the whole app on one port:
+
+```bash
+docker compose up --build   # build the image and start the container
+```
+
+Then open <http://localhost:8000> in your browser. Stop it with `docker compose down`.
+
+The container builds the React UI and runs the FastAPI backend, which serves both the
+API and the built UI on port 8000 — no separate frontend server or second container
+needed. The sections below run the app from source, mainly for development.
+
 ### Prerequisites
 
-- Python 3.11+ with [uv](https://docs.astral.sh/uv/)
+- Python 3.14 with [uv](https://docs.astral.sh/uv/)
 - Node.js 18+
 
 ### Setup
@@ -152,10 +160,15 @@ analyzer/
       pages/         # AgentStatusPage, DashboardPage
       test/          # Vitest setup, MSW handlers, test wrapper
   docs/
-    design-decisions.md  # Architectural decisions log
-    REVISIT.md           # Deferred features
+    architecture.md  # Architecture deep-dive (mkdocs site)
+    index.md         # Docs site landing page
+  .agents/
+    context/         # Agent-facing technical docs (start at index.md)
+  tools/
+    context_docs.py  # Generator for the .agents/context/ inventory blocks
   CHANGELOG.md
   CLAUDE.md              # Claude Code instructions
+  AGENTS.md              # Pointer to the agent context docs
 ```
 
 ## License

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from pydantic import BaseModel, Field
 
@@ -11,7 +11,7 @@ class Session(BaseModel):
     id: str
     filename: str
     file_size: int
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     parse_status: str = "pending"  # pending | parsing | complete | error
     parse_error: str | None = None
     parse_duration_ms: int | None = None
