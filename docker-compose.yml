@@ -1,0 +1,23 @@
+# Run PAA Analyzer as a single container: `docker compose up` then open
+# http://localhost:8000. The image builds the frontend and serves it together
+# with the API on port 8000 (see Dockerfile).
+services:
+  paa-analyzer:
+    build: .
+    image: paa-analyzer:latest
+    container_name: paa-analyzer
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    healthcheck:
+      # Hits the sessions list endpoint (returns 200 with an empty list) to
+      # confirm the API is serving. python3 ships in the runtime image.
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/api/v1/sessions').status == 200 else 1)"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

@@ -12,7 +12,7 @@ class TestParseFileRouting:
     def test_routes_pacli_status(self):
         result = _parse_file("Pacli Output/pacli_status.log", "pacli_status.log", "State: Enabled", None)
         assert result is not None
-        data_type, module, component, name, parsed, raw_text = result
+        data_type, module, _component, name, _parsed, raw_text = result
         assert data_type == "state"
         assert module == "Agent"
         assert name == "status"

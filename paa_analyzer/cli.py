@@ -8,19 +8,20 @@ import sys
 import time
 import zipfile
 from pathlib import Path
+from typing import Any
 
 from paa_analyzer import parsers, parsers_win
 from paa_analyzer.taxonomy import (
-    PACLI_FILES,
-    SYSTEM_INFO_FILES,
     LOG_SOURCES,
-    SPECIAL_FILES,
+    PACLI_FILES,
     SKIP_EXTENSIONS,
     SKIP_PREFIXES,
+    SPECIAL_FILES,
+    SYSTEM_INFO_FILES,
 )
 
 
-def main():
+def main() -> None:
     if len(sys.argv) < 2:
         print("Usage: paa-parse <troubleshooting.zip> [output_dir]")
         sys.exit(1)
@@ -42,12 +43,12 @@ def main():
     logs_dir.mkdir(exist_ok=True)
 
     # Extract and get timezone context
-    tz_offset = None
-    manifest = []
-    all_state = {}
-    all_logs = {}
-    skipped = []
-    errors = []
+    tz_offset: str | None = None
+    manifest: list[dict[str, Any]] = []
+    all_state: dict[str, dict[str, Any]] = {}
+    all_logs: dict[str, dict[str, Any]] = {}
+    skipped: list[str] = []
+    errors: list[dict[str, str]] = []
 
     with zipfile.ZipFile(zip_path, "r") as zf:
         # First pass: find timezone from pacli_status
@@ -81,7 +82,7 @@ def main():
 
             if data_type == "state":
                 key = f"{module}.{component}.{name}"
-                entry: dict = {
+                entry: dict[str, Any] = {
                     "_meta": {
                         "type": "state",
                         "module": module,
@@ -297,7 +298,7 @@ def parse_file(
     return None
 
 
-def _run_parser(parser_name: str, text: str, **kwargs):
+def _run_parser(parser_name: str, text: str, **kwargs: Any) -> object:
     fn = getattr(parsers, parser_name, None) or getattr(parsers_win, parser_name, None)
     if fn is None:
         return text

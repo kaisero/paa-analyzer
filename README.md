@@ -52,6 +52,21 @@ troubleshooting.zip
 
 ## Getting Started
 
+### Run with Docker (recommended)
+
+The quickest way to run PAA Analyzer — you only need Docker. This builds a single
+image containing both the frontend and backend and serves the whole app on one port:
+
+```bash
+docker compose up --build   # build the image and start the container
+```
+
+Then open <http://localhost:8000> in your browser. Stop it with `docker compose down`.
+
+The container builds the React UI and runs the FastAPI backend, which serves both the
+API and the built UI on port 8000 — no separate frontend server or second container
+needed. The sections below run the app from source, mainly for development.
+
 ### Prerequisites
 
 - Python 3.11+ with [uv](https://docs.astral.sh/uv/)

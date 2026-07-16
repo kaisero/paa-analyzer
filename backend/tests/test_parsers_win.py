@@ -2,9 +2,7 @@
 
 import json
 
-
 from paa_analyzer import parsers_win
-
 
 # ── Machine Info state parsers ────────────────────────────────────────────
 

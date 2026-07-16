@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-from importlib.metadata import version, PackageNotFoundError
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from backend.api import sessions, logs, state, dashboard
+from backend.api import dashboard, logs, sessions, state
 
 try:
     __version__ = version("paa-analyzer")
@@ -44,7 +44,8 @@ def create_app() -> FastAPI:
 app = create_app()
 
 
-def run():
+def run() -> None:
     import uvicorn
 
-    uvicorn.run("backend.main:app", host="0.0.0.0", port=8000, reload=True)
+    # Bind on all interfaces so the diagnostic web UI is reachable from the host.
+    uvicorn.run("backend.main:app", host="0.0.0.0", port=8000, reload=True)  # noqa: S104
