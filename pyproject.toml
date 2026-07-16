@@ -92,7 +92,7 @@ docstring-code-format = true
 [tool.codespell]
 # Spell-check the Python backend only. The frontend is out of scope and trips on
 # camelCase test-framework identifiers; build/vendor dirs are skipped too.
-skip = "*.lock,./frontend,./.git,./.nox,./htmlcov,*/__pycache__,*/dist,*/node_modules"
+skip = "*.lock,./frontend,./.git,./.nox,./htmlcov,*/__pycache__,*/dist,*/node_modules,./site,./docs/plans"
 
 [tool.mypy]
 python_version = "3.14"

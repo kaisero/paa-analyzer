@@ -24,6 +24,7 @@ jobs:
       - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
         with:
           enable-cache: true
+          python-version: "3.14"
       # Runs BEFORE any `uv run` — a plain `uv run` would silently refresh the
       # lock first and mask drift. `uv lock --check` fails if uv.lock is stale.
       - name: Lock file up to date
@@ -42,6 +43,7 @@ jobs:
       - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
         with:
           enable-cache: true
+          python-version: "3.14"
       - name: Lock file up to date
         run: uv lock --check
       - name: Type-check
