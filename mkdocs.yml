@@ -28,6 +28,7 @@ theme:
 
 nav:
   - Home: index.md
+  - Architecture: architecture.md
   - Design Decisions: design-decisions.md
   - Changelog: changelog.md
 
@@ -44,7 +45,13 @@ plugins:
 markdown_extensions:
   - admonition
   - pymdownx.highlight
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      # Render ```mermaid blocks as diagrams (mkdocs-material has built-in
+      # mermaid support; this custom fence hands them to the mermaid renderer).
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.snippets:
       base_path: ["."]
   - toc:

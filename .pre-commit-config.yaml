@@ -30,6 +30,11 @@ repos:
         exclude: ^frontend/
       - id: check-yaml
         exclude: ^frontend/
+        # --unsafe: parse structure but tolerate custom tags. mkdocs.yml uses
+        # `!!python/name:pymdownx.superfences.fence_code_format` for mermaid, which
+        # the safe loader rejects. mkdocs.yml is still fully validated by the
+        # strict docs build (nox -s docs) in CI.
+        args: [--unsafe]
       - id: end-of-file-fixer
         exclude: ^frontend/
       - id: mixed-line-ending
