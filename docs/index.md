@@ -32,7 +32,7 @@ renders the results.
 
 - **Node.js 20+** (a recent LTS) and **npm**
 - JavaScript packages (installed by `npm install`): React 19, Vite, TypeScript,
-  Tailwind CSS, TanStack Query
+  Ant Design, TanStack Query
 
 ## Usage
 
