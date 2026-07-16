@@ -1,0 +1,36 @@
+# Keep the build context small and the image clean. The Dockerfile copies only
+# what it needs; these excludes speed up context transfer and avoid leaking
+# local/dev artifacts into the image.
+
+# Python caches & tooling
+**/__pycache__/
+*.py[cod]
+.venv/
+.nox/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node / build output (the image rebuilds these)
+frontend/node_modules/
+frontend/dist/
+
+# Tests are not needed in the runtime image
+backend/tests/
+
+# VCS, CI, editor, agent tooling
+.git/
+.github/
+.claude/
+.superpowers/
+.idea/
+.vscode/
+
+# Docs, meta, generated site, local env, sample bundles
+docs/
+site/
+*.md
+.env
+examples/
