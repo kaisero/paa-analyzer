@@ -29,7 +29,6 @@ theme:
 nav:
   - Home: index.md
   - Architecture: architecture.md
-  - Design Decisions: design-decisions.md
   - Changelog: changelog.md
 
 # Internal working files kept in the repo but excluded from the published site
