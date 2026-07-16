@@ -79,6 +79,9 @@ select = ["E","W","F","I","N","UP","B","C4","SIM","S","ASYNC","PTH","RUF"]
 # bundle (trusted operator input); S314 (untrusted-XML) does not apply and no
 # extra dependency is introduced in this lint-only pass.
 "paa_analyzer/parsers_win.py" = ["S314"]
+# The Stop-hook gate subprocesses a fixed, code-defined command from
+# harness.toml (never user input), so S603/S607 do not apply.
+".claude/hooks/*.py" = ["S603", "S607"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["paa_analyzer", "backend"]

@@ -1,0 +1,63 @@
+# Pre-commit hooks for paa-analyzer.
+# Install with: uv run pre-commit install
+# Run on all files: uv run pre-commit run --all-files
+#
+# The project's own tools (ruff, mypy, codespell) run as LOCAL hooks that shell
+# out to `uv run`, so their versions match nox/CI exactly and mypy sees the real
+# project environment (strict mode + the pydantic plugin need the project deps,
+# which an isolated pre-commit env cannot provide reliably).
+default_language_version:
+  python: python3.14
+
+repos:
+  # Secrets scanning: block hardcoded credentials/API keys from being committed.
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+
+  # Keep uv.lock in sync with pyproject.toml.
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.5.18
+    hooks:
+      - id: uv-lock
+
+  # Project tools run locally via `uv run` so versions match nox/CI exactly.
+  - repo: local
+    hooks:
+      - id: ruff
+        name: ruff (uv run)
+        entry: uv run ruff check --fix
+        language: system
+        types_or: [python, pyi]
+        require_serial: true
+      - id: ruff-format
+        name: ruff-format (uv run)
+        entry: uv run ruff format
+        language: system
+        types_or: [python, pyi]
+        require_serial: true
+      - id: mypy
+        name: mypy (uv run)
+        entry: uv run mypy
+        language: system
+        types_or: [python, pyi]
+        pass_filenames: false
+        require_serial: true
+      - id: codespell
+        name: codespell (uv run)
+        entry: uv run codespell
+        language: system
+        pass_filenames: false
+        require_serial: true
