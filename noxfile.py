@@ -79,6 +79,12 @@ def docs_serve(session: nox.Session) -> None:
 
 
 @nox.session(venv_backend="none")
+def context(session: nox.Session) -> None:
+    """Regenerate (or --check) the .agents/context/ mechanical blocks."""
+    session.run("python", "tools/context_docs.py", *session.posargs, external=True)
+
+
+@nox.session(venv_backend="none")
 def gate(session: nox.Session) -> None:
     """Fast, offline pre-commit gate run in the invoking environment."""
     session.run("ruff", "check", ".")

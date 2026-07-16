@@ -62,7 +62,7 @@ needed. The sections below run the app from source, mainly for development.
 
 ### Prerequisites
 
-- Python 3.11+ with [uv](https://docs.astral.sh/uv/)
+- Python 3.14 with [uv](https://docs.astral.sh/uv/)
 - Node.js 18+
 
 ### Setup
@@ -160,10 +160,15 @@ analyzer/
       pages/         # AgentStatusPage, DashboardPage
       test/          # Vitest setup, MSW handlers, test wrapper
   docs/
-    design-decisions.md  # Architectural decisions log
-    REVISIT.md           # Deferred features
+    architecture.md  # Architecture deep-dive (mkdocs site)
+    index.md         # Docs site landing page
+  .agents/
+    context/         # Agent-facing technical docs (start at index.md)
+  tools/
+    context_docs.py  # Generator for the .agents/context/ inventory blocks
   CHANGELOG.md
   CLAUDE.md              # Claude Code instructions
+  AGENTS.md              # Pointer to the agent context docs
 ```
 
 ## License

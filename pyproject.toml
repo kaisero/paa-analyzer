@@ -32,7 +32,9 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-testpaths = ["backend/tests"]
+testpaths = ["backend/tests", "tests"]
+# Repo root on sys.path so tests can `from tools import context_docs`.
+pythonpath = ["."]
 markers = [
     "unit: Pure function tests, no I/O",
     "integration: Tests that use ZIP parsing or SQLite",
@@ -71,6 +73,8 @@ select = ["E","W","F","I","N","UP","B","C4","SIM","S","ASYNC","PTH","RUF"]
 # routing-table sample data, not a real socket bind; RUF012 for class-level sample
 # fixtures (annotating with ClassVar is deferred to the typing task).
 "backend/tests/**" = ["S101", "S105", "S106", "S107", "E501", "S104", "RUF012"]
+# Top-level tests/ (tooling tests, e.g. the context-docs generator): asserts only.
+"tests/**" = ["S101"]
 # store.py builds SQL with f-strings, but every user value is passed as a bound
 # `?` parameter; only fixed, code-defined fragments (column names, whitelisted
 # ASC/DESC) are interpolated, so S608 is a false positive here.

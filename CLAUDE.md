@@ -7,7 +7,7 @@ Upload a .zip → backend parses it → React frontend displays logs, state, and
 ## Stack
 - **Backend**: Python 3.14, FastAPI, uvicorn, pydantic — in `backend/`
 - **Parsers**: Standalone package in `paa_analyzer/` — imported by backend
-- **Frontend**: React 19 + TypeScript + Vite + Tailwind + TanStack React Query — in `frontend/`
+- **Frontend**: React 19 + TypeScript + Vite + Ant Design + TanStack React Query — in `frontend/`
 
 ## Commands
 - `uv run paa-server` — start backend (port 8000, serves API + built frontend)
@@ -29,6 +29,15 @@ Upload a .zip → backend parses it → React frontend displays logs, state, and
 - API: `/api/v1/sessions` (upload), `/api/v1/sessions/{id}/logs` (query), `/api/v1/sessions/{id}/state`
 - Frontend routes: `/` (upload), `/s/{id}` (log viewer), `/s/{id}/dashboard`, `/s/{id}/agent-status`
 
+## Agent context docs (`.agents/context/`)
+
+Deep technical docs for this repo live in `.agents/context/` (start at
+`.agents/context/index.md`). They are loaded **on demand** — do NOT `@`-import them.
+
+- **Before** working in a subsystem, read its deep-dive (e.g. `.agents/context/backend.md`).
+- **After** a change that alters a subsystem, update its deep-dive's narrative and
+  run `uv run nox -s context` to refresh its generated blocks (`-- --check` must pass).
+
 ## Releasing
 1. Bump version in `pyproject.toml` and `frontend/package.json`
 2. Update `CHANGELOG.md` with new section
@@ -37,8 +46,8 @@ Upload a .zip → backend parses it → React frontend displays logs, state, and
 5. Tag: `git tag -a vX.Y.Z -m "Release X.Y.Z"`
 
 ## Design Decisions Documentation
-**Every dev or design decision must be documented in `docs/design-decisions.md`.**
+**Every dev or design decision must be documented in `.agents/context/decisions.md`.**
 When making changes to the viewer, parser, or architecture:
-1. Add a dated section to `docs/design-decisions.md` with the decision, rationale, and alternatives considered
+1. Add a dated entry to `.agents/context/decisions.md` with the decision, rationale, and alternatives considered
 2. Keep entries concise but complete enough that a new developer can understand *why* a choice was made
 3. Group related decisions under a shared date/heading
