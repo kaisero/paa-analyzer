@@ -15,15 +15,20 @@ the float epochs and tuples the lower layers use stop here.
 
 from __future__ import annotations
 
-import re
-from collections.abc import Callable
 from datetime import UTC, datetime
 from typing import Any
 
+from paa_analyzer.hip.cycle_scalars import (
+    category_timings,
+    dispatch,
+    duration_s,
+    first,
+    generate_time,
+    policy,
+)
 from paa_analyzer.hip.cycles import Cycle, pair_cycles, split_cycles
 from paa_analyzer.hip.opswat import parse_detected_products, parse_opswat_errors
 from paa_analyzer.hip.patches import parse_missing_patches
-from paa_analyzer.hip.policy import parse_policy
 from paa_analyzer.hip.report import parse_hip_report
 from paa_analyzer.hip.status import category_status, product_status
 from paa_analyzer.parsers import format_ts
@@ -44,16 +49,6 @@ _XML_START = "<?xml"
 _PATCHES_START = "<missing-patches>"
 _PATCHES_END = "</missing-patches>"
 
-_CATEGORY_TIMING_RE = re.compile(r"^Category (?P<name>.+): took (?P<seconds>\d+) seconds?$")
-_DURATION_RE = re.compile(r"^HIP creation done, took (?P<seconds>\d+) second")
-_STATUS_CODE_RE = re.compile(r"^Finished with status code: (?P<code>-?\d+)")
-_SENT_MESSAGE = "Send hip report to service"
-_SUCCEEDED_MESSAGE = "SetHipReport succeeded"
-
-_GENERATE_TIME_RE = re.compile(r"<generate-time>([^<]*)</generate-time>")
-_GENERATE_TIME_FORMAT = "%m/%d/%Y %H:%M:%S"
-# Real-world UTC offsets are whole quarter hours; see _generate_time().
-_OFFSET_STEP_S = 900
 _SECONDS_PER_DAY = 86400.0
 
 
@@ -61,6 +56,7 @@ def build_hip_data(
     logs: dict[str, Any],
     state: dict[str, Any],
     platform: str,
+    tz_offset: str | None = None,
 ) -> dict[str, Any]:
     """Assemble the HipData object from a parsed bundle's logs and state.
 
@@ -68,10 +64,18 @@ def build_hip_data(
     (`logs[key]["entries"]`, `state[key]["data"]`). Either compliance log may
     be absent, in which case the result simply carries no cycles.
 
+    `tz_offset` is the bundle-wide UTC offset `parsers.extract_tz_offset()`
+    recovers from `pacli_status.log` (e.g. `"+0200"`). When supplied, it
+    resolves each cycle's `generate_time` authoritatively; when omitted, that
+    resolution falls back to a same-cycle inference -- see
+    `cycle_scalars.generate_time()`. Task 6 wires the real pipeline value
+    through; the default keeps existing 3-arg callers working.
+
     Cycles come back newest-first with `index` 0..n-1. Raw XML is deliberately
     kept out of them and returned under the top-level `_raw` key, keyed by
-    cycle index, so callers can serve the model without shipping megabytes of
-    XML.
+    cycle index (as a string, so callers see the same shape in-process and
+    after a JSON round-trip), so callers can serve the model without shipping
+    megabytes of XML.
     """
     compliance_cycles = split_cycles(_entries(logs, _COMPLIANCE_LOG_KEY))
     mp_cycles = split_cycles(_entries(logs, _MP_LOG_KEY))
@@ -82,11 +86,11 @@ def build_hip_data(
     ordered = sorted(pairs, key=lambda pair: (pair[0]["start_ts"] is not None, pair[0]["start_ts"] or 0), reverse=True)
 
     cycles: list[dict[str, Any]] = []
-    raw: dict[int, dict[str, Any]] = {}
+    raw: dict[str, dict[str, Any]] = {}
     for index, (compliance_cycle, mp_cycle) in enumerate(ordered):
-        cycle, cycle_raw = _build_cycle(index, compliance_cycle, mp_cycle, platform)
+        cycle, cycle_raw = _build_cycle(index, compliance_cycle, mp_cycle, platform, tz_offset)
         cycles.append(cycle)
-        raw[index] = cycle_raw
+        raw[str(index)] = cycle_raw
 
     newest_ts = ordered[0][0]["start_ts"] if ordered else None
     status = _hip_status(state)
@@ -140,6 +144,11 @@ def _age_days(last_report: str | None, reference_ts: float | None) -> float | No
         reported = datetime.fromisoformat(last_report)
     except ValueError:
         return None
+    # parsers.hip_status() emits offset-aware format_ts() strings today, so
+    # this is a no-op in practice -- but a naive string must never be read
+    # as the analysis host's local zone, so treat it as UTC explicitly.
+    if reported.tzinfo is None:
+        reported = reported.replace(tzinfo=UTC)
     return round((reference_ts - reported.timestamp()) / _SECONDS_PER_DAY, 1)
 
 
@@ -151,16 +160,17 @@ def _build_cycle(
     compliance_cycle: Cycle,
     mp_cycle: Cycle | None,
     platform: str,
+    tz_offset: str | None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     """Assemble one HipCycle and its raw-XML companion."""
     entries = compliance_cycle["entries"]
     mp_entries = mp_cycle["entries"] if mp_cycle else []
 
-    report_entry = _first(entries, lambda message: _REPORT_END in message)
+    report_entry = first(entries, lambda message: _REPORT_END in message)
     raw_xml = _slice(report_entry["message"], _XML_START, _REPORT_END) if report_entry else None
     report = parse_hip_report(report_entry["message"], platform) if report_entry else None
 
-    patches_entry = _first(mp_entries, lambda message: _PATCHES_START in message)
+    patches_entry = first(mp_entries, lambda message: _PATCHES_START in message)
     raw_patches_xml = _slice(patches_entry["message"], _PATCHES_START, _PATCHES_END) if patches_entry else None
     patches = parse_missing_patches(patches_entry["message"]) if patches_entry else []
 
@@ -183,15 +193,15 @@ def _build_cycle(
     cycle = {
         "index": index,
         "started_at": format_ts(compliance_cycle["start_ts"]),
-        "generate_time": _generate_time(raw_xml, report_entry),
-        "duration_s": _duration_s(entries),
+        "generate_time": generate_time(raw_xml, report_entry, tz_offset),
+        "duration_s": duration_s(entries),
         "partial": compliance_cycle["partial"],
-        "policy": _policy(entries),
+        "policy": policy(entries),
         "report": report,
         "opswat_errors": errors,
-        "category_timings": _category_timings(entries),
-        "dispatch": _dispatch(entries),
-        "counts": _counts(report, errors, patches),
+        "category_timings": category_timings(entries),
+        "dispatch": dispatch(entries),
+        "counts": _counts(report, errors),
     }
     return cycle, {"raw_xml": raw_xml, "raw_patches_xml": raw_patches_xml}
 
@@ -209,7 +219,11 @@ def _decorate_categories(
     Errors are attached to a product by matching the product's report name
     against the DETECT_PRODUCTS signature map; an error with no signature (the
     GetMissingPatchesForThisProduct lines never carry one) stays in the
-    cycle-wide flat list only.
+    cycle-wide flat list only. This assumes a report's product name always
+    resolves 1:1 to a DETECT_PRODUCTS `sig_name` -- true for all 22 products
+    across both fixtures, but a report name that diverges from OPSWAT's
+    `sig_name`, or two products sharing a name across categories, would drop
+    the attachment silently rather than erroring.
     """
     signature_by_name = {entry["name"]: signature for signature, entry in signature_map.items() if entry.get("name")}
     errors_by_signature: dict[int, list[dict[str, Any]]] = {}
@@ -224,6 +238,7 @@ def _decorate_categories(
         category["patches_source"] = patches_source if is_patch_category else None
 
         for product in category["products"]:
+            # See the assumption noted above: matched by name, not a stable id.
             signature = signature_by_name.get(product["name"])
             product["signature"] = signature
             product["errors"] = errors_by_signature.get(signature, []) if signature is not None else []
@@ -235,96 +250,24 @@ def _decorate_categories(
 def _counts(
     report: dict[str, Any] | None,
     errors: list[dict[str, Any]],
-    patches: list[dict[str, Any]],
 ) -> dict[str, int]:
-    statuses = [
-        product["status"] for category in (report or {}).get("categories", []) for product in category["products"]
-    ]
+    """`missing_patches` is read from the decorated patch-management category
+    rather than the raw `patches` list, so a cycle with no report (hence no
+    category to hold them) counts 0 instead of silently claiming patches no
+    category displays."""
+    categories = (report or {}).get("categories", [])
+    statuses = [product["status"] for category in categories for product in category["products"]]
+    patch_category = next((category for category in categories if category["name"] == _PATCH_CATEGORY), None)
+    missing_patches = len(patch_category["missing_patches"]) if patch_category else 0
     return {
         "warn": statuses.count("warn"),
         "unknown": statuses.count("unknown"),
         "errors": len(errors),
-        "missing_patches": len(patches),
+        "missing_patches": missing_patches,
     }
 
 
-def _policy(entries: list[dict[str, Any]]) -> dict[str, Any] | None:
-    for entry in entries:
-        policy = parse_policy(entry.get("message") or "")
-        if policy is not None:
-            return policy
-    return None
-
-
-def _category_timings(entries: list[dict[str, Any]]) -> dict[str, int]:
-    """Every `Category X: took N seconds` line in the cycle, verbatim. The
-    agent emits an aggregate `Category All` row alongside the real categories;
-    it is kept under that name rather than dropped or renamed."""
-    timings: dict[str, int] = {}
-    for entry in entries:
-        match = _CATEGORY_TIMING_RE.match(entry.get("message") or "")
-        if match:
-            timings[match.group("name")] = int(match.group("seconds"))
-    return timings
-
-
-def _duration_s(entries: list[dict[str, Any]]) -> float | None:
-    for entry in entries:
-        match = _DURATION_RE.match(entry.get("message") or "")
-        if match:
-            return float(match.group("seconds"))
-    return None
-
-
-def _dispatch(entries: list[dict[str, Any]]) -> dict[str, Any]:
-    dispatch: dict[str, Any] = {"sent": False, "succeeded": False, "status_code": None}
-    for entry in entries:
-        message = entry.get("message") or ""
-        if message == _SENT_MESSAGE:
-            dispatch["sent"] = True
-        elif message == _SUCCEEDED_MESSAGE:
-            dispatch["succeeded"] = True
-        else:
-            match = _STATUS_CODE_RE.match(message)
-            if match:
-                dispatch["status_code"] = int(match.group("code"))
-    return dispatch
-
-
-def _generate_time(raw_xml: str | None, report_entry: dict[str, Any] | None) -> str | None:
-    """`<generate-time>` as an ISO-8601 UTC string.
-
-    The element carries the endpoint's *local* wall clock with no offset (e.g.
-    "07/25/2026 17:07:44"), while the rest of the model is UTC. The offset is
-    recovered from the log entry that carried the XML -- written within a few
-    seconds of the generate-time -- by snapping the difference between the two
-    to the nearest quarter hour, the granularity of real UTC offsets.
-    """
-    if raw_xml is None:
-        return None
-    match = _GENERATE_TIME_RE.search(raw_xml)
-    if not match:
-        return None
-    try:
-        local = datetime.strptime(match.group(1).strip(), _GENERATE_TIME_FORMAT).replace(tzinfo=UTC)
-    except ValueError:
-        return None
-
-    anchor = report_entry.get("timestamp") if report_entry else None
-    if anchor is None:
-        return format_ts(local.timestamp())
-    offset = round((local.timestamp() - anchor) / _OFFSET_STEP_S) * _OFFSET_STEP_S
-    return format_ts(local.timestamp() - offset)
-
-
 # ── small helpers ────────────────────────────────────────────────────────────
-
-
-def _first(entries: list[dict[str, Any]], matches: Callable[[str], bool]) -> dict[str, Any] | None:
-    for entry in entries:
-        if matches(entry.get("message") or ""):
-            return entry
-    return None
 
 
 def _slice(message: str, start_marker: str, end_marker: str) -> str | None:

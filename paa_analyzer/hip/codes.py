@@ -39,6 +39,18 @@ _METHOD_QUERIES: dict[int, str] = {
     1013: "Missing patches for a patch-management product.",
 }
 
+# OESIS method id -> the hip-report attribute that method queries. Used by
+# status.py to decide whether an error *covers* (makes untrustworthy) a
+# product's key attribute. Kept beside _METHOD_QUERIES because it is indexed
+# by the same four method ids observed in the fixtures; an uncatalogued
+# method (e.g. Windows' 1012) covers nothing, so it never suppresses a value.
+_METHOD_ATTRIBUTES: dict[int, str] = {
+    1001: "real-time-protection",
+    1004: "last-full-scan-time",
+    1008: "last-backup-time",
+    1013: "missing-patches",
+}
+
 # ── OPSWAT category ids → HIP category name ─────────────────────────────────
 _CATEGORY_NAMES: dict[int, str] = {
     2: "disk-backup",
@@ -55,6 +67,12 @@ def error_explanation(code: int) -> str | None:
 def method_query(method_id: int) -> str | None:
     """What an OESIS method id queries, or None if unknown."""
     return _METHOD_QUERIES.get(method_id)
+
+
+def method_attribute(method_id: int) -> str | None:
+    """The hip-report attribute an OESIS method id queries, or None if the
+    method is uncatalogued (in which case it covers nothing)."""
+    return _METHOD_ATTRIBUTES.get(method_id)
 
 
 def category_name(category_id: int) -> str | None:

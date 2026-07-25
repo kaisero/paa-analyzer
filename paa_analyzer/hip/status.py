@@ -15,7 +15,7 @@ The rules, in the order they are applied to a product:
    defined threshold that makes a backup time good or bad.
 2. If an OPSWAT error covers the key attribute, the reported value cannot be
    trusted and the product is `unknown`. An error *covers* an attribute when
-   its OESIS method id maps to that attribute in `_METHOD_ATTRIBUTES` below,
+   its OESIS method id maps to that attribute in `codes.method_attribute()`,
    which is why an error on a different method (e.g. Xprotect's method 1004,
    last full scan time) leaves `real-time-protection=no` standing as `warn`.
 3. Otherwise the value speaks for itself: good -> `ok`, explicitly bad ->
@@ -29,15 +29,7 @@ from __future__ import annotations
 
 from typing import Any
 
-# OESIS method id -> the hip-report attribute that method queries. Kept in
-# step with the method ids catalogued in codes.py; an uncatalogued method
-# (e.g. Windows' 1012) covers nothing, so it never suppresses a value.
-_METHOD_ATTRIBUTES: dict[int, str] = {
-    1001: "real-time-protection",
-    1004: "last-full-scan-time",
-    1008: "last-backup-time",
-    1013: "missing-patches",
-}
+from paa_analyzer.hip.codes import method_attribute
 
 # The attribute a product's verdict is based on, in precedence order. No
 # product in either fixture reports more than one of these.
@@ -50,8 +42,12 @@ _ENCRYPTED = "encrypted"
 
 # Worst-wins ordering for rolling product statuses up into a category status.
 # `warn` outranks `unknown`: a known-bad value is a firmer finding than an
-# unreadable one.
-_SEVERITY = {"ok": 0, "not-detected": 1, "unknown": 2, "warn": 3}
+# unreadable one. Only product-level statuses ever appear here -- a product
+# is never `not-detected` (that's a category-only verdict for zero products),
+# so it has no entry; an unexpected status falls back to `_SEVERITY.get(status,
+# 0)`, the same severity as `ok`, which is deliberately the least alarming
+# choice rather than a guess at where it should rank.
+_SEVERITY = {"ok": 0, "unknown": 1, "warn": 2}
 
 
 def product_status(product: dict[str, Any]) -> tuple[str, str]:
@@ -71,7 +67,7 @@ def product_status(product: dict[str, Any]) -> tuple[str, str]:
             return "unknown", _error_reason(errors[0])
         return "unknown", "This product reports no attribute whose value can be judged."
 
-    covering = next((error for error in errors if _METHOD_ATTRIBUTES.get(error["method"]) == key), None)
+    covering = next((error for error in errors if method_attribute(error["method"]) == key), None)
     if covering is not None:
         return "unknown", _error_reason(covering)
 
@@ -89,20 +85,34 @@ def product_status(product: dict[str, Any]) -> tuple[str, str]:
 
 
 def category_status(products: list[dict[str, Any]]) -> tuple[str, str]:
-    """Return `(status, reason)` for a HipCategory, given its products."""
+    """Return `(status, reason)` for a HipCategory, given its products.
+
+    Reads each product's already-computed `status` -- set by
+    `_decorate_categories` before this runs -- rather than recomputing it via
+    `product_status()`, so the two can never disagree. Falls back to
+    `product_status()` for a product dict that hasn't been decorated yet.
+    """
     if not products:
         return "not-detected", "No products were detected in this category."
 
-    statuses = [product_status(product)[0] for product in products]
-    worst = max(statuses, key=lambda status: _SEVERITY.get(status, 0))
-    affected = statuses.count(worst)
+    statuses = [product.get("status") or product_status(product)[0] for product in products]
     total = len(products)
+    warn = statuses.count("warn")
+    unknown = statuses.count("unknown")
+    worst = max(statuses, key=lambda status: _SEVERITY.get(status, 0))
+    noun = _plural(total, "product", "products")
 
     if worst == "warn":
-        return worst, f"{affected} of {total} products {_reports(affected)} a bad value."
+        reason = f"{warn} of {total} {noun} {_plural(warn, 'reports', 'report')} a bad value."
+        if unknown:
+            # Don't let a second-worst finding go invisible behind the worst
+            # one -- a category whose reason only ever names the top status
+            # can hide an equally-unresolved product.
+            reason += f" {unknown} more could not be queried."
+        return "warn", reason
     if worst == "unknown":
-        return worst, f"{affected} of {total} products could not be queried."
-    return "ok", f"All {total} products report a good value."
+        return "unknown", f"{unknown} of {total} {noun} could not be queried."
+    return "ok", f"All {total} {noun} {_plural(total, 'reports', 'report')} a good value."
 
 
 def _drive_status(product: dict[str, Any]) -> tuple[str, str]:
@@ -120,9 +130,13 @@ def _drive_status(product: dict[str, Any]) -> tuple[str, str]:
 
 def _error_reason(error: dict[str, Any]) -> str:
     method, code = error["method"], error["code"]
-    attribute = _METHOD_ATTRIBUTES.get(method) or "the value it reports"
+    attribute = method_attribute(method) or "the value it reports"
     return f"OPSWAT method {method} failed with error {code}, so {attribute} could not be queried."
 
 
-def _reports(count: int) -> str:
-    return "reports" if count == 1 else "report"
+def _plural(count: int, singular: str, plural: str) -> str:
+    """`singular` for a count of exactly 1, `plural` otherwise. Used for both
+    nouns (`_plural(total, "product", "products")`) and verbs
+    (`_plural(warn, "reports", "report")` -- singular subject, singular verb
+    form ending in `s`)."""
+    return singular if count == 1 else plural

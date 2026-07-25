@@ -78,6 +78,35 @@ class TestMethodQuery:
         assert codes.method_query(9999) is None
 
 
+class TestMethodAttribute:
+    """method_attribute: OESIS method id -> hip-report attribute it queries.
+
+    Moved here from paa_analyzer.hip.status (Task 4 review finding 3) so it
+    lives beside method_query(), indexed by the same four method ids.
+    """
+
+    @pytest.mark.parametrize(
+        "method_id,attribute",
+        [
+            (1001, "real-time-protection"),
+            (1004, "last-full-scan-time"),
+            (1008, "last-backup-time"),
+            (1013, "missing-patches"),
+        ],
+    )
+    def test_known_methods_map_to_their_attribute(self, method_id, attribute):
+        assert codes.method_attribute(method_id) == attribute
+
+    def test_uncatalogued_method_returns_none(self):
+        """Windows' method 1012 is real (it appears in the Windows fixture's
+        OPSWAT errors) but uncatalogued -- codes.py documents it as an
+        inference risk not yet confirmed, so it must cover nothing."""
+        assert codes.method_attribute(1012) is None
+
+    def test_unknown_method_returns_none(self):
+        assert codes.method_attribute(9999) is None
+
+
 class TestCategoryName:
     """category_name: OPSWAT category id -> HIP category name."""
 

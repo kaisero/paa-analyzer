@@ -11,8 +11,9 @@ from typing import Any
 import pytest
 
 from paa_analyzer.hip import build_hip_data
+from paa_analyzer.hip.cycle_scalars import generate_time
 from paa_analyzer.hip.status import category_status, product_status
-from paa_analyzer.parsers import LogEntry, structured_log
+from paa_analyzer.parsers import LogEntry, hip_status, structured_log
 
 FIXTURES = Path(__file__).parent / "fixtures" / "hip"
 
@@ -48,20 +49,39 @@ def windows_logs() -> dict[str, Any]:
 
 
 def hip_status_state() -> dict[str, Any]:
-    """The `Agent.Compliance.hip_status` state record for the macOS bundle.
+    """The `Agent.Compliance.hip_status` state record for the macOS bundle,
+    sourced from the redacted `pacli_hip_status.log` fixture committed
+    alongside the other HIP fixtures.
 
-    Collection flag, next-check time and gateway rows are transcribed verbatim
-    from that bundle's real `pacli hip-status` output into the record shape
-    `parsers.hip_status` returns. It is shaped here rather than parsed because
-    `parsers.hip_status` does not yet read the current `Name / Time / Status`
-    table layout — that is Task 5's job — and `status` / `status_kind` are
-    therefore absent, exactly as the parser leaves them today.
+    `collection` / `next_check` are parsed for real via `parsers.hip_status`
+    -- it reads those two lines correctly today. The gateway rows are not:
+    `parsers.hip_status`'s table detection looks for a "Last HIP Report"
+    header, but this bundle's current table layout is `Name / Time / Status`
+    (see fixture lines 4-5), so `in_table` is never set and parsing yields
+    `gateways: []` for this file. That is Task 5's fix, not this one's.
+
+    Until then, the two gateway rows used below are transcribed by hand from
+    the fixture's own committed bytes, each cited by line number so the value
+    is auditable against the file in this repo rather than an external bundle:
+      - fixtures/hip/pacli_hip_status.log:8 -- "Finland ... 2026-07-14
+        13:17:24, GMT+0200" -> 11:17:24 UTC.
+      - fixtures/hip/pacli_hip_status.log:12 -- "South Korea ... 2026-06-16
+        10:30:01, GMT+0200" -> 08:30:01 UTC.
+
+    TODO(Task 5): once parsers.hip_status() reads the Name/Time/Status table,
+    replace the hand-transcribed gateways below with
+    hip_status(fixture_text, tz="+0200")["gateways"] and drop this docstring's
+    caveat -- `status` / `status_kind` should also become tested for real then.
     """
+    fixture_text = (FIXTURES / "pacli_hip_status.log").read_text()
+    parsed = hip_status(fixture_text, tz="+0200")
+    assert parsed["gateways"] == []  # confirms the Task 5 gap this docstring describes
+
     return {
         HIP_STATUS_KEY: {
             "data": {
-                "collection": "Enabled",
-                "next_check": "2026-07-25T16:07:43+00:00",
+                "collection": parsed["collection"],
+                "next_check": parsed["next_check"],
                 "gateways": [
                     {"gateway": "Finland", "last_report": "2026-07-14T11:17:24+00:00"},
                     {"gateway": "South Korea", "last_report": "2026-06-16T08:30:01+00:00"},
@@ -109,18 +129,21 @@ class TestTopLevel:
         assert [c["partial"] for c in macos["cycles"]] == [False, False]
 
     def test_raw_xml_is_kept_out_of_the_cycles_under_a_separate_key(self, macos):
-        assert set(macos["_raw"]) == {0, 1}
+        # String keys, not int: json.dumps would stringify int keys, so a
+        # CLI round-trip through hip.json would disagree with the in-process
+        # shape unless both use strings from the start.
+        assert set(macos["_raw"]) == {"0", "1"}
         for cycle in macos["cycles"]:
             assert "raw_xml" not in cycle
-            raw = macos["_raw"][cycle["index"]]
+            raw = macos["_raw"][str(cycle["index"])]
             assert raw["raw_xml"].startswith("<?xml")
             assert raw["raw_xml"].endswith("</hip-report>")
             assert raw["raw_patches_xml"].startswith("<missing-patches>")
             assert raw["raw_patches_xml"].endswith("</missing-patches>")
 
     def test_windows_cycle_has_no_paired_patches_xml(self, windows):
-        assert windows["_raw"][0]["raw_xml"].startswith("<?xml")
-        assert windows["_raw"][0]["raw_patches_xml"] is None
+        assert windows["_raw"]["0"]["raw_xml"].startswith("<?xml")
+        assert windows["_raw"]["0"]["raw_patches_xml"] is None
 
 
 class TestEmptyShape:
@@ -220,6 +243,46 @@ class TestCycleScalars:
         host_info = macos["cycles"][0]["report"]["host_info"]
         assert host_info["os"] == "Apple Mac OS X 15.7.7"
         assert host_info["host_id_kind"] == "mac-address"
+
+
+# ── generate_time offset resolution ─────────────────────────────────────────
+
+
+class TestGenerateTimeOffset:
+    """<generate-time>07/25/2026 17:07:44</generate-time> is the endpoint's
+    local wall clock. build_hip_data resolves it to UTC either from an
+    explicit tz_offset (authoritative) or, absent that, a same-cycle
+    quarter-hour-snap fallback -- see cycle_scalars.generate_time()."""
+
+    def test_explicit_tz_offset_is_applied_directly(self):
+        data = build_hip_data(macos_logs(), hip_status_state(), "macos", tz_offset="+0200")
+        assert data["cycles"][0]["generate_time"] == "2026-07-25T15:07:44+00:00"
+        assert data["cycles"][1]["generate_time"] == "2026-07-25T14:07:45+00:00"
+
+    def test_without_tz_offset_falls_back_to_the_quarter_hour_snap(self, macos):
+        # macos() is built with the default 3-arg call (no tz_offset), so this
+        # is the fallback path -- and it agrees with the explicit-offset
+        # result above because the real gap here is only ~2.7s, well inside
+        # the snap tolerance.
+        assert macos["cycles"][0]["generate_time"] == "2026-07-25T15:07:44+00:00"
+
+    def test_fallback_can_be_fooled_by_a_delayed_anchor_but_tz_offset_is_not(self, macos):
+        """The fallback infers the offset from the gap between generate-time
+        and the log entry that carried the XML. A gateway-triggered
+        GetHipReport that re-emits a *cached* report would widen that gap --
+        e.g. by an hour -- and the snap would silently lock onto the wrong
+        quarter hour. Demonstrated directly against generate_time() using the
+        real raw_xml from the macOS fixture (cycle 0) with a synthetic anchor
+        standing in for that delayed re-send; the anchor delay is the only
+        non-fixture value here, not the HIP content itself.
+        """
+        raw_xml = macos["_raw"]["0"]["raw_xml"]
+        real_anchor = 1784992066.668  # the actual </hip-report> entry's timestamp
+        cached_anchor = real_anchor + 3600  # pretend it was replayed an hour later
+
+        assert generate_time(raw_xml, {"timestamp": real_anchor}) == "2026-07-25T15:07:44+00:00"
+        assert generate_time(raw_xml, {"timestamp": cached_anchor}) != "2026-07-25T15:07:44+00:00"
+        assert generate_time(raw_xml, {"timestamp": cached_anchor}, tz_offset="+0200") == "2026-07-25T15:07:44+00:00"
 
 
 # ── Patch merging ────────────────────────────────────────────────────────────
@@ -364,13 +427,15 @@ class TestProductStatus:
 
 class TestCategoryStatus:
     def test_category_takes_the_worst_product_status(self, macos):
+        # anti-malware: Xprotect is warn, Gatekeeper is unknown (its method
+        # 1001 error covers real-time-protection), Cortex XDR is ok. The
+        # reason names both the worst finding and the second-worst one --
+        # Gatekeeper's unknown must not go invisible behind Xprotect's warn.
         cycle = macos["cycles"][0]
         anti_malware = _category(cycle, "anti-malware")
-        assert category_status(anti_malware["products"]) == ("warn", "1 of 3 products reports a bad value.")
-        assert (anti_malware["status"], anti_malware["status_reason"]) == (
-            "warn",
-            "1 of 3 products reports a bad value.",
-        )
+        expected = ("warn", "1 of 3 products reports a bad value. 1 more could not be queried.")
+        assert category_status(anti_malware["products"]) == expected
+        assert (anti_malware["status"], anti_malware["status_reason"]) == expected
 
     def test_all_good_category_is_ok(self, macos):
         firewall = _category(macos["cycles"][0], "firewall")
