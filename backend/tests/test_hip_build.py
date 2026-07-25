@@ -441,6 +441,10 @@ class TestCategoryStatus:
         firewall = _category(macos["cycles"][0], "firewall")
         assert category_status(firewall["products"]) == ("ok", "All 2 products report a good value.")
 
+    def test_singular_product_grammar(self, macos):
+        disk_encryption = _category(macos["cycles"][0], "disk-encryption")
+        assert category_status(disk_encryption["products"]) == ("ok", "All 1 product reports a good value.")
+
     def test_unqueryable_category_is_unknown(self, macos):
         disk_backup = _category(macos["cycles"][0], "disk-backup")
         assert category_status(disk_backup["products"]) == ("unknown", "2 of 2 products could not be queried.")
