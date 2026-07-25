@@ -188,6 +188,23 @@ class TestCategoriesMacOS:
         )
         assert autoupdate["attributes"]["is-enabled"] == "no"
 
+    def test_prods_extra_attributes_pass_through(self):
+        """Cortex XDR's Prod carries prodType/osType (populated) alongside
+        an empty engver -- all three must still land in attributes, with the
+        empty one normalized to None like every other empty scalar."""
+        cortex = next(p for p in self.categories["anti-malware"]["products"] if p["name"] == "Cortex XDR")
+        assert cortex["attributes"]["prodType"] == "3"
+        assert cortex["attributes"]["osType"] == "4"
+        assert cortex["attributes"]["engver"] is None
+
+    def test_prod_without_extra_attributes_gains_no_empty_keys(self):
+        """Google Drive's Prod has no engver/prodType/osType/defver attributes
+        at all -- they must not appear in attributes as spurious empty keys."""
+        drive = next(p for p in self.categories["disk-backup"]["products"] if p["name"] == "Google Drive")
+        assert "engver" not in drive["attributes"]
+        assert "prodType" not in drive["attributes"]
+        assert "osType" not in drive["attributes"]
+
 
 class TestCategoriesWindows:
     def setup_method(self):
@@ -211,6 +228,16 @@ class TestCategoriesWindows:
         assert len(self.categories["disk-backup"]["products"]) == 3
         assert len(self.categories["firewall"]["products"]) == 1
         assert len(self.categories["patch-management"]["products"]) == 4
+
+    def test_prods_engver_is_distinct_from_def_version(self):
+        """Windows Defender's Prod carries both a populated engver (engine
+        version) and defver (signature version) -- distinct values that must
+        both surface, engver via attributes and defver via def_version."""
+        defender = next(p for p in self.categories["anti-malware"]["products"] if p["name"] == "Windows Defender")
+        assert defender["def_version"] == "1.455.279.0"
+        assert defender["attributes"]["engver"] == "1.1.26060.3008"
+        assert defender["attributes"]["prodType"] == "3"
+        assert defender["attributes"]["osType"] == "1"
 
 
 class TestDrivesLifting:

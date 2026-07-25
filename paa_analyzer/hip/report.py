@@ -13,6 +13,8 @@ import re
 import xml.etree.ElementTree as ET
 from typing import Any
 
+from paa_analyzer.hip._xml import text_or_none as _text_or_none
+
 _XML_START = "<?xml"
 _REPORT_END = "</hip-report>"
 
@@ -31,6 +33,11 @@ _HOST_INFO_FIELDS = {
     "host-name": "host_name",
     "host-id": "host_id",
 }
+
+# Prod attributes already surfaced as named HipProduct fields -- everything
+# else on Prod (e.g. engver, prodType, osType) passes through into
+# attributes, see _parse_product.
+_PROD_NAMED_ATTRS = {"name", "version", "vendor", "defver", "dateyear", "datemon", "dateday"}
 
 
 def parse_hip_report(xml_text: str, platform: str) -> dict[str, Any] | None:
@@ -69,13 +76,6 @@ def parse_hip_report(xml_text: str, platform: str) -> dict[str, Any] | None:
         "categories": categories,
         "custom_checks": _parse_custom_checks(root),
     }
-
-
-def _text_or_none(elem: ET.Element | None) -> str | None:
-    if elem is None or elem.text is None:
-        return None
-    text = elem.text.strip()
-    return text or None
 
 
 # ── host-info ────────────────────────────────────────────────────────────────
@@ -121,6 +121,8 @@ def _parse_category(entry: ET.Element) -> dict[str, Any]:
 
 def _parse_product(product_info: ET.Element) -> dict[str, Any]:
     prod = product_info.find("Prod")
+    # UNREACHED: every ProductInfo in both fixtures has a Prod child; the
+    # `prod is None` fallback below is defensive only.
     attrib = prod.attrib if prod is not None else {}
 
     product: dict[str, Any] = {
@@ -132,9 +134,23 @@ def _parse_product(product_info: ET.Element) -> dict[str, Any]:
         "attributes": {},
     }
 
-    # Every ProductInfo child other than Prod goes verbatim into attributes,
-    # keyed by its own tag -- this is what makes unknown fields (and unknown
-    # categories, via _parse_category above) survive into the model.
+    # Any other Prod attribute (e.g. engver, prodType, osType -- real,
+    # populated fields on the anti-malware/EDR products in both platforms'
+    # fixtures) passes through into attributes verbatim, keyed by its own
+    # attribute name, so nothing on Prod is silently dropped.
+    for key, value in attrib.items():
+        if key in _PROD_NAMED_ATTRS:
+            continue
+        product["attributes"][key] = value or None
+
+    # Every ProductInfo child other than Prod also goes verbatim into
+    # attributes, keyed by its own tag -- this is what makes unknown fields
+    # (and unknown categories, via _parse_category above) survive into the
+    # model. Assigned after the Prod-attribute loop above so that, if a Prod
+    # attribute name ever collided with a child element's tag, the child
+    # element wins (it carries richer structure) -- no such collision exists
+    # in the current fixtures since Prod attributes are camelCase and child
+    # tags are hyphenated, so this is a guard, not an observed case.
     for child in product_info:
         if child is prod:
             continue

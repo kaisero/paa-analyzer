@@ -14,6 +14,8 @@ from __future__ import annotations
 import xml.etree.ElementTree as ET
 from typing import Any
 
+from paa_analyzer.hip._xml import text_or_none as _text_or_none
+
 _FRAGMENT_START = "<missing-patches>"
 _FRAGMENT_END = "</missing-patches>"
 
@@ -58,10 +60,3 @@ def parse_missing_patches(fragment_text: str) -> list[dict[str, Any]]:
         patch["reboot_required"] = "Action: restart" in (patch["description"] or "")
         patches.append(patch)
     return patches
-
-
-def _text_or_none(elem: ET.Element | None) -> str | None:
-    if elem is None or elem.text is None:
-        return None
-    text = elem.text.strip()
-    return text or None
