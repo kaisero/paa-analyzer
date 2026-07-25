@@ -399,8 +399,8 @@
 						<entry name="192.0.2.1"/>
 					</ip-address>
 					<ipv6-address>
-						<entry name="2001:db8::2"/>
-						<entry name="2001:db8::1"/>
+						<entry name="fe80::1"/>
+						<entry name="fd00::1"/>
 					</ipv6-address>
 				</entry>
 				<entry name="vmenet0">
@@ -411,21 +411,21 @@
 					<description>utun3</description>
 					<mac-address></mac-address>
 					<ipv6-address>
-						<entry name="2001:db8::3"/>
+						<entry name="fe80::2"/>
 					</ipv6-address>
 				</entry>
 				<entry name="utun2">
 					<description>utun2</description>
 					<mac-address></mac-address>
 					<ipv6-address>
-						<entry name="2001:db8::4"/>
+						<entry name="fe80::3"/>
 					</ipv6-address>
 				</entry>
 				<entry name="utun1">
 					<description>utun1</description>
 					<mac-address></mac-address>
 					<ipv6-address>
-						<entry name="2001:db8::5"/>
+						<entry name="fe80::4"/>
 					</ipv6-address>
 				</entry>
 				<entry name="en6">
@@ -436,7 +436,7 @@
 					<description>llw0</description>
 					<mac-address>00:00:5e:00:53:04</mac-address>
 					<ipv6-address>
-						<entry name="2001:db8::6"/>
+						<entry name="fe80::5"/>
 					</ipv6-address>
 				</entry>
 				<entry name="bridge0">
@@ -455,7 +455,7 @@
 					<description>awdl0</description>
 					<mac-address>00:00:5e:00:53:04</mac-address>
 					<ipv6-address>
-						<entry name="2001:db8::6"/>
+						<entry name="fe80::5"/>
 					</ipv6-address>
 				</entry>
 				<entry name="en5">
@@ -473,7 +473,7 @@
 						<entry name="192.0.2.2"/>
 					</ip-address>
 					<ipv6-address>
-						<entry name="2001:db8::7"/>
+						<entry name="fe80::6"/>
 					</ipv6-address>
 				</entry>
 				<entry name="anpi1">
@@ -500,7 +500,7 @@
 					<description>utun0</description>
 					<mac-address></mac-address>
 					<ipv6-address>
-						<entry name="2001:db8::8"/>
+						<entry name="fe80::7"/>
 					</ipv6-address>
 				</entry>
 				<entry name="stf0">
@@ -515,11 +515,11 @@
 					<description>lo0</description>
 					<mac-address></mac-address>
 					<ip-address>
-						<entry name="192.0.2.3"/>
+						<entry name="127.0.0.1"/>
 					</ip-address>
 					<ipv6-address>
-						<entry name="2001:db8::a"/>
-						<entry name="2001:db8::9"/>
+						<entry name="::1"/>
+						<entry name="fe80::8"/>
 					</ipv6-address>
 				</entry>
 			</network-interface>

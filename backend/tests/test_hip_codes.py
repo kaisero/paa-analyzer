@@ -35,13 +35,32 @@ class TestErrorExplanation:
 
 
 class TestMethodQuery:
-    """method_query: OESIS method ids observed in the HIP fixtures."""
+    """method_query: OESIS method ids observed in the HIP fixtures.
+
+    Grounded in the fixtures' Category/Method pairing (see fixtures'
+    ``Category: N, Method: M`` OPSWAT error lines and codes.py's comment):
+    ``Category: 5, Method: 1001``, ``Category: 5, Method: 1004``,
+    ``Category: 2, Method: 1008``, ``Category: 12, Method: 1013``.
+    """
 
     @pytest.mark.parametrize("method_id", [1001, 1004, 1008, 1013])
     def test_known_methods_return_a_non_empty_string(self, method_id):
         description = codes.method_query(method_id)
         assert isinstance(description, str)
         assert description
+
+    @pytest.mark.parametrize("method_id", [1001, 1004])
+    def test_category_5_methods_mention_antivirus(self, method_id):
+        """Category: 5, Method: 1001 / 1004 -- CollectComplianceDataForAV."""
+        assert "antivirus" in codes.method_query(method_id).lower()
+
+    def test_method_1008_mentions_backup(self):
+        """Category: 2, Method: 1008 -- CollectComplianceDataForDLP."""
+        assert "backup" in codes.method_query(1008).lower()
+
+    def test_method_1013_mentions_patch(self):
+        """Category: 12, Method: 1013 -- GetMissingPatchesForThisProduct."""
+        assert "patch" in codes.method_query(1013).lower()
 
     def test_unknown_method_returns_none(self):
         assert codes.method_query(9999) is None

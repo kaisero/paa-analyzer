@@ -93,7 +93,10 @@ def pair_cycles(
         best_delta: float | None = None
         if mp_ts is not None:
             for idx in sorted(unclaimed):
-                delta = abs(compliance_cycles[idx]["start_ts"] - mp_ts)  # type: ignore[operator]
+                compliance_ts = compliance_cycles[idx]["start_ts"]
+                if compliance_ts is None:
+                    continue
+                delta = abs(compliance_ts - mp_ts)
                 if delta <= tolerance_s and (best_delta is None or delta < best_delta):
                     best_delta = delta
                     best_idx = idx

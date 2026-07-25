@@ -370,56 +370,56 @@
 			<os-vendor>Microsoft</os-vendor>
 			<domain>example.com</domain>
 			<host-name>testhost</host-name>
-			<host-id>00000000-0000-0000-0000-000000000001</host-id>
+			<host-id>00000000-0000-0000-0000-000000000002</host-id>
 			<network-interface>
-				<entry name="{00000000-0000-0000-0000-000000000002}">
+				<entry name="{00000000-0000-0000-0000-000000000003}">
 					<description>PA Virtual Ethernet Adapter Secure</description>
 					<mac-address>00-00-5E-00-53-01</mac-address>
 					<ip-address>
 						<entry name="192.0.2.1"/>
 					</ip-address>
 					<ipv6-address>
-						<entry name="2001:db8::1"/>
+						<entry name="fe80::1"/>
 					</ipv6-address>
 				</entry>
-				<entry name="{00000000-0000-0000-0000-000000000003}">
+				<entry name="{00000000-0000-0000-0000-000000000004}">
 					<description>Intel(R) Wi-Fi 7 BE201 320MHz #4</description>
 					<mac-address>00-00-5E-00-53-02</mac-address>
+					<ip-address>
+						<entry name="169.254.1.1"/>
+					</ip-address>
+					<ipv6-address>
+						<entry name="fe80::2"/>
+					</ipv6-address>
+				</entry>
+				<entry name="{00000000-0000-0000-0000-000000000005}">
+					<description>Intel(R) Wi-Fi 7 BE201 320MHz</description>
+					<mac-address>00-00-5E-00-53-03</mac-address>
 					<ip-address>
 						<entry name="192.0.2.2"/>
 					</ip-address>
 					<ipv6-address>
-						<entry name="2001:db8::2"/>
-					</ipv6-address>
-				</entry>
-				<entry name="{00000000-0000-0000-0000-000000000004}">
-					<description>Intel(R) Wi-Fi 7 BE201 320MHz</description>
-					<mac-address>00-00-5E-00-53-03</mac-address>
-					<ip-address>
-						<entry name="192.0.2.3"/>
-					</ip-address>
-					<ipv6-address>
-						<entry name="2001:db8::3"/>
-					</ipv6-address>
-				</entry>
-				<entry name="{00000000-0000-0000-0000-000000000005}">
-					<description>Intel(R) Wi-Fi 7 BE201 320MHz #5</description>
-					<mac-address>00-00-5E-00-53-04</mac-address>
-					<ip-address>
-						<entry name="192.0.2.4"/>
-					</ip-address>
-					<ipv6-address>
-						<entry name="2001:db8::4"/>
+						<entry name="fe80::3"/>
 					</ipv6-address>
 				</entry>
 				<entry name="{00000000-0000-0000-0000-000000000006}">
+					<description>Intel(R) Wi-Fi 7 BE201 320MHz #5</description>
+					<mac-address>00-00-5E-00-53-04</mac-address>
+					<ip-address>
+						<entry name="169.254.1.2"/>
+					</ip-address>
+					<ipv6-address>
+						<entry name="fe80::4"/>
+					</ipv6-address>
+				</entry>
+				<entry name="{00000000-0000-0000-0000-000000000007}">
 					<description>Software Loopback Interface 1</description>
 					<mac-address></mac-address>
 					<ip-address>
-						<entry name="192.0.2.5"/>
+						<entry name="127.0.0.1"/>
 					</ip-address>
 					<ipv6-address>
-						<entry name="2001:db8::5"/>
+						<entry name="::1"/>
 					</ipv6-address>
 				</entry>
 			</network-interface>

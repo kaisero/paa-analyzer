@@ -135,12 +135,16 @@ class TestPairCycles:
         assert unpaired_mp == [mp_outside]
 
     def test_each_compliance_cycle_takes_at_most_one_mp_cycle(self):
+        """mp is strictly closer to c1 (delta 0.3) than to c2 (delta 1.2), so
+        c1 must claim it -- not just "some cycle claims it" (that would pass
+        for any implementation, including a buggy one that always picks the
+        last candidate)."""
         c1 = {"start_ts": 1000.0, "entries": [], "partial": False}
-        c2 = {"start_ts": 1001.0, "entries": [], "partial": False}
-        mp = {"start_ts": 1000.5, "entries": [], "partial": False}
+        c2 = {"start_ts": 1001.5, "entries": [], "partial": False}
+        mp = {"start_ts": 1000.3, "entries": [], "partial": False}
         pairs, unpaired_mp = pair_cycles([c1, c2], [mp], tolerance_s=5.0)
-        claimed = [p for p in pairs if p[1] is not None]
-        assert len(claimed) == 1
+        assert pairs[0][1] is mp
+        assert pairs[1][1] is None
         assert unpaired_mp == []
 
     def test_no_compliance_cycles_reports_all_mp_as_unpaired(self):

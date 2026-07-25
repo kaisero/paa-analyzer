@@ -22,10 +22,16 @@ _ERROR_EXPLANATIONS: dict[int, str] = {
 }
 
 # ── OESIS method ids ─────────────────────────────────────────────────────────
-# What each method queries, inferred from the OPSWAT category/product context
-# each id is called under in the fixtures (e.g. method 1013 is called from
-# GetMissingPatchesForThisProduct under patch-management; method 1009 is
-# called from CollectComplianceDataForDisks under disk-encryption).
+# The *category/function* each id belongs to is grounded in the fixtures:
+#   Category: 5 (anti-malware),      Method: 1001, 1004 -- CollectComplianceDataForAV
+#   Category: 2 (disk-backup),       Method: 1008       -- CollectComplianceDataForDLP
+#   Category: 12 (patch-management), Method: 1013       -- GetMissingPatchesForThisProduct
+# The *exact wording* below (e.g. distinguishing 1001's "real-time protection"
+# from 1004's "last full scan time") is this author's inference from that
+# context plus general OESIS V4 API knowledge -- it is NOT a quoted line from
+# an OPSWAT/OESIS document; the fixtures never spell out what 1001 vs 1004
+# individually query. Treat the wording as best-effort description, not a
+# verified fact, and revisit if official OESIS method documentation surfaces.
 _METHOD_QUERIES: dict[int, str] = {
     1001: "Antivirus real-time protection status.",
     1004: "Antivirus last full scan time.",
