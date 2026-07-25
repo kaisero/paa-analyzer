@@ -36,7 +36,7 @@ const columns = [
     key: 'enabled',
     width: 72,
     render: (v: boolean) => (
-      <span style={{ color: v ? 'var(--green)' : 'var(--text3)' }}>
+      <span style={{ color: v ? 'var(--ok)' : 'var(--text-dim)' }}>
         {v ? '\u2713' : '\u2717'}
       </span>
     ),
@@ -47,7 +47,7 @@ const columns = [
     key: 'active',
     width: 64,
     render: (v: boolean) => (
-      <span style={{ color: v ? 'var(--green)' : 'var(--text3)' }}>
+      <span style={{ color: v ? 'var(--ok)' : 'var(--text-dim)' }}>
         {v ? '\u2713' : '\u2717'}
       </span>
     ),
@@ -101,7 +101,7 @@ const columns = [
 
 export function SystemExtensionsTab({ entry, viewMode }: Props) {
   if (!entry) {
-    return <div style={{ color: 'var(--text3)', fontSize: 12, padding: 16 }}>No system extensions data available.</div>;
+    return <div style={{ color: 'var(--text-dim)', fontSize: 12, padding: 16 }}>No system extensions data available.</div>;
   }
 
   if (viewMode !== 'Table') {

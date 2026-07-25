@@ -62,12 +62,12 @@ const mono = { fontFamily: '"JetBrains Mono", monospace', fontSize: 11 };
 const macColumns = [
   {
     title: 'Destination', dataIndex: 'destination', key: 'destination',
-    render: (v: string) => <span style={{ ...mono, fontWeight: v === 'default' ? 600 : 400, color: v === 'default' ? 'var(--blue)' : undefined }}>{v}</span>,
+    render: (v: string) => <span style={{ ...mono, fontWeight: v === 'default' ? 600 : 400, color: v === 'default' ? 'var(--info)' : undefined }}>{v}</span>,
   },
   { title: 'Gateway', dataIndex: 'gateway', key: 'gateway', render: (v: string) => <span style={mono}>{v}</span> },
   { title: 'Flags', dataIndex: 'flags', key: 'flags', width: 100, render: (v: string) => <FlagsCell flags={v} /> },
   { title: 'Interface', dataIndex: 'netif', key: 'netif', width: 100, render: (v: string) => <span style={mono}>{v}</span> },
-  { title: 'Expire', dataIndex: 'expire', key: 'expire', width: 80, render: (v: string | null) => <span style={{ ...mono, color: 'var(--text3)' }}>{v ?? '--'}</span> },
+  { title: 'Expire', dataIndex: 'expire', key: 'expire', width: 80, render: (v: string | null) => <span style={{ ...mono, color: 'var(--text-dim)' }}>{v ?? '--'}</span> },
 ];
 
 /** Convert dotted netmask to CIDR prefix length (e.g. "255.255.255.0" → 24). */
@@ -84,7 +84,7 @@ const winIpv4Columns = [
       const cidr = record.netmask ? netmaskToCidr(record.netmask) : null;
       const display = cidr !== null ? `${v}/${cidr}` : v;
       const isDefault = v === '0.0.0.0';
-      return <span style={{ ...mono, fontWeight: isDefault ? 600 : 400, color: isDefault ? 'var(--blue)' : undefined }}>{display}</span>;
+      return <span style={{ ...mono, fontWeight: isDefault ? 600 : 400, color: isDefault ? 'var(--info)' : undefined }}>{display}</span>;
     },
   },
   { title: 'Gateway', dataIndex: 'gateway', key: 'gateway', render: (v: string) => <span style={mono}>{v}</span> },
@@ -95,7 +95,7 @@ const winIpv4Columns = [
 const winIpv6Columns = [
   {
     title: 'Destination', dataIndex: 'destination', key: 'destination',
-    render: (v: string) => <span style={{ ...mono, fontWeight: v === '::/0' ? 600 : 400, color: v === '::/0' ? 'var(--blue)' : undefined }}>{v}</span>,
+    render: (v: string) => <span style={{ ...mono, fontWeight: v === '::/0' ? 600 : 400, color: v === '::/0' ? 'var(--info)' : undefined }}>{v}</span>,
   },
   { title: 'Gateway', dataIndex: 'gateway', key: 'gateway', render: (v: string) => <span style={mono}>{v}</span> },
   { title: 'Interface', dataIndex: 'interface', key: 'interface', render: (v: string) => <span style={mono}>{v}</span> },
@@ -106,7 +106,7 @@ export function RoutingTableTab({ entry, viewMode }: Props) {
   const [family, setFamily] = useState<'IPv4' | 'IPv6'>('IPv4');
 
   if (!entry) {
-    return <div style={{ color: 'var(--text3)', fontSize: 12, padding: 16 }}>No routing data available.</div>;
+    return <div style={{ color: 'var(--text-dim)', fontSize: 12, padding: 16 }}>No routing data available.</div>;
   }
 
   if (viewMode !== 'Table') {

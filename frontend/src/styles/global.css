@@ -1,26 +1,72 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-  --bg: #0a0e14;
-  --surface: #111820;
-  --elevated: #1a2332;
-  --hover: #1e2a3a;
-  --border: #1e2a3a;
-  --focus: #00c8e5;
-  --text: #e6edf3;
-  --text2: #8b949e;
-  --text3: #565e67;
-  --blue: #00c8e5;
-  --orange: #fa582d;
-  --green: #00cc66;
-  --yellow: #ffcb06;
-  --red: #f85149;
+  --accent: #FA582D;
+  --accent-hover: #FF6E45;
+  --accent-dim: rgba(250, 88, 45, 0.12);
+  --accent-border: rgba(250, 88, 45, 0.45);
+  --bg: #0C0F14;
+  --surface: #131920;
+  --elevated: #1C2535;
+  --border: #283040;
+  --border-soft: #1E2632;
+  --text: #E8EEF4;
+  --text-sec: #8FA4BC;
+  --text-dim: #5C6E84;
+  --row-alt: rgba(255, 255, 255, 0.025);
+  --row-hover: rgba(250, 88, 45, 0.06);
+  --err: #F0564A;
+  --err-bg: rgba(240, 86, 74, 0.15);
+  --err-border: rgba(240, 86, 74, 0.40);
+  --warn: #E8A33D;
+  --warn-bg: rgba(232, 163, 61, 0.14);
+  --warn-border: rgba(232, 163, 61, 0.40);
+  --info: #4D9FDC;
+  --info-bg: rgba(77, 159, 220, 0.13);
+  --info-border: rgba(77, 159, 220, 0.38);
+  --dbg: #8FA4BC;
+  --dbg-bg: rgba(143, 164, 188, 0.10);
+  --dbg-border: rgba(143, 164, 188, 0.32);
+  --ok: #3DBE7B;
+  --ok-bg: rgba(61, 190, 123, 0.14);
+  --scroll-thumb: #2C3648;
+  --sans: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+}
+
+[data-theme="light"] {
+  --bg: #F0F4F8;
+  --surface: #FFFFFF;
+  --elevated: #E8EEF4;
+  --border: #CBD5E1;
+  --border-soft: #DAE2EC;
+  --text: #0F172A;
+  --text-sec: #526071;
+  --text-dim: #7C8A9C;
+  --row-alt: rgba(15, 23, 42, 0.03);
+  --row-hover: rgba(250, 88, 45, 0.07);
+  --err: #C4372C;
+  --err-bg: rgba(196, 55, 44, 0.10);
+  --err-border: rgba(196, 55, 44, 0.35);
+  --warn: #A66E12;
+  --warn-bg: rgba(166, 110, 18, 0.10);
+  --warn-border: rgba(166, 110, 18, 0.35);
+  --info: #1D6FAE;
+  --info-bg: rgba(29, 111, 174, 0.10);
+  --info-border: rgba(29, 111, 174, 0.32);
+  --dbg: #5C6E84;
+  --dbg-bg: rgba(92, 110, 132, 0.10);
+  --dbg-border: rgba(92, 110, 132, 0.30);
+  --ok: #1F8A55;
+  --ok-bg: rgba(31, 138, 85, 0.12);
+  --scroll-thumb: #B7C3D2;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--sans);
   background: var(--bg);
   color: var(--text);
   font-size: 14px;
@@ -29,18 +75,26 @@ body {
 /* Scrollbar */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 0; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+/* Global antd overrides */
+#root { border-left: 3px solid var(--accent); box-sizing: border-box; }
+.ant-menu-item-selected::after { display: none !important; }
+.ant-menu-inline .ant-menu-item-selected { border-left: 3px solid var(--accent) !important; padding-inline-start: 9px !important; }
+.ant-tag { text-transform: uppercase !important; font-weight: 600 !important; letter-spacing: 0.06em !important; }
+.ant-table-row-expand-icon-cell { width: 0 !important; padding: 0 !important; display: none !important; }
+.ant-table-expand-icon-col { width: 0 !important; padding: 0 !important; }
 
 /* Upload page animations */
 @keyframes upload-glow {
   0%, 100% { box-shadow: 0 0 0 1px var(--border); }
-  50% { box-shadow: 0 0 24px rgba(0, 200, 229, 0.12), 0 0 0 1px rgba(0, 200, 229, 0.4); }
+  50% { box-shadow: 0 0 24px var(--accent-dim), 0 0 0 1px var(--accent-border); }
 }
 
 @keyframes progress-glow {
-  0%, 100% { box-shadow: 0 0 8px rgba(0, 200, 229, 0.3); }
-  50% { box-shadow: 0 0 20px rgba(0, 200, 229, 0.5); }
+  0%, 100% { box-shadow: 0 0 8px var(--accent-dim); }
+  50% { box-shadow: 0 0 20px rgba(250, 88, 45, 0.3); }
 }
 
 @keyframes fade-in {
@@ -50,9 +104,4 @@ body {
 
 .animate-fade-in {
   animation: fade-in 0.4s ease-out;
-}
-
-/* Ant Design overrides not handled by ConfigProvider */
-.ant-layout-sider {
-  background: var(--surface) !important;
 }

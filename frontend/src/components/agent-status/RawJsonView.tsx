@@ -10,7 +10,7 @@ const preStyle = {
   margin: 0,
   padding: 16,
   whiteSpace: 'pre-wrap' as const,
-  color: 'var(--text2)',
+  color: 'var(--text-sec)',
   fontFamily: '"JetBrains Mono", monospace',
   fontSize: 12,
   background: 'var(--bg)',
@@ -31,7 +31,7 @@ export function RawJsonView({ entry, viewMode }: Props) {
   }, [entry, viewMode]);
 
   if (!entry) {
-    return <div style={{ color: 'var(--text3)', fontSize: 12, padding: 16 }}>No data available.</div>;
+    return <div style={{ color: 'var(--text-dim)', fontSize: 12, padding: 16 }}>No data available.</div>;
   }
 
   if (viewMode === 'Raw') {
@@ -39,7 +39,7 @@ export function RawJsonView({ entry, viewMode }: Props) {
       return <pre style={preStyle}>{entry.raw_text}</pre>;
     }
     return (
-      <div style={{ color: 'var(--text3)', fontSize: 11, fontStyle: 'italic', padding: 16 }}>
+      <div style={{ color: 'var(--text-dim)', fontSize: 11, fontStyle: 'italic', padding: 16 }}>
         Raw text not available — re-upload bundle to enable
       </div>
     );

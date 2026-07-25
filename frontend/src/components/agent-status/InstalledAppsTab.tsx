@@ -11,7 +11,7 @@ const mono = { fontFamily: '"JetBrains Mono", monospace', fontSize: 11 };
 
 export function InstalledAppsTab({ entry, viewMode }: Props) {
   if (!entry) {
-    return <div style={{ color: 'var(--text3)', fontSize: 12, padding: 16 }}>No application data available.</div>;
+    return <div style={{ color: 'var(--text-dim)', fontSize: 12, padding: 16 }}>No application data available.</div>;
   }
 
   if (viewMode !== 'Table') {

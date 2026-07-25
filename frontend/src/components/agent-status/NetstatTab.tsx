@@ -68,7 +68,7 @@ const columns = [
     key: 'process',
     render: (v: string) => {
       const isPalo = v.toLowerCase().includes('pasrv') || v.toLowerCase().includes('palo');
-      return <span style={{ ...mono, fontWeight: isPalo ? 600 : 400, color: isPalo ? 'var(--blue)' : undefined }}>{v || '--'}</span>;
+      return <span style={{ ...mono, fontWeight: isPalo ? 600 : 400, color: isPalo ? 'var(--info)' : undefined }}>{v || '--'}</span>;
     },
   },
 ];
@@ -90,7 +90,7 @@ export function NetstatTab({ entry, viewMode }: Props) {
   }, [entry, search]);
 
   if (!entry) {
-    return <div style={{ color: 'var(--text3)', fontSize: 12, padding: 16 }}>No network connection data available.</div>;
+    return <div style={{ color: 'var(--text-dim)', fontSize: 12, padding: 16 }}>No network connection data available.</div>;
   }
 
   if (viewMode !== 'Table') {
@@ -101,7 +101,7 @@ export function NetstatTab({ entry, viewMode }: Props) {
     <div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
         <Input
-          prefix={<SearchOutlined style={{ color: 'var(--text3)' }} />}
+          prefix={<SearchOutlined style={{ color: 'var(--text-dim)' }} />}
           placeholder="Filter by address or process..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -109,7 +109,7 @@ export function NetstatTab({ entry, viewMode }: Props) {
           size="small"
           style={{ maxWidth: 320 }}
         />
-        <span style={{ fontSize: 11, color: 'var(--text3)' }}>
+        <span style={{ fontSize: 11, color: 'var(--text-dim)' }}>
           {filtered.length} connections
         </span>
       </div>

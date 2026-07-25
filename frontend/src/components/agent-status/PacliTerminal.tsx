@@ -78,13 +78,13 @@ export function PacliTerminal() {
     if (viewMode === 'Raw') {
       if (data.raw_text) {
         return (
-          <pre style={{ margin: '4px 0 16px 0', whiteSpace: 'pre-wrap', color: 'var(--text2)', fontSize: 12 }}>
+          <pre style={{ margin: '4px 0 16px 0', whiteSpace: 'pre-wrap', color: 'var(--text-sec)', fontSize: 12 }}>
             {data.raw_text}
           </pre>
         );
       }
       return (
-        <div style={{ margin: '4px 0 16px 0', color: 'var(--text3)', fontSize: 11, fontStyle: 'italic' }}>
+        <div style={{ margin: '4px 0 16px 0', color: 'var(--text-dim)', fontSize: 11, fontStyle: 'italic' }}>
           Raw text not available — re-upload bundle to enable
         </div>
       );
@@ -92,7 +92,7 @@ export function PacliTerminal() {
 
     // JSON mode
     return (
-      <pre style={{ margin: '4px 0 16px 0', whiteSpace: 'pre-wrap', color: 'var(--text2)', fontSize: 12 }}>
+      <pre style={{ margin: '4px 0 16px 0', whiteSpace: 'pre-wrap', color: 'var(--text-sec)', fontSize: 12 }}>
         {JSON.stringify(data.data, null, 2)}
       </pre>
     );
@@ -118,7 +118,7 @@ export function PacliTerminal() {
         style={{
           background: 'var(--bg)',
           border: '1px solid var(--border)',
-          borderRadius: 8,
+          borderRadius: 0,
           padding: 16,
           fontFamily: '"JetBrains Mono", monospace',
           fontSize: 12,
@@ -130,7 +130,7 @@ export function PacliTerminal() {
       >
         {/* Welcome message */}
         {history.length === 0 && (
-          <div style={{ color: 'var(--text3)', marginBottom: 8 }}>
+          <div style={{ color: 'var(--text-dim)', marginBottom: 8 }}>
             Type a pacli command to view its output. Use autocomplete to browse available commands.
           </div>
         )}
@@ -140,8 +140,8 @@ export function PacliTerminal() {
           const isActive = idx === history.length - 1 && entry.stateKey === activeEntry?.stateKey;
           return (
             <div key={idx}>
-              <div style={{ color: 'var(--green)' }}>
-                <span style={{ color: 'var(--blue)', marginRight: 8 }}>$</span>
+              <div style={{ color: 'var(--ok)' }}>
+                <span style={{ color: 'var(--accent)', marginRight: 8 }}>$</span>
                 {entry.command}
               </div>
               {renderOutput(isActive)}
@@ -151,7 +151,7 @@ export function PacliTerminal() {
 
         {/* Input line */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ color: 'var(--blue)', flexShrink: 0 }}>$</span>
+          <span style={{ color: 'var(--accent)', flexShrink: 0 }}>$</span>
           <AutoComplete
             value={input}
             onChange={setInput}

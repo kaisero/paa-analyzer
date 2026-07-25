@@ -41,7 +41,7 @@ function formatValue(val: unknown): string {
 
 export function IpconfigTab({ entry, viewMode }: Props) {
   if (!entry) {
-    return <div style={{ color: 'var(--text3)', fontSize: 12, padding: 16 }}>No network configuration available.</div>;
+    return <div style={{ color: 'var(--text-dim)', fontSize: 12, padding: 16 }}>No network configuration available.</div>;
   }
 
   if (viewMode !== 'Table') {
@@ -62,7 +62,7 @@ export function IpconfigTab({ entry, viewMode }: Props) {
           styles={{ header: { borderBottom: '1px solid var(--border)', color: 'var(--text)', fontSize: 12 }, body: { padding: '8px 16px' } }}
         >
           <Descriptions column={1} size="small" colon={false}
-            labelStyle={{ color: 'var(--text3)', width: 160, fontSize: 12 }}
+            labelStyle={{ color: 'var(--text-dim)', width: 160, fontSize: 12 }}
             contentStyle={{ color: 'var(--text)', fontFamily: '"JetBrains Mono", monospace', fontSize: 12 }}
           >
             {Object.entries(data.global).map(([key, val]) => (
@@ -84,7 +84,7 @@ export function IpconfigTab({ entry, viewMode }: Props) {
           styles={{ header: { borderBottom: '1px solid var(--border)', color: 'var(--text)', fontSize: 12, fontFamily: '"JetBrains Mono", monospace' }, body: { padding: '8px 16px' } }}
         >
           <Descriptions column={1} size="small" colon={false}
-            labelStyle={{ color: 'var(--text3)', width: 160, fontSize: 12 }}
+            labelStyle={{ color: 'var(--text-dim)', width: 160, fontSize: 12 }}
             contentStyle={{ color: 'var(--text)', fontFamily: '"JetBrains Mono", monospace', fontSize: 12 }}
           >
             {DISPLAY_FIELDS.map((field) => {

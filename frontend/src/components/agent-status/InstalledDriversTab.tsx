@@ -38,7 +38,7 @@ const columns = [
     width: 140,
     render: (v: string) => {
       const isPalo = v.toLowerCase().includes('pa') && v.toLowerCase().includes('srv');
-      return <span style={{ ...mono, fontWeight: isPalo ? 600 : 400, color: isPalo ? 'var(--blue)' : undefined }}>{v}</span>;
+      return <span style={{ ...mono, fontWeight: isPalo ? 600 : 400, color: isPalo ? 'var(--info)' : undefined }}>{v}</span>;
     },
     sorter: (a: Driver, b: Driver) => a.module.localeCompare(b.module),
   },
@@ -90,7 +90,7 @@ export function InstalledDriversTab({ entry, viewMode }: Props) {
   }, [entry, search]);
 
   if (!entry) {
-    return <div style={{ color: 'var(--text3)', fontSize: 12, padding: 16 }}>No driver data available.</div>;
+    return <div style={{ color: 'var(--text-dim)', fontSize: 12, padding: 16 }}>No driver data available.</div>;
   }
 
   if (viewMode !== 'Table') {
@@ -101,7 +101,7 @@ export function InstalledDriversTab({ entry, viewMode }: Props) {
     <div>
       <div style={{ marginBottom: 12 }}>
         <Input
-          prefix={<SearchOutlined style={{ color: 'var(--text3)' }} />}
+          prefix={<SearchOutlined style={{ color: 'var(--text-dim)' }} />}
           placeholder="Filter by module or name..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}

@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Layout, Tabs, Typography } from 'antd';
-import { APP_NAME, APP_VERSION } from '../../constants';
+import { Tabs, Button } from 'antd';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface Props {
   sessionId: string;
@@ -15,6 +15,7 @@ const tabItems = [
 export function TopNav({ sessionId }: Props) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isDark, toggle } = useTheme();
 
   // Determine active tab from current path
   const path = location.pathname;
@@ -28,37 +29,60 @@ export function TopNav({ sessionId }: Props) {
   };
 
   return (
-    <Layout.Header
+    <header
       style={{
         display: 'flex',
-        alignItems: 'center',
-        gap: 0,
-        padding: '0 16px',
-        height: 44,
+        flexDirection: 'row',
+        alignItems: 'stretch',
+        height: 52,
         background: 'var(--surface)',
         borderBottom: '1px solid var(--border)',
         flexShrink: 0,
-        lineHeight: '44px',
       }}
     >
       {/* Brand */}
       <div
         onClick={() => navigate('/')}
         style={{
-          fontSize: 13,
-          fontWeight: 700,
-          color: 'var(--text)',
-          marginRight: 24,
-          cursor: 'pointer',
-          letterSpacing: '-0.01em',
           display: 'flex',
           alignItems: 'center',
-          gap: 8,
+          gap: 10,
+          padding: '0 20px 0 17px',
+          borderRight: '1px solid var(--border)',
+          cursor: 'pointer',
         }}
       >
-        <span style={{ color: 'var(--orange)', fontSize: 16 }}>{'\u25C6'}</span>
-        {APP_NAME}
-        <span style={{ fontSize: 10, fontWeight: 400, color: 'var(--text3)', marginLeft: 4 }}>v{APP_VERSION}</span>
+        <div
+          style={{
+            width: 26,
+            height: 26,
+            background: 'var(--accent)',
+            color: 'var(--surface)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontFamily: 'var(--mono)',
+            fontWeight: 700,
+            fontSize: 11,
+          }}
+        >
+          PA
+        </div>
+        <div>
+          <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.06em' }}>
+            PAA <span style={{ color: 'var(--accent)' }}>ANALYZER</span>
+          </div>
+          <div
+            style={{
+              fontSize: 9,
+              color: 'var(--text-dim)',
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+            }}
+          >
+            Prisma Access Agent Diagnostics
+          </div>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -66,30 +90,32 @@ export function TopNav({ sessionId }: Props) {
         activeKey={activeKey}
         onChange={handleTabChange}
         items={tabItems}
-        size="small"
-        style={{ marginBottom: 0, flex: 1 }}
-        tabBarStyle={{
-          margin: 0,
-          height: 44,
-          borderBottom: 'none',
-        }}
+        type="line"
+        style={{ flex: 1, marginBottom: 0 }}
+        tabBarStyle={{ margin: 0, border: 'none', height: 52, background: 'transparent' }}
       />
 
-      {/* Session info */}
-      <Typography.Text
-        onClick={() => navigate('/')}
-        style={{
-          fontSize: 11,
-          color: 'var(--text3)',
-          cursor: 'pointer',
-          padding: '4px 8px',
-          borderRadius: 4,
-          flexShrink: 0,
-        }}
-        title="Switch session"
-      >
-        Session {sessionId}
-      </Typography.Text>
-    </Layout.Header>
+      {/* Right controls */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, paddingRight: 16 }}>
+        <span
+          onClick={() => navigate('/')}
+          title="Switch session"
+          style={{
+            fontFamily: 'var(--mono)',
+            fontSize: 11,
+            color: 'var(--text-sec)',
+            border: '1px solid var(--border)',
+            background: 'var(--elevated)',
+            padding: '4px 10px',
+            cursor: 'pointer',
+          }}
+        >
+          SESSION: <b style={{ color: 'var(--text)' }}>{sessionId}</b>
+        </span>
+        <Button size="small" onClick={toggle}>
+          {isDark ? 'Light Mode' : 'Dark Mode'}
+        </Button>
+      </div>
+    </header>
   );
 }

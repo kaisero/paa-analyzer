@@ -5,6 +5,7 @@ import { UploadPage } from './components/upload/UploadPage';
 import { LogViewer } from './components/log-viewer/LogViewer';
 import { DashboardPage } from './pages/DashboardPage';
 import { AgentStatusPage } from './pages/AgentStatusPage';
+import { AntdProto } from './pages/AntdProto';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,6 +24,7 @@ export default function App() {
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="agent-status" element={<AgentStatusPage />} />
           </Route>
+          <Route path="/proto" element={<AntdProto />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>

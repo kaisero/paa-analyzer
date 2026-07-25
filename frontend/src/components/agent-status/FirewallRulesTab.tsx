@@ -37,7 +37,7 @@ const columns = [
     key: 'enabled',
     width: 72,
     render: (v: boolean) => (
-      <span style={{ color: v ? 'var(--green)' : 'var(--text3)' }}>
+      <span style={{ color: v ? 'var(--ok)' : 'var(--text-dim)' }}>
         {v ? '\u2713' : '\u2717'}
       </span>
     ),
@@ -95,7 +95,7 @@ export function FirewallRulesTab({ entry, viewMode }: Props) {
   }, [entry, search]);
 
   if (!entry) {
-    return <div style={{ color: 'var(--text3)', fontSize: 12, padding: 16 }}>No firewall rules available.</div>;
+    return <div style={{ color: 'var(--text-dim)', fontSize: 12, padding: 16 }}>No firewall rules available.</div>;
   }
 
   if (viewMode !== 'Table') {
@@ -106,7 +106,7 @@ export function FirewallRulesTab({ entry, viewMode }: Props) {
     <div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
         <Input
-          prefix={<SearchOutlined style={{ color: 'var(--text3)' }} />}
+          prefix={<SearchOutlined style={{ color: 'var(--text-dim)' }} />}
           placeholder="Filter by name..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -114,7 +114,7 @@ export function FirewallRulesTab({ entry, viewMode }: Props) {
           size="small"
           style={{ maxWidth: 320 }}
         />
-        <span style={{ fontSize: 11, color: 'var(--text3)' }}>
+        <span style={{ fontSize: 11, color: 'var(--text-dim)' }}>
           {filtered.length} of {allRules.length} rules
         </span>
       </div>

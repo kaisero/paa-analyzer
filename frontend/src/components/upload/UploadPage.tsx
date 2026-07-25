@@ -48,15 +48,13 @@ export function UploadPage() {
       justifyContent: 'center',
       height: '100vh',
       background: 'var(--bg)',
-      backgroundImage: 'radial-gradient(ellipse at 50% 0%, rgba(0,200,229,0.04) 0%, transparent 60%)',
     }}>
       <div style={{ width: '100%', maxWidth: 520, padding: '0 24px' }} className="animate-fade-in">
 
         {/* Branding */}
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
           <div style={{
-            fontSize: 28, color: 'var(--orange)', marginBottom: 12,
-            filter: 'drop-shadow(0 0 12px rgba(250,88,45,0.3))',
+            fontSize: 28, color: 'var(--accent)', marginBottom: 12,
           }}>
             {'\u25C6'}
           </div>
@@ -66,7 +64,7 @@ export function UploadPage() {
           }}>
             {APP_NAME}
           </h1>
-          <p style={{ fontSize: 13, color: 'var(--text3)' }}>
+          <p style={{ fontSize: 13, color: 'var(--text-dim)' }}>
             Prisma Access Agent Diagnostics
           </p>
         </div>
@@ -81,19 +79,19 @@ export function UploadPage() {
               return false; // prevent default upload
             }}
             style={{
-              borderRadius: 16,
+              borderRadius: 0,
               border: '1px solid var(--border)',
               background: 'var(--surface)',
               padding: '48px 32px',
             }}
           >
             <p className="ant-upload-drag-icon">
-              <InboxOutlined style={{ color: 'var(--blue)', fontSize: 48 }} />
+              <InboxOutlined style={{ color: 'var(--accent)', fontSize: 48 }} />
             </p>
-            <p style={{ fontSize: 14, fontWeight: 500, color: 'var(--text2)', marginBottom: 6 }}>
+            <p style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-sec)', marginBottom: 6 }}>
               Drop a troubleshooting bundle here
             </p>
-            <p style={{ fontSize: 12, color: 'var(--text3)' }}>
+            <p style={{ fontSize: 12, color: 'var(--text-dim)' }}>
               or click to browse &middot; .zip up to 500 MB
             </p>
           </Dragger>
@@ -102,7 +100,7 @@ export function UploadPage() {
         {/* Progress state */}
         {(isUploading || isComplete) && (
           <div style={{
-            borderRadius: 16,
+            borderRadius: 0,
             border: '1px solid var(--border)',
             background: 'var(--surface)',
             padding: '40px 32px',
@@ -115,7 +113,7 @@ export function UploadPage() {
               {isComplete ? 'Parsing complete' : stageLabel(stage)}
             </div>
             <div style={{
-              fontSize: 11, color: 'var(--text3)',
+              fontSize: 11, color: 'var(--text-dim)',
               fontFamily: "'JetBrains Mono', monospace",
               marginBottom: 20,
               overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
@@ -126,12 +124,12 @@ export function UploadPage() {
             <Progress
               percent={progress}
               showInfo={false}
-              strokeColor={isComplete ? 'var(--green)' : 'var(--blue)'}
+              strokeColor={isComplete ? 'var(--ok)' : 'var(--accent)'}
               trailColor="var(--elevated)"
               style={{ marginBottom: 16 }}
             />
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--text3)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--text-dim)' }}>
               <span>{progress}%</span>
               <span>{elapsed}s</span>
             </div>
@@ -180,7 +178,7 @@ export function UploadPage() {
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <div>
                     <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text)' }}>{s.filename}</div>
-                    <div style={{ fontSize: 11, color: 'var(--text3)', marginTop: 2 }}>
+                    <div style={{ fontSize: 11, color: 'var(--text-dim)', marginTop: 2 }}>
                       {s.total_log_sources} sources &middot; {s.total_log_entries.toLocaleString()} entries
                       {s.parse_duration_ms ? ` \u00b7 ${(s.parse_duration_ms / 1000).toFixed(1)}s` : ''}
                     </div>
