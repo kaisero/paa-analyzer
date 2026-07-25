@@ -8,13 +8,13 @@ from pathlib import Path
 
 import pytest
 
-from paa_analyzer.hip.cycles import pair_cycles, split_cycles
-from paa_analyzer.parsers import structured_log
+from paa_analyzer.hip.cycles import Cycle, pair_cycles, split_cycles
+from paa_analyzer.parsers import LogEntry, structured_log
 
 FIXTURES = Path(__file__).parent / "fixtures" / "hip"
 
 
-def _entries(name: str) -> list[dict]:
+def _entries(name: str) -> list[LogEntry]:
     return structured_log((FIXTURES / name).read_text())
 
 
@@ -121,15 +121,15 @@ class TestPairCycles:
         assert unpaired_mp == [mp_cycles[1]]
 
     def test_tolerance_boundary_is_inclusive(self):
-        base = {"start_ts": 1000.0, "entries": [], "partial": False}
-        mp_within = {"start_ts": 1005.0, "entries": [], "partial": False}
+        base: Cycle = {"start_ts": 1000.0, "entries": [], "partial": False}
+        mp_within: Cycle = {"start_ts": 1005.0, "entries": [], "partial": False}
         pairs, unpaired_mp = pair_cycles([base], [mp_within], tolerance_s=5.0)
         assert pairs == [(base, mp_within)]
         assert unpaired_mp == []
 
     def test_just_outside_tolerance_is_unpaired(self):
-        base = {"start_ts": 1000.0, "entries": [], "partial": False}
-        mp_outside = {"start_ts": 1005.001, "entries": [], "partial": False}
+        base: Cycle = {"start_ts": 1000.0, "entries": [], "partial": False}
+        mp_outside: Cycle = {"start_ts": 1005.001, "entries": [], "partial": False}
         pairs, unpaired_mp = pair_cycles([base], [mp_outside], tolerance_s=5.0)
         assert pairs == [(base, None)]
         assert unpaired_mp == [mp_outside]
@@ -139,9 +139,9 @@ class TestPairCycles:
         c1 must claim it -- not just "some cycle claims it" (that would pass
         for any implementation, including a buggy one that always picks the
         last candidate)."""
-        c1 = {"start_ts": 1000.0, "entries": [], "partial": False}
-        c2 = {"start_ts": 1001.5, "entries": [], "partial": False}
-        mp = {"start_ts": 1000.3, "entries": [], "partial": False}
+        c1: Cycle = {"start_ts": 1000.0, "entries": [], "partial": False}
+        c2: Cycle = {"start_ts": 1001.5, "entries": [], "partial": False}
+        mp: Cycle = {"start_ts": 1000.3, "entries": [], "partial": False}
         pairs, unpaired_mp = pair_cycles([c1, c2], [mp], tolerance_s=5.0)
         assert pairs[0][1] is mp
         assert pairs[1][1] is None
