@@ -3,7 +3,7 @@ import { AutoComplete, Segmented, Spin } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useStateKeys, useStateEntry } from '../../api/hooks';
 
-interface HistoryEntry {
+interface ActiveEntry {
   command: string;
   stateKey: string;
 }
@@ -13,8 +13,7 @@ export function PacliTerminal() {
   const { data: keysData } = useStateKeys(sessionId);
 
   const [input, setInput] = useState('');
-  const [history, setHistory] = useState<HistoryEntry[]>([]);
-  const [activeEntry, setActiveEntry] = useState<HistoryEntry | null>(null);
+  const [activeEntry, setActiveEntry] = useState<ActiveEntry | null>(null);
   const [viewMode, setViewMode] = useState<'Raw' | 'JSON'>('Raw');
   const outputRef = useRef<HTMLDivElement>(null);
 
@@ -37,19 +36,17 @@ export function PacliTerminal() {
     activeEntry?.stateKey,
   );
 
-  // Scroll to bottom when new output appears
+  // Scroll to top when a new command is run
   useEffect(() => {
     if (outputRef.current) {
-      outputRef.current.scrollTop = outputRef.current.scrollHeight;
+      outputRef.current.scrollTop = 0;
     }
-  }, [history, stateData]);
+  }, [activeEntry]);
 
   const handleSelect = useCallback((value: string) => {
     const match = pacliCommands.find((c) => c.command === value);
     if (match) {
-      const entry = { command: match.command, stateKey: match.stateKey };
-      setHistory((prev) => [...prev, entry]);
-      setActiveEntry(entry);
+      setActiveEntry({ command: match.command, stateKey: match.stateKey });
       setInput('');
     }
   }, [pacliCommands]);
@@ -67,12 +64,12 @@ export function PacliTerminal() {
     }
   }, [input, pacliCommands, handleSelect]);
 
-  const renderOutput = (isActive: boolean) => {
-    if (isActive && stateLoading) {
+  const renderOutput = () => {
+    if (stateLoading) {
       return <Spin size="small" style={{ marginLeft: 8 }} />;
     }
 
-    const data = isActive ? stateData?.data : undefined;
+    const data = stateData?.data;
     if (!data) return null;
 
     if (viewMode === 'Raw') {
@@ -129,25 +126,22 @@ export function PacliTerminal() {
         }}
       >
         {/* Welcome message */}
-        {history.length === 0 && (
+        {!activeEntry && (
           <div style={{ color: 'var(--text-dim)', marginBottom: 8 }}>
             Type a pacli command to view its output. Use autocomplete to browse available commands.
           </div>
         )}
 
-        {/* Command history */}
-        {history.map((entry, idx) => {
-          const isActive = idx === history.length - 1 && entry.stateKey === activeEntry?.stateKey;
-          return (
-            <div key={idx}>
-              <div style={{ color: 'var(--ok)' }}>
-                <span style={{ color: 'var(--accent)', marginRight: 8 }}>$</span>
-                {entry.command}
-              </div>
-              {renderOutput(isActive)}
+        {/* Current command + output */}
+        {activeEntry && (
+          <div>
+            <div style={{ color: 'var(--ok)', marginBottom: 4 }}>
+              <span style={{ color: 'var(--accent)', marginRight: 8 }}>$</span>
+              {activeEntry.command}
             </div>
-          );
-        })}
+            {renderOutput()}
+          </div>
+        )}
 
         {/* Input line */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

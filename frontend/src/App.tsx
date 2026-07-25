@@ -20,9 +20,10 @@ export default function App() {
         <Routes>
           <Route path="/" element={<UploadPage />} />
           <Route path="/s/:sessionId" element={<AppShell />}>
-            <Route index element={<LogViewer />} />
-            <Route path="dashboard" element={<DashboardPage />} />
+            <Route index element={<Navigate to="agent-status" replace />} />
             <Route path="agent-status" element={<AgentStatusPage />} />
+            <Route path="logs" element={<LogViewer />} />
+            <Route path="dashboard" element={<DashboardPage />} />
           </Route>
           <Route path="/proto" element={<AntdProto />} />
           <Route path="*" element={<Navigate to="/" replace />} />

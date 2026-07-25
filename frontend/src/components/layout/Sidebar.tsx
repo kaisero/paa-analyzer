@@ -27,6 +27,10 @@ export function Sidebar({
   const sidebarRef = useRef<HTMLDivElement>(null);
   const resizing = useRef(false);
 
+  useEffect(() => {
+    document.documentElement.style.setProperty('--sidebar-width', `${width}px`);
+  }, [width]);
+
   const onResizeStart = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();

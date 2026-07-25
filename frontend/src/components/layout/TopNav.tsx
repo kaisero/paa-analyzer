@@ -7,8 +7,7 @@ interface Props {
 }
 
 const tabItems = [
-  { key: 'dashboard', label: 'Dashboard' },
-  { key: 'agent-status', label: 'Agent Status' },
+  { key: 'agent-status', label: 'Overview' },
   { key: 'logs', label: 'Log Viewer' },
 ];
 
@@ -19,13 +18,11 @@ export function TopNav({ sessionId }: Props) {
 
   // Determine active tab from current path
   const path = location.pathname;
-  let activeKey = 'logs';
-  if (path.endsWith('/dashboard')) activeKey = 'dashboard';
-  else if (path.endsWith('/agent-status')) activeKey = 'agent-status';
+  let activeKey = 'agent-status';
+  if (path.endsWith('/logs')) activeKey = 'logs';
 
   const handleTabChange = (key: string) => {
-    if (key === 'logs') navigate(`/s/${sessionId}`);
-    else navigate(`/s/${sessionId}/${key}`);
+    navigate(`/s/${sessionId}/${key}`);
   };
 
   return (
@@ -50,6 +47,9 @@ export function TopNav({ sessionId }: Props) {
           padding: '0 20px 0 17px',
           borderRight: '1px solid var(--border)',
           cursor: 'pointer',
+          width: 'var(--sidebar-width, 260px)',
+          flexShrink: 0,
+          boxSizing: 'border-box',
         }}
       >
         <div
@@ -80,7 +80,7 @@ export function TopNav({ sessionId }: Props) {
               textTransform: 'uppercase',
             }}
           >
-            Prisma Access Agent Diagnostics
+            Agent Diagnostics
           </div>
         </div>
       </div>
