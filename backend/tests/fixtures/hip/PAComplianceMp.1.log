@@ -1,0 +1,159 @@
+2026-07-25T16:07:43.507+02:00 <debug> TESTHOST [50607:68117841] Try to parse hip policy: {"collection_hip_data":true,"max_wait_time":20,"certs":[],"default_categories":["host-info","data-loss-prevention","patch-management","firewall","anti-malware","disk-backup","disk-encryption"],"exclusion_categories":[],"custom_check":{"windows":{"registry_key":[{"name":"HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\CloudDomainJoin\\TenantInfo\\00000000-0000-0000-0000-000000000001","member":["DisplayName"]}],"process_list":[]},"mac_os":{"plist":[{"name":"com.jamfsoftware.jamf","member":["jss_url"]}],"process_list":[]}}} 
+2026-07-25T16:07:43.508+02:00 <debug> TESTHOST [50607:68117841] HIP policy parsing is completed
+2026-07-25T16:07:43.508+02:00 <debug> TESTHOST [50607:68117841] HasValidSignature for OPSWAT at path: /Library/Application Support/PaloAltoNetworks/Prisma Access Agent/Data/OPSWAT/libs/libwaapi.dylib
+2026-07-25T16:07:43.758+02:00 <debug> TESTHOST [50607:68117841] Requirement validation successful for OPSWAT at path: /Library/Application Support/PaloAltoNetworks/Prisma Access Agent/Data/OPSWAT/libs/libwaapi.dylib
+2026-07-25T16:07:45.149+02:00 <debug> TESTHOST [50607:68117841] Opswat version "4.3.4222.0" 
+2026-07-25T16:07:45.149+02:00 <debug> TESTHOST [50607:68117841] CollectComplianceDataForPatches
+2026-07-25T16:07:45.288+02:00 <debug> TESTHOST [50607:68117841] Detected patch products {
+    "result" : {
+            "timestamp" : "1784988465",
+            "code" : 0,
+            "method" : 0,
+            "timing" : 138,
+            "detected_products" : [                    
+                    {
+                        "categories" : [
+                                12
+                            ],
+                        "signature" : 100493,
+                        "labels" : {
+                                "pua" : false,
+                                "bloatware" : false,
+                                "toolbar" : false,
+                                "adware" : false
+                            },
+                        "vendor" : {
+                                "name" : "JAMF Software",
+                                "id" : 100093
+                            },
+                        "product" : {
+                                "name" : "Jamf Pro",
+                                "id" : 100432
+                            },
+                        "sig_name" : "Jamf Pro"
+                    },                    
+                    {
+                        "sig_name" : "Microsoft AutoUpdate",
+                        "product" : {
+                                "id" : 100455,
+                                "name" : "Microsoft AutoUpdate"
+                            },
+                        "vendor" : {
+                                "id" : 100090,
+                                "name" : "Microsoft Corporation"
+                            },
+                        "labels" : {
+                                "adware" : false,
+                                "toolbar" : false,
+                                "bloatware" : false,
+                                "pua" : false
+                            },
+                        "signature" : 100516,
+                        "categories" : [
+                                12
+                            ]
+                    },                    
+                    {
+                        "categories" : [
+                                12
+                            ],
+                        "signature" : 100192,
+                        "labels" : {
+                                "pua" : false,
+                                "bloatware" : false,
+                                "toolbar" : false,
+                                "adware" : false
+                            },
+                        "vendor" : {
+                                "name" : "Apple Inc.",
+                                "id" : 100011
+                            },
+                        "product" : {
+                                "name" : "Software Update",
+                                "id" : 100076
+                            },
+                        "sig_name" : "Software Update"
+                    }
+                ]
+        }
+}
+2026-07-25T16:07:45.288+02:00 <debug> TESTHOST [50607:68117841] GetMissingPatchesForThisProduct id 100493 done - query {"input":{"method": 1013, "signature": 100493}}
+2026-07-25T16:07:45.288+02:00 <error> TESTHOST [50607:68117841] GetMissingPatchesForThisProduct: Opswat Error(-12): An error when a method call was made on a component that does not implement it, Category: 12, Method: 1013, OESIS (V4 ver: 4.3.4222.0) 
+2026-07-25T16:07:45.288+02:00 <debug> TESTHOST [50607:68117841] GetMissingPatchesForThisProduct id 100516 done - query {"input":{"method": 1013, "signature": 100516}}
+2026-07-25T16:07:45.288+02:00 <error> TESTHOST [50607:68117841] GetMissingPatchesForThisProduct: Opswat Error(-12): An error when a method call was made on a component that does not implement it, Category: 12, Method: 1013, OESIS (V4 ver: 4.3.4222.0) 
+2026-07-25T16:07:56.971+02:00 <debug> TESTHOST [50607:68117841] GetMissingPatchesForThisProduct id 100192 done - query {"input":{"method": 1013, "signature": 100192}}
+2026-07-25T16:07:56.971+02:00 <debug> TESTHOST [50607:68117841] GetMissingPatchesForThisProduct id 100192 done - json_out {
+    "result" : {
+            "signature" : 100192,
+            "timestamp" : "1784988465",
+            "timing" : 11682,
+            "code" : 0,
+            "method" : 1013,
+            "patches" : [                    
+                    {
+                        "type" : 1,
+                        "kb_id" : "127685",
+                        "description" : "Title: Safari, Version: 26.5.2, Size: 226530KiB, Recommended: YES, ",
+                        "vendor" : "Apple Inc.",
+                        "title" : "Safari26.5.2SequoiaAuto-26.5.2",
+                        "severity" : "moderate",
+                        "version" : "26.5.2",
+                        "size" : 226530,
+                        "category" : "update",
+                        "product" : "",
+                        "date" : "1782684000"
+                    },                    
+                    {
+                        "size" : 9819136,
+                        "date" : "1782684000",
+                        "reboot_required" : true,
+                        "description" : "Title: macOS Tahoe 26.5.2, Version: 26.5.2, Size: 9819136KiB, Recommended: YES, Action: restart, ",
+                        "category" : "update",
+                        "product" : "macOS Tahoe",
+                        "version" : "26.5.2",
+                        "severity" : "important",
+                        "title" : "macOS Tahoe 26.5.2-25F84",
+                        "vendor" : "Apple Inc.",
+                        "kb_id" : "127595",
+                        "type" : 1
+                    }
+                ]
+        }
+}
+2026-07-25T16:07:56.971+02:00 <debug> TESTHOST [50607:68117841] Category patch-management: took 11 seconds
+2026-07-25T16:07:56.971+02:00 <debug> TESTHOST [50607:68117841] GetMissingPatchesReport report: 			<missing-patches>
+				<entry>
+					<title>Safari26.5.2SequoiaAuto-26.5.2</title>
+					<description>Title: Safari, Version: 26.5.2, Size: 226530KiB, Recommended: YES, </description>
+					<product></product>
+					<vendor></vendor>
+					<info-url></info-url>
+					<kb-article-id>127685</kb-article-id>
+					<security-bulletin-id></security-bulletin-id>
+					<severity>moderate</severity>
+					<category>update</category>
+					<is-installed>n/a</is-installed>
+					<deadline-info>n/a</deadline-info>
+				</entry>
+				<entry>
+					<title>macOS Tahoe 26.5.2-25F84</title>
+					<description>Title: macOS Tahoe 26.5.2, Version: 26.5.2, Size: 9819136KiB, Recommended: YES, Action: restart, </description>
+					<product>macOS Tahoe</product>
+					<vendor></vendor>
+					<info-url></info-url>
+					<kb-article-id>127595</kb-article-id>
+					<security-bulletin-id></security-bulletin-id>
+					<severity>important</severity>
+					<category>update</category>
+					<is-installed>n/a</is-installed>
+					<deadline-info>n/a</deadline-info>
+				</entry>
+			</missing-patches>
+
+2026-07-25T16:08:00.974+02:00 <debug> TESTHOST [50607:68117841] Get missing patches completed
+2026-07-25T16:08:00.975+02:00 <debug> TESTHOST [50607:68117841] HIP creation done, took 17 second
+2026-07-25T16:08:00.978+02:00 <debug> TESTHOST [50607:68117841] Send hip report to service
+2026-07-25T16:08:00.978+02:00 <debug> TESTHOST [50607:68117841] SetHipReport succeeded
+2026-07-25T16:08:00.979+02:00 <debug> TESTHOST [50607:68117841] PAHipCompliance waiting for events
+2026-07-25T16:08:00.979+02:00 <debug> TESTHOST [50607:68117854] HipReportChangedEvent received
+2026-07-25T16:08:00.979+02:00 <debug> TESTHOST [50607:68117841] Finished with status code: 0
