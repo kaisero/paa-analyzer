@@ -379,7 +379,7 @@
 						<entry name="192.0.2.1"/>
 					</ip-address>
 					<ipv6-address>
-						<entry name="2001:db82001:db8::5"/>
+						<entry name="2001:db8::1"/>
 					</ipv6-address>
 				</entry>
 				<entry name="{00000000-0000-0000-0000-000000000003}">

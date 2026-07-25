@@ -399,7 +399,7 @@
 					</ip-address>
 					<ipv6-address>
 						<entry name="2001:db8::2"/>
-						<entry name="2001:db82001:db8::a"/>
+						<entry name="2001:db8::1"/>
 					</ipv6-address>
 				</entry>
 				<entry name="vmenet0">
