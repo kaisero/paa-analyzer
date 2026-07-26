@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
+import hipFixture from './fixtures/hip.json' with { type: 'json' };
 
 // -- Test data factories --
 
@@ -106,6 +107,25 @@ const handlers = [
       data: { session_id: 'test123', filename: 'bundle.zip', total_log_entries: 500, total_log_sources: 5, total_state_files: 10, parse_duration_ms: 150 },
     }),
   ),
+
+  // HIP (Host Information Profile) -- served from the generated fixture
+  // (see src/test/fixtures/generate-hip-fixture.py). Never hand-edit
+  // hip.json or invent HIP data here.
+  http.get('/api/v1/sessions/:id/hip', () =>
+    HttpResponse.json({ data: hipFixture.macos }),
+  ),
+
+  http.get('/api/v1/sessions/:id/hip/cycles/:index/raw', ({ params }) => {
+    const raw = (hipFixture.macosRaw as Record<string, unknown>)[params.index as string];
+    if (!raw) {
+      return new HttpResponse(null, { status: 404 });
+    }
+    return HttpResponse.json({ data: raw });
+  }),
 ];
 
 export const server = setupServer(...handlers);
+
+// Exposed so tests can override a handler with another slice of the same
+// generated fixture (e.g. the empty HIP shape) without hand-writing data.
+export { hipFixture };

@@ -9,6 +9,7 @@ interface Props {
 const tabItems = [
   { key: 'agent-status', label: 'Overview' },
   { key: 'logs', label: 'Log Viewer' },
+  { key: 'hip', label: 'HIP' },
 ];
 
 export function TopNav({ sessionId }: Props) {
@@ -20,6 +21,7 @@ export function TopNav({ sessionId }: Props) {
   const path = location.pathname;
   let activeKey = 'agent-status';
   if (path.endsWith('/logs')) activeKey = 'logs';
+  if (path.endsWith('/hip')) activeKey = 'hip';
 
   const handleTabChange = (key: string) => {
     navigate(`/s/${sessionId}/${key}`);

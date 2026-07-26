@@ -3,6 +3,7 @@ import { api } from './client';
 import type {
   Session, LogSource, LogEntry, DataResponse, PaginatedResponse,
   StateKeyInfo, StateEntry, StateBatchResponse, ForwardingProfile,
+  HipData, HipRaw,
 } from './types';
 
 const BASE = '/api/v1';
@@ -101,6 +102,25 @@ export function useForwardingProfile(sessionId: string | undefined) {
       `${BASE}/sessions/${sessionId}/state/forwarding-profile`
     ),
     enabled: !!sessionId,
+  });
+}
+
+// HIP (Host Information Profile)
+export function useHip(sessionId: string | undefined) {
+  return useQuery({
+    queryKey: ['hip', sessionId],
+    queryFn: () => api.get<DataResponse<HipData>>(`${BASE}/sessions/${sessionId}/hip`),
+    enabled: !!sessionId,
+  });
+}
+
+export function useHipRaw(sessionId: string | undefined, index: string | undefined, enabled: boolean) {
+  return useQuery({
+    queryKey: ['hipRaw', sessionId, index],
+    queryFn: () => api.get<DataResponse<HipRaw>>(
+      `${BASE}/sessions/${sessionId}/hip/cycles/${index}/raw`
+    ),
+    enabled: !!sessionId && index !== undefined && enabled,
   });
 }
 

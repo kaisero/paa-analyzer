@@ -1,0 +1,2031 @@
+{
+  "macos": {
+    "platform": "macos",
+    "collection": "Enabled",
+    "next_check": "2026-07-25T16:07:43+00:00",
+    "gateways": [
+      {
+        "gateway": "EPM",
+        "last_report": "2026-07-25T13:08:01+00:00",
+        "status": "Successfully sent HIP report",
+        "status_kind": "success",
+        "age_days": 0.1
+      },
+      {
+        "gateway": "Austria",
+        "last_report": "2026-07-25T13:08:01+00:00",
+        "status": "HIP report is not needed",
+        "status_kind": "not-needed",
+        "age_days": 0.1
+      },
+      {
+        "gateway": "Finland",
+        "last_report": "2026-07-14T11:17:24+00:00",
+        "status": "Failed to send HIP report to Finl",
+        "status_kind": "failed",
+        "age_days": 11.2
+      },
+      {
+        "gateway": "Germany Central",
+        "last_report": "2026-07-20T12:16:47+00:00",
+        "status": "HIP report is not needed",
+        "status_kind": "not-needed",
+        "age_days": 5.1
+      },
+      {
+        "gateway": "Israel-gw",
+        "last_report": "2026-07-14T11:43:58+00:00",
+        "status": "HIP report is not needed",
+        "status_kind": "not-needed",
+        "age_days": 11.1
+      },
+      {
+        "gateway": "Netherlands Central",
+        "last_report": "2026-07-15T05:42:22+00:00",
+        "status": "HIP report is not needed",
+        "status_kind": "not-needed",
+        "age_days": 10.4
+      },
+      {
+        "gateway": "South Korea",
+        "last_report": "2026-06-16T08:30:01+00:00",
+        "status": "Failed to send HIP report to Sout",
+        "status_kind": "failed",
+        "age_days": 39.3
+      },
+      {
+        "gateway": "UK",
+        "last_report": "2026-07-14T10:50:57+00:00",
+        "status": "Successfully sent HIP report",
+        "status_kind": "success",
+        "age_days": 11.2
+      },
+      {
+        "gateway": "US Northwest",
+        "last_report": "2026-07-14T16:03:11+00:00",
+        "status": "HIP report is not needed",
+        "status_kind": "not-needed",
+        "age_days": 11.0
+      },
+      {
+        "gateway": "amsterdam-gw",
+        "last_report": "2026-07-22T05:30:27+00:00",
+        "status": "HIP report is not needed",
+        "status_kind": "not-needed",
+        "age_days": 3.4
+      }
+    ],
+    "cycles": [
+      {
+        "index": 0,
+        "started_at": "2026-07-25T15:07:43.640000+00:00",
+        "generate_time": "2026-07-25T15:07:44+00:00",
+        "duration_s": 7.0,
+        "partial": false,
+        "policy": {
+          "collection_hip_data": true,
+          "max_wait_time": 20,
+          "default_categories": [
+            "host-info",
+            "data-loss-prevention",
+            "patch-management",
+            "firewall",
+            "anti-malware",
+            "disk-backup",
+            "disk-encryption"
+          ],
+          "exclusion_categories": [],
+          "custom_check": {
+            "windows": {
+              "registry_key": [
+                {
+                  "name": "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\CloudDomainJoin\\TenantInfo\\00000000-0000-0000-0000-000000000001",
+                  "member": [
+                    "DisplayName"
+                  ]
+                }
+              ],
+              "process_list": []
+            },
+            "mac_os": {
+              "plist": [
+                {
+                  "name": "com.jamfsoftware.jamf",
+                  "member": [
+                    "jss_url"
+                  ]
+                }
+              ],
+              "process_list": []
+            }
+          },
+          "certs": [],
+          "raw": {
+            "collection_hip_data": true,
+            "max_wait_time": 20,
+            "certs": [],
+            "default_categories": [
+              "host-info",
+              "data-loss-prevention",
+              "patch-management",
+              "firewall",
+              "anti-malware",
+              "disk-backup",
+              "disk-encryption"
+            ],
+            "exclusion_categories": [],
+            "custom_check": {
+              "windows": {
+                "registry_key": [
+                  {
+                    "name": "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\CloudDomainJoin\\TenantInfo\\00000000-0000-0000-0000-000000000001",
+                    "member": [
+                      "DisplayName"
+                    ]
+                  }
+                ],
+                "process_list": []
+              },
+              "mac_os": {
+                "plist": [
+                  {
+                    "name": "com.jamfsoftware.jamf",
+                    "member": [
+                      "jss_url"
+                    ]
+                  }
+                ],
+                "process_list": []
+              }
+            }
+          }
+        },
+        "report": {
+          "version": "4",
+          "host_info": {
+            "client_version": "26.2.1.26",
+            "os": "Apple Mac OS X 15.7.7",
+            "os_vendor": "Apple",
+            "domain": null,
+            "host_name": "testhost",
+            "host_id": "00:00:5e:00:53:01",
+            "host_id_kind": "mac-address",
+            "interfaces": [
+              {
+                "name": "bridge100",
+                "description": "bridge100",
+                "mac": "00:00:5e:00:53:02",
+                "ipv4": [
+                  "192.0.2.1"
+                ],
+                "ipv6": [
+                  "fe80::1",
+                  "fd00::1"
+                ]
+              },
+              {
+                "name": "vmenet0",
+                "description": "vmenet0",
+                "mac": "00:00:5e:00:53:03",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "utun3",
+                "description": "utun3",
+                "mac": null,
+                "ipv4": [],
+                "ipv6": [
+                  "fe80::2"
+                ]
+              },
+              {
+                "name": "utun2",
+                "description": "utun2",
+                "mac": null,
+                "ipv4": [],
+                "ipv6": [
+                  "fe80::3"
+                ]
+              },
+              {
+                "name": "utun1",
+                "description": "utun1",
+                "mac": null,
+                "ipv4": [],
+                "ipv6": [
+                  "fe80::4"
+                ]
+              },
+              {
+                "name": "llw0",
+                "description": "llw0",
+                "mac": "00:00:5e:00:53:04",
+                "ipv4": [],
+                "ipv6": [
+                  "fe80::5"
+                ]
+              },
+              {
+                "name": "bridge0",
+                "description": "bridge0",
+                "mac": "00:00:5e:00:53:05",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "ap1",
+                "description": "ap1",
+                "mac": "00:00:5e:00:53:06",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "en1",
+                "description": "en1",
+                "mac": "00:00:5e:00:53:05",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "en6",
+                "description": "en6",
+                "mac": "00:00:5e:00:53:07",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "awdl0",
+                "description": "awdl0",
+                "mac": "00:00:5e:00:53:04",
+                "ipv4": [],
+                "ipv6": [
+                  "fe80::5"
+                ]
+              },
+              {
+                "name": "en5",
+                "description": "en5",
+                "mac": "00:00:5e:00:53:08",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "en4",
+                "description": "en4",
+                "mac": "00:00:5e:00:53:09",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "en0",
+                "description": "en0",
+                "mac": "00:00:5e:00:53:0a",
+                "ipv4": [
+                  "192.0.2.2"
+                ],
+                "ipv6": [
+                  "fe80::6"
+                ]
+              },
+              {
+                "name": "anpi1",
+                "description": "anpi1",
+                "mac": "00:00:5e:00:53:0b",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "en2",
+                "description": "en2",
+                "mac": "00:00:5e:00:53:0c",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "en3",
+                "description": "en3",
+                "mac": "00:00:5e:00:53:0d",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "anpi2",
+                "description": "anpi2",
+                "mac": "00:00:5e:00:53:0e",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "utun0",
+                "description": "utun0",
+                "mac": null,
+                "ipv4": [],
+                "ipv6": [
+                  "fe80::7"
+                ]
+              },
+              {
+                "name": "stf0",
+                "description": "stf0",
+                "mac": null,
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "anpi0",
+                "description": "anpi0",
+                "mac": "00:00:5e:00:53:0f",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "gif0",
+                "description": "gif0",
+                "mac": null,
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "lo0",
+                "description": "lo0",
+                "mac": null,
+                "ipv4": [
+                  "127.0.0.1"
+                ],
+                "ipv6": [
+                  "::1",
+                  "fe80::8"
+                ]
+              }
+            ]
+          },
+          "categories": [
+            {
+              "name": "anti-malware",
+              "products": [
+                {
+                  "name": "Cortex XDR",
+                  "version": "9.0.0",
+                  "vendor": "Palo Alto Networks, Inc.",
+                  "def_version": "2026.07.25",
+                  "def_date": "2026-07-25",
+                  "attributes": {
+                    "engver": null,
+                    "prodType": "3",
+                    "osType": "4",
+                    "real-time-protection": "yes",
+                    "last-full-scan-time": "07/20/2026 12:50:41"
+                  },
+                  "signature": 100379,
+                  "errors": [],
+                  "status": "ok",
+                  "status_reason": "real-time-protection is yes and no OPSWAT error covers it."
+                },
+                {
+                  "name": "Xprotect",
+                  "version": "5352",
+                  "vendor": "Apple Inc.",
+                  "def_version": "5352",
+                  "def_date": "2026-07-24",
+                  "attributes": {
+                    "engver": null,
+                    "prodType": "3",
+                    "osType": "4",
+                    "real-time-protection": "no",
+                    "last-full-scan-time": "n/a"
+                  },
+                  "signature": 100428,
+                  "errors": [
+                    {
+                      "code": -12,
+                      "code_meaning": "An error when a method call was made on a component that does not implement it.",
+                      "method": 1004,
+                      "method_name": "Antivirus last full scan time.",
+                      "signature": 100428,
+                      "category_id": 5,
+                      "category": "anti-malware",
+                      "product": "Xprotect",
+                      "source": "PACompliance",
+                      "raw_message": "CollectComplianceDataForAV: Opswat Error(-12): An error when a method call was made on a component that does not implement it, Signature: 100428, Category: 5, Method: 1004, OESIS (V4 ver: 4.3.4222.0)"
+                    }
+                  ],
+                  "status": "warn",
+                  "status_reason": "real-time-protection is no and no OPSWAT error explains it."
+                },
+                {
+                  "name": "Gatekeeper",
+                  "version": "15.7.7",
+                  "vendor": "Apple Inc.",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "engver": null,
+                    "prodType": "3",
+                    "osType": "4",
+                    "real-time-protection": "yes",
+                    "last-full-scan-time": "n/a"
+                  },
+                  "signature": 100141,
+                  "errors": [
+                    {
+                      "code": -11,
+                      "code_meaning": "An error when a method call was made on a component that does not support it.",
+                      "method": 1001,
+                      "method_name": "Antivirus real-time protection status.",
+                      "signature": 100141,
+                      "category_id": 5,
+                      "category": "anti-malware",
+                      "product": "Gatekeeper",
+                      "source": "PACompliance",
+                      "raw_message": "CollectComplianceDataForAV: Opswat Error(-11): An error when a method call was made on a component that does not support it, Signature: 100141, Category: 5, Method: 1001, OESIS (V4 ver: 4.3.4222.0)"
+                    },
+                    {
+                      "code": -11,
+                      "code_meaning": "An error when a method call was made on a component that does not support it.",
+                      "method": 1004,
+                      "method_name": "Antivirus last full scan time.",
+                      "signature": 100141,
+                      "category_id": 5,
+                      "category": "anti-malware",
+                      "product": "Gatekeeper",
+                      "source": "PACompliance",
+                      "raw_message": "CollectComplianceDataForAV: Opswat Error(-11): An error when a method call was made on a component that does not support it, Signature: 100141, Category: 5, Method: 1004, OESIS (V4 ver: 4.3.4222.0)"
+                    }
+                  ],
+                  "status": "unknown",
+                  "status_reason": "OPSWAT method 1001 failed with error -11, so real-time-protection could not be queried."
+                }
+              ],
+              "missing_patches": [],
+              "patches_source": null,
+              "status": "warn",
+              "status_reason": "1 of 3 products reports a bad value. 1 more could not be queried."
+            },
+            {
+              "name": "disk-backup",
+              "products": [
+                {
+                  "name": "Google Drive",
+                  "version": "128.0",
+                  "vendor": "Google Inc.",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "last-backup-time": "n/a"
+                  },
+                  "signature": 100206,
+                  "errors": [],
+                  "status": "unknown",
+                  "status_reason": "This product reports no attribute whose value can be judged."
+                },
+                {
+                  "name": "Time Machine",
+                  "version": "1.3",
+                  "vendor": "Apple Inc.",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "last-backup-time": "n/a"
+                  },
+                  "signature": 100191,
+                  "errors": [
+                    {
+                      "code": -28,
+                      "code_meaning": "An error when an object is not found. This can be objects held internally, or objects on the endpoint, such as files, backup times, etc.",
+                      "method": 1008,
+                      "method_name": "Last backup time for a disk-backup product.",
+                      "signature": 100191,
+                      "category_id": 2,
+                      "category": "disk-backup",
+                      "product": "Time Machine",
+                      "source": "PACompliance",
+                      "raw_message": "CollectComplianceDataForDLP: Opswat Error(-28): An error when an object is not found. This can be objects held internally, or objects on the endpoint, such as files, backup  times, etc, Signature: 100191, Category: 2, Method: 1008, OESIS (V4 ver: 4.3.4222.0)"
+                    }
+                  ],
+                  "status": "unknown",
+                  "status_reason": "OPSWAT method 1008 failed with error -28, so last-backup-time could not be queried."
+                }
+              ],
+              "missing_patches": [],
+              "patches_source": null,
+              "status": "unknown",
+              "status_reason": "2 of 2 products could not be queried."
+            },
+            {
+              "name": "disk-encryption",
+              "products": [
+                {
+                  "name": "FileVault",
+                  "version": "15.7.7",
+                  "vendor": "Apple Inc.",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "drives": [
+                      {
+                        "drive-name": "Macintosh HD - Data",
+                        "enc-state": "encrypted"
+                      },
+                      {
+                        "drive-name": "Macintosh HD",
+                        "enc-state": "encrypted"
+                      },
+                      {
+                        "drive-name": "All",
+                        "enc-state": "encrypted"
+                      }
+                    ]
+                  },
+                  "drives": [
+                    {
+                      "name": "Macintosh HD - Data",
+                      "enc_state": "encrypted"
+                    },
+                    {
+                      "name": "Macintosh HD",
+                      "enc_state": "encrypted"
+                    },
+                    {
+                      "name": "All",
+                      "enc_state": "encrypted"
+                    }
+                  ],
+                  "signature": 100145,
+                  "errors": [],
+                  "status": "ok",
+                  "status_reason": "All 3 drives report enc-state encrypted."
+                }
+              ],
+              "missing_patches": [],
+              "patches_source": null,
+              "status": "ok",
+              "status_reason": "All 1 product reports a good value."
+            },
+            {
+              "name": "firewall",
+              "products": [
+                {
+                  "name": "Mac OS X Builtin Firewall",
+                  "version": "15.7.7",
+                  "vendor": "Apple Inc.",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "is-enabled": "yes"
+                  },
+                  "signature": 100189,
+                  "errors": [],
+                  "status": "ok",
+                  "status_reason": "is-enabled is yes and no OPSWAT error covers it."
+                },
+                {
+                  "name": "Packet Filter",
+                  "version": "15.7.7",
+                  "vendor": "OpenBSD",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "is-enabled": "yes"
+                  },
+                  "signature": 100448,
+                  "errors": [],
+                  "status": "ok",
+                  "status_reason": "is-enabled is yes and no OPSWAT error covers it."
+                }
+              ],
+              "missing_patches": [],
+              "patches_source": null,
+              "status": "ok",
+              "status_reason": "All 2 products report a good value."
+            },
+            {
+              "name": "data-loss-prevention",
+              "products": [],
+              "missing_patches": [],
+              "patches_source": null,
+              "status": "not-detected",
+              "status_reason": "No products were detected in this category."
+            },
+            {
+              "name": "patch-management",
+              "products": [
+                {
+                  "name": "Jamf Pro",
+                  "version": "11.25.2",
+                  "vendor": "JAMF Software",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "is-enabled": "yes"
+                  },
+                  "signature": 100493,
+                  "errors": [],
+                  "status": "ok",
+                  "status_reason": "is-enabled is yes and no OPSWAT error covers it."
+                },
+                {
+                  "name": "Microsoft AutoUpdate",
+                  "version": "4.84",
+                  "vendor": "Microsoft Corporation",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "is-enabled": "no"
+                  },
+                  "signature": 100516,
+                  "errors": [],
+                  "status": "warn",
+                  "status_reason": "is-enabled is no and no OPSWAT error explains it."
+                },
+                {
+                  "name": "Software Update",
+                  "version": "3.0",
+                  "vendor": "Apple Inc.",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "is-enabled": "yes"
+                  },
+                  "signature": 100192,
+                  "errors": [],
+                  "status": "ok",
+                  "status_reason": "is-enabled is yes and no OPSWAT error covers it."
+                }
+              ],
+              "missing_patches": [
+                {
+                  "title": "Safari26.5.2SequoiaAuto-26.5.2",
+                  "description": "Title: Safari, Version: 26.5.2, Size: 226530KiB, Recommended: YES,",
+                  "product": null,
+                  "vendor": null,
+                  "info_url": null,
+                  "kb_article_id": "127685",
+                  "security_bulletin_id": null,
+                  "severity": "moderate",
+                  "category": "update",
+                  "is_installed": "n/a",
+                  "deadline_info": "n/a",
+                  "reboot_required": false
+                },
+                {
+                  "title": "macOS Tahoe 26.5.2-25F84",
+                  "description": "Title: macOS Tahoe 26.5.2, Version: 26.5.2, Size: 9819136KiB, Recommended: YES, Action: restart,",
+                  "product": "macOS Tahoe",
+                  "vendor": null,
+                  "info_url": null,
+                  "kb_article_id": "127595",
+                  "security_bulletin_id": null,
+                  "severity": "important",
+                  "category": "update",
+                  "is_installed": "n/a",
+                  "deadline_info": "n/a",
+                  "reboot_required": true
+                }
+              ],
+              "patches_source": "PAComplianceMp",
+              "status": "warn",
+              "status_reason": "1 of 3 products reports a bad value."
+            },
+            {
+              "name": "certificate",
+              "products": [],
+              "missing_patches": [],
+              "patches_source": null,
+              "status": "not-detected",
+              "status_reason": "No products were detected in this category."
+            }
+          ],
+          "custom_checks": {
+            "kind": "plist",
+            "entries": [
+              {
+                "name": "com.jamfsoftware.jamf",
+                "exist": "yes",
+                "value": null,
+                "preference-value": [
+                  {
+                    "name": "jss_url",
+                    "exist": "yes",
+                    "value": "https://jss.example.com:8443/"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "opswat_errors": [
+          {
+            "code": -12,
+            "code_meaning": "An error when a method call was made on a component that does not implement it.",
+            "method": 1004,
+            "method_name": "Antivirus last full scan time.",
+            "signature": 100428,
+            "category_id": 5,
+            "category": "anti-malware",
+            "product": "Xprotect",
+            "source": "PACompliance",
+            "raw_message": "CollectComplianceDataForAV: Opswat Error(-12): An error when a method call was made on a component that does not implement it, Signature: 100428, Category: 5, Method: 1004, OESIS (V4 ver: 4.3.4222.0)"
+          },
+          {
+            "code": -11,
+            "code_meaning": "An error when a method call was made on a component that does not support it.",
+            "method": 1001,
+            "method_name": "Antivirus real-time protection status.",
+            "signature": 100141,
+            "category_id": 5,
+            "category": "anti-malware",
+            "product": "Gatekeeper",
+            "source": "PACompliance",
+            "raw_message": "CollectComplianceDataForAV: Opswat Error(-11): An error when a method call was made on a component that does not support it, Signature: 100141, Category: 5, Method: 1001, OESIS (V4 ver: 4.3.4222.0)"
+          },
+          {
+            "code": -11,
+            "code_meaning": "An error when a method call was made on a component that does not support it.",
+            "method": 1004,
+            "method_name": "Antivirus last full scan time.",
+            "signature": 100141,
+            "category_id": 5,
+            "category": "anti-malware",
+            "product": "Gatekeeper",
+            "source": "PACompliance",
+            "raw_message": "CollectComplianceDataForAV: Opswat Error(-11): An error when a method call was made on a component that does not support it, Signature: 100141, Category: 5, Method: 1004, OESIS (V4 ver: 4.3.4222.0)"
+          },
+          {
+            "code": -28,
+            "code_meaning": "An error when an object is not found. This can be objects held internally, or objects on the endpoint, such as files, backup times, etc.",
+            "method": 1008,
+            "method_name": "Last backup time for a disk-backup product.",
+            "signature": 100191,
+            "category_id": 2,
+            "category": "disk-backup",
+            "product": "Time Machine",
+            "source": "PACompliance",
+            "raw_message": "CollectComplianceDataForDLP: Opswat Error(-28): An error when an object is not found. This can be objects held internally, or objects on the endpoint, such as files, backup  times, etc, Signature: 100191, Category: 2, Method: 1008, OESIS (V4 ver: 4.3.4222.0)"
+          },
+          {
+            "code": -12,
+            "code_meaning": "An error when a method call was made on a component that does not implement it.",
+            "method": 1013,
+            "method_name": "Missing patches for a patch-management product.",
+            "signature": null,
+            "category_id": 12,
+            "category": "patch-management",
+            "product": null,
+            "source": "PAComplianceMp",
+            "raw_message": "GetMissingPatchesForThisProduct: Opswat Error(-12): An error when a method call was made on a component that does not implement it, Category: 12, Method: 1013, OESIS (V4 ver: 4.3.4222.0)"
+          },
+          {
+            "code": -12,
+            "code_meaning": "An error when a method call was made on a component that does not implement it.",
+            "method": 1013,
+            "method_name": "Missing patches for a patch-management product.",
+            "signature": null,
+            "category_id": 12,
+            "category": "patch-management",
+            "product": null,
+            "source": "PAComplianceMp",
+            "raw_message": "GetMissingPatchesForThisProduct: Opswat Error(-12): An error when a method call was made on a component that does not implement it, Category: 12, Method: 1013, OESIS (V4 ver: 4.3.4222.0)"
+          }
+        ],
+        "category_timings": {
+          "host-info": 0,
+          "anti-malware": 1,
+          "disk-backup": 0,
+          "disk-encryption": 0,
+          "firewall": 0,
+          "data-loss-prevention": 0,
+          "patch-management": 0,
+          "All": 1
+        },
+        "dispatch": {
+          "sent": true,
+          "succeeded": true,
+          "status_code": 0
+        },
+        "counts": {
+          "warn": 2,
+          "unknown": 3,
+          "errors": 6,
+          "missing_patches": 2
+        }
+      },
+      {
+        "index": 1,
+        "started_at": "2026-07-25T14:07:43.507000+00:00",
+        "generate_time": "2026-07-25T14:07:45+00:00",
+        "duration_s": 7.0,
+        "partial": false,
+        "policy": {
+          "collection_hip_data": true,
+          "max_wait_time": 20,
+          "default_categories": [
+            "host-info",
+            "data-loss-prevention",
+            "patch-management",
+            "firewall",
+            "anti-malware",
+            "disk-backup",
+            "disk-encryption"
+          ],
+          "exclusion_categories": [],
+          "custom_check": {
+            "windows": {
+              "registry_key": [
+                {
+                  "name": "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\CloudDomainJoin\\TenantInfo\\00000000-0000-0000-0000-000000000001",
+                  "member": [
+                    "DisplayName"
+                  ]
+                }
+              ],
+              "process_list": []
+            },
+            "mac_os": {
+              "plist": [
+                {
+                  "name": "com.jamfsoftware.jamf",
+                  "member": [
+                    "jss_url"
+                  ]
+                }
+              ],
+              "process_list": []
+            }
+          },
+          "certs": [],
+          "raw": {
+            "collection_hip_data": true,
+            "max_wait_time": 20,
+            "certs": [],
+            "default_categories": [
+              "host-info",
+              "data-loss-prevention",
+              "patch-management",
+              "firewall",
+              "anti-malware",
+              "disk-backup",
+              "disk-encryption"
+            ],
+            "exclusion_categories": [],
+            "custom_check": {
+              "windows": {
+                "registry_key": [
+                  {
+                    "name": "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\CloudDomainJoin\\TenantInfo\\00000000-0000-0000-0000-000000000001",
+                    "member": [
+                      "DisplayName"
+                    ]
+                  }
+                ],
+                "process_list": []
+              },
+              "mac_os": {
+                "plist": [
+                  {
+                    "name": "com.jamfsoftware.jamf",
+                    "member": [
+                      "jss_url"
+                    ]
+                  }
+                ],
+                "process_list": []
+              }
+            }
+          }
+        },
+        "report": {
+          "version": "4",
+          "host_info": {
+            "client_version": "26.2.1.26",
+            "os": "Apple Mac OS X 15.7.7",
+            "os_vendor": "Apple",
+            "domain": null,
+            "host_name": "testhost",
+            "host_id": "00:00:5e:00:53:01",
+            "host_id_kind": "mac-address",
+            "interfaces": [
+              {
+                "name": "ap1",
+                "description": "ap1",
+                "mac": "00:00:5e:00:53:06",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "bridge100",
+                "description": "bridge100",
+                "mac": "00:00:5e:00:53:02",
+                "ipv4": [
+                  "192.0.2.1"
+                ],
+                "ipv6": [
+                  "fe80::1",
+                  "fd00::1"
+                ]
+              },
+              {
+                "name": "vmenet0",
+                "description": "vmenet0",
+                "mac": "00:00:5e:00:53:03",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "utun3",
+                "description": "utun3",
+                "mac": null,
+                "ipv4": [],
+                "ipv6": [
+                  "fe80::2"
+                ]
+              },
+              {
+                "name": "utun2",
+                "description": "utun2",
+                "mac": null,
+                "ipv4": [],
+                "ipv6": [
+                  "fe80::3"
+                ]
+              },
+              {
+                "name": "utun1",
+                "description": "utun1",
+                "mac": null,
+                "ipv4": [],
+                "ipv6": [
+                  "fe80::4"
+                ]
+              },
+              {
+                "name": "en6",
+                "description": "en6",
+                "mac": "00:00:5e:00:53:07",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "llw0",
+                "description": "llw0",
+                "mac": "00:00:5e:00:53:04",
+                "ipv4": [],
+                "ipv6": [
+                  "fe80::5"
+                ]
+              },
+              {
+                "name": "bridge0",
+                "description": "bridge0",
+                "mac": "00:00:5e:00:53:05",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "en1",
+                "description": "en1",
+                "mac": "00:00:5e:00:53:05",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "gif0",
+                "description": "gif0",
+                "mac": null,
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "awdl0",
+                "description": "awdl0",
+                "mac": "00:00:5e:00:53:04",
+                "ipv4": [],
+                "ipv6": [
+                  "fe80::5"
+                ]
+              },
+              {
+                "name": "en5",
+                "description": "en5",
+                "mac": "00:00:5e:00:53:08",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "en4",
+                "description": "en4",
+                "mac": "00:00:5e:00:53:09",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "en0",
+                "description": "en0",
+                "mac": "00:00:5e:00:53:0a",
+                "ipv4": [
+                  "192.0.2.2"
+                ],
+                "ipv6": [
+                  "fe80::6"
+                ]
+              },
+              {
+                "name": "anpi1",
+                "description": "anpi1",
+                "mac": "00:00:5e:00:53:0b",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "en2",
+                "description": "en2",
+                "mac": "00:00:5e:00:53:0c",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "en3",
+                "description": "en3",
+                "mac": "00:00:5e:00:53:0d",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "anpi2",
+                "description": "anpi2",
+                "mac": "00:00:5e:00:53:0e",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "en7",
+                "description": "en7",
+                "mac": "00:00:5e:00:53:10",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "utun0",
+                "description": "utun0",
+                "mac": null,
+                "ipv4": [],
+                "ipv6": [
+                  "fe80::7"
+                ]
+              },
+              {
+                "name": "stf0",
+                "description": "stf0",
+                "mac": null,
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "anpi0",
+                "description": "anpi0",
+                "mac": "00:00:5e:00:53:0f",
+                "ipv4": [],
+                "ipv6": []
+              },
+              {
+                "name": "lo0",
+                "description": "lo0",
+                "mac": null,
+                "ipv4": [
+                  "127.0.0.1"
+                ],
+                "ipv6": [
+                  "::1",
+                  "fe80::8"
+                ]
+              }
+            ]
+          },
+          "categories": [
+            {
+              "name": "anti-malware",
+              "products": [
+                {
+                  "name": "Cortex XDR",
+                  "version": "9.0.0",
+                  "vendor": "Palo Alto Networks, Inc.",
+                  "def_version": "2026.07.25",
+                  "def_date": "2026-07-25",
+                  "attributes": {
+                    "engver": null,
+                    "prodType": "3",
+                    "osType": "4",
+                    "real-time-protection": "yes",
+                    "last-full-scan-time": "07/20/2026 12:50:41"
+                  },
+                  "signature": 100379,
+                  "errors": [],
+                  "status": "ok",
+                  "status_reason": "real-time-protection is yes and no OPSWAT error covers it."
+                },
+                {
+                  "name": "Xprotect",
+                  "version": "5352",
+                  "vendor": "Apple Inc.",
+                  "def_version": "5352",
+                  "def_date": "2026-07-24",
+                  "attributes": {
+                    "engver": null,
+                    "prodType": "3",
+                    "osType": "4",
+                    "real-time-protection": "no",
+                    "last-full-scan-time": "n/a"
+                  },
+                  "signature": 100428,
+                  "errors": [
+                    {
+                      "code": -12,
+                      "code_meaning": "An error when a method call was made on a component that does not implement it.",
+                      "method": 1004,
+                      "method_name": "Antivirus last full scan time.",
+                      "signature": 100428,
+                      "category_id": 5,
+                      "category": "anti-malware",
+                      "product": "Xprotect",
+                      "source": "PACompliance",
+                      "raw_message": "CollectComplianceDataForAV: Opswat Error(-12): An error when a method call was made on a component that does not implement it, Signature: 100428, Category: 5, Method: 1004, OESIS (V4 ver: 4.3.4222.0)"
+                    }
+                  ],
+                  "status": "warn",
+                  "status_reason": "real-time-protection is no and no OPSWAT error explains it."
+                },
+                {
+                  "name": "Gatekeeper",
+                  "version": "15.7.7",
+                  "vendor": "Apple Inc.",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "engver": null,
+                    "prodType": "3",
+                    "osType": "4",
+                    "real-time-protection": "yes",
+                    "last-full-scan-time": "n/a"
+                  },
+                  "signature": 100141,
+                  "errors": [
+                    {
+                      "code": -11,
+                      "code_meaning": "An error when a method call was made on a component that does not support it.",
+                      "method": 1001,
+                      "method_name": "Antivirus real-time protection status.",
+                      "signature": 100141,
+                      "category_id": 5,
+                      "category": "anti-malware",
+                      "product": "Gatekeeper",
+                      "source": "PACompliance",
+                      "raw_message": "CollectComplianceDataForAV: Opswat Error(-11): An error when a method call was made on a component that does not support it, Signature: 100141, Category: 5, Method: 1001, OESIS (V4 ver: 4.3.4222.0)"
+                    },
+                    {
+                      "code": -11,
+                      "code_meaning": "An error when a method call was made on a component that does not support it.",
+                      "method": 1004,
+                      "method_name": "Antivirus last full scan time.",
+                      "signature": 100141,
+                      "category_id": 5,
+                      "category": "anti-malware",
+                      "product": "Gatekeeper",
+                      "source": "PACompliance",
+                      "raw_message": "CollectComplianceDataForAV: Opswat Error(-11): An error when a method call was made on a component that does not support it, Signature: 100141, Category: 5, Method: 1004, OESIS (V4 ver: 4.3.4222.0)"
+                    }
+                  ],
+                  "status": "unknown",
+                  "status_reason": "OPSWAT method 1001 failed with error -11, so real-time-protection could not be queried."
+                }
+              ],
+              "missing_patches": [],
+              "patches_source": null,
+              "status": "warn",
+              "status_reason": "1 of 3 products reports a bad value. 1 more could not be queried."
+            },
+            {
+              "name": "disk-backup",
+              "products": [
+                {
+                  "name": "Google Drive",
+                  "version": "128.0",
+                  "vendor": "Google Inc.",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "last-backup-time": "n/a"
+                  },
+                  "signature": 100206,
+                  "errors": [],
+                  "status": "unknown",
+                  "status_reason": "This product reports no attribute whose value can be judged."
+                },
+                {
+                  "name": "Time Machine",
+                  "version": "1.3",
+                  "vendor": "Apple Inc.",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "last-backup-time": "n/a"
+                  },
+                  "signature": 100191,
+                  "errors": [
+                    {
+                      "code": -28,
+                      "code_meaning": "An error when an object is not found. This can be objects held internally, or objects on the endpoint, such as files, backup times, etc.",
+                      "method": 1008,
+                      "method_name": "Last backup time for a disk-backup product.",
+                      "signature": 100191,
+                      "category_id": 2,
+                      "category": "disk-backup",
+                      "product": "Time Machine",
+                      "source": "PACompliance",
+                      "raw_message": "CollectComplianceDataForDLP: Opswat Error(-28): An error when an object is not found. This can be objects held internally, or objects on the endpoint, such as files, backup  times, etc, Signature: 100191, Category: 2, Method: 1008, OESIS (V4 ver: 4.3.4222.0)"
+                    }
+                  ],
+                  "status": "unknown",
+                  "status_reason": "OPSWAT method 1008 failed with error -28, so last-backup-time could not be queried."
+                }
+              ],
+              "missing_patches": [],
+              "patches_source": null,
+              "status": "unknown",
+              "status_reason": "2 of 2 products could not be queried."
+            },
+            {
+              "name": "disk-encryption",
+              "products": [
+                {
+                  "name": "FileVault",
+                  "version": "15.7.7",
+                  "vendor": "Apple Inc.",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "drives": [
+                      {
+                        "drive-name": "Macintosh HD - Data",
+                        "enc-state": "encrypted"
+                      },
+                      {
+                        "drive-name": "Macintosh HD",
+                        "enc-state": "encrypted"
+                      },
+                      {
+                        "drive-name": "All",
+                        "enc-state": "encrypted"
+                      }
+                    ]
+                  },
+                  "drives": [
+                    {
+                      "name": "Macintosh HD - Data",
+                      "enc_state": "encrypted"
+                    },
+                    {
+                      "name": "Macintosh HD",
+                      "enc_state": "encrypted"
+                    },
+                    {
+                      "name": "All",
+                      "enc_state": "encrypted"
+                    }
+                  ],
+                  "signature": 100145,
+                  "errors": [],
+                  "status": "ok",
+                  "status_reason": "All 3 drives report enc-state encrypted."
+                }
+              ],
+              "missing_patches": [],
+              "patches_source": null,
+              "status": "ok",
+              "status_reason": "All 1 product reports a good value."
+            },
+            {
+              "name": "firewall",
+              "products": [
+                {
+                  "name": "Mac OS X Builtin Firewall",
+                  "version": "15.7.7",
+                  "vendor": "Apple Inc.",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "is-enabled": "yes"
+                  },
+                  "signature": 100189,
+                  "errors": [],
+                  "status": "ok",
+                  "status_reason": "is-enabled is yes and no OPSWAT error covers it."
+                },
+                {
+                  "name": "Packet Filter",
+                  "version": "15.7.7",
+                  "vendor": "OpenBSD",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "is-enabled": "yes"
+                  },
+                  "signature": 100448,
+                  "errors": [],
+                  "status": "ok",
+                  "status_reason": "is-enabled is yes and no OPSWAT error covers it."
+                }
+              ],
+              "missing_patches": [],
+              "patches_source": null,
+              "status": "ok",
+              "status_reason": "All 2 products report a good value."
+            },
+            {
+              "name": "data-loss-prevention",
+              "products": [],
+              "missing_patches": [],
+              "patches_source": null,
+              "status": "not-detected",
+              "status_reason": "No products were detected in this category."
+            },
+            {
+              "name": "patch-management",
+              "products": [
+                {
+                  "name": "Jamf Pro",
+                  "version": "11.25.2",
+                  "vendor": "JAMF Software",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "is-enabled": "yes"
+                  },
+                  "signature": 100493,
+                  "errors": [],
+                  "status": "ok",
+                  "status_reason": "is-enabled is yes and no OPSWAT error covers it."
+                },
+                {
+                  "name": "Microsoft AutoUpdate",
+                  "version": "4.84",
+                  "vendor": "Microsoft Corporation",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "is-enabled": "no"
+                  },
+                  "signature": 100516,
+                  "errors": [],
+                  "status": "warn",
+                  "status_reason": "is-enabled is no and no OPSWAT error explains it."
+                },
+                {
+                  "name": "Software Update",
+                  "version": "3.0",
+                  "vendor": "Apple Inc.",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "is-enabled": "yes"
+                  },
+                  "signature": 100192,
+                  "errors": [],
+                  "status": "ok",
+                  "status_reason": "is-enabled is yes and no OPSWAT error covers it."
+                }
+              ],
+              "missing_patches": [
+                {
+                  "title": "Safari26.5.2SequoiaAuto-26.5.2",
+                  "description": "Title: Safari, Version: 26.5.2, Size: 226530KiB, Recommended: YES,",
+                  "product": null,
+                  "vendor": null,
+                  "info_url": null,
+                  "kb_article_id": "127685",
+                  "security_bulletin_id": null,
+                  "severity": "moderate",
+                  "category": "update",
+                  "is_installed": "n/a",
+                  "deadline_info": "n/a",
+                  "reboot_required": false
+                },
+                {
+                  "title": "macOS Tahoe 26.5.2-25F84",
+                  "description": "Title: macOS Tahoe 26.5.2, Version: 26.5.2, Size: 9819136KiB, Recommended: YES, Action: restart,",
+                  "product": "macOS Tahoe",
+                  "vendor": null,
+                  "info_url": null,
+                  "kb_article_id": "127595",
+                  "security_bulletin_id": null,
+                  "severity": "important",
+                  "category": "update",
+                  "is_installed": "n/a",
+                  "deadline_info": "n/a",
+                  "reboot_required": true
+                }
+              ],
+              "patches_source": "PAComplianceMp",
+              "status": "warn",
+              "status_reason": "1 of 3 products reports a bad value."
+            },
+            {
+              "name": "certificate",
+              "products": [],
+              "missing_patches": [],
+              "patches_source": null,
+              "status": "not-detected",
+              "status_reason": "No products were detected in this category."
+            }
+          ],
+          "custom_checks": {
+            "kind": "plist",
+            "entries": [
+              {
+                "name": "com.jamfsoftware.jamf",
+                "exist": "yes",
+                "value": null,
+                "preference-value": [
+                  {
+                    "name": "jss_url",
+                    "exist": "yes",
+                    "value": "https://jss.example.com:8443/"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "opswat_errors": [
+          {
+            "code": -12,
+            "code_meaning": "An error when a method call was made on a component that does not implement it.",
+            "method": 1004,
+            "method_name": "Antivirus last full scan time.",
+            "signature": 100428,
+            "category_id": 5,
+            "category": "anti-malware",
+            "product": "Xprotect",
+            "source": "PACompliance",
+            "raw_message": "CollectComplianceDataForAV: Opswat Error(-12): An error when a method call was made on a component that does not implement it, Signature: 100428, Category: 5, Method: 1004, OESIS (V4 ver: 4.3.4222.0)"
+          },
+          {
+            "code": -11,
+            "code_meaning": "An error when a method call was made on a component that does not support it.",
+            "method": 1001,
+            "method_name": "Antivirus real-time protection status.",
+            "signature": 100141,
+            "category_id": 5,
+            "category": "anti-malware",
+            "product": "Gatekeeper",
+            "source": "PACompliance",
+            "raw_message": "CollectComplianceDataForAV: Opswat Error(-11): An error when a method call was made on a component that does not support it, Signature: 100141, Category: 5, Method: 1001, OESIS (V4 ver: 4.3.4222.0)"
+          },
+          {
+            "code": -11,
+            "code_meaning": "An error when a method call was made on a component that does not support it.",
+            "method": 1004,
+            "method_name": "Antivirus last full scan time.",
+            "signature": 100141,
+            "category_id": 5,
+            "category": "anti-malware",
+            "product": "Gatekeeper",
+            "source": "PACompliance",
+            "raw_message": "CollectComplianceDataForAV: Opswat Error(-11): An error when a method call was made on a component that does not support it, Signature: 100141, Category: 5, Method: 1004, OESIS (V4 ver: 4.3.4222.0)"
+          },
+          {
+            "code": -28,
+            "code_meaning": "An error when an object is not found. This can be objects held internally, or objects on the endpoint, such as files, backup times, etc.",
+            "method": 1008,
+            "method_name": "Last backup time for a disk-backup product.",
+            "signature": 100191,
+            "category_id": 2,
+            "category": "disk-backup",
+            "product": "Time Machine",
+            "source": "PACompliance",
+            "raw_message": "CollectComplianceDataForDLP: Opswat Error(-28): An error when an object is not found. This can be objects held internally, or objects on the endpoint, such as files, backup  times, etc, Signature: 100191, Category: 2, Method: 1008, OESIS (V4 ver: 4.3.4222.0)"
+          },
+          {
+            "code": -12,
+            "code_meaning": "An error when a method call was made on a component that does not implement it.",
+            "method": 1013,
+            "method_name": "Missing patches for a patch-management product.",
+            "signature": null,
+            "category_id": 12,
+            "category": "patch-management",
+            "product": null,
+            "source": "PAComplianceMp",
+            "raw_message": "GetMissingPatchesForThisProduct: Opswat Error(-12): An error when a method call was made on a component that does not implement it, Category: 12, Method: 1013, OESIS (V4 ver: 4.3.4222.0)"
+          },
+          {
+            "code": -12,
+            "code_meaning": "An error when a method call was made on a component that does not implement it.",
+            "method": 1013,
+            "method_name": "Missing patches for a patch-management product.",
+            "signature": null,
+            "category_id": 12,
+            "category": "patch-management",
+            "product": null,
+            "source": "PAComplianceMp",
+            "raw_message": "GetMissingPatchesForThisProduct: Opswat Error(-12): An error when a method call was made on a component that does not implement it, Category: 12, Method: 1013, OESIS (V4 ver: 4.3.4222.0)"
+          }
+        ],
+        "category_timings": {
+          "host-info": 0,
+          "anti-malware": 1,
+          "disk-backup": 0,
+          "disk-encryption": 0,
+          "firewall": 0,
+          "data-loss-prevention": 0,
+          "patch-management": 0,
+          "All": 2
+        },
+        "dispatch": {
+          "sent": true,
+          "succeeded": true,
+          "status_code": 0
+        },
+        "counts": {
+          "warn": 2,
+          "unknown": 3,
+          "errors": 6,
+          "missing_patches": 2
+        }
+      }
+    ]
+  },
+  "macosRaw": {
+    "0": {
+      "raw_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<hip-report>\n\t<generate-time>07/25/2026 17:07:44</generate-time>\n\t<hip-report-version>4</hip-report-version>\n\t<categories>\n\t\t<entry name=\"host-info\">\n\t\t\t<client-version>26.2.1.26</client-version>\n\t\t\t<os>Apple Mac OS X 15.7.7</os>\n\t\t\t<os-vendor>Apple</os-vendor>\n\t\t\t<domain></domain>\n\t\t\t<host-name>testhost</host-name>\n\t\t\t<host-id>00:00:5e:00:53:01</host-id>\n\t\t\t<network-interface>\n\t\t\t\t<entry name=\"bridge100\">\n\t\t\t\t\t<description>bridge100</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:02</mac-address>\n\t\t\t\t\t<ip-address>\n\t\t\t\t\t\t<entry name=\"192.0.2.1\"/>\n\t\t\t\t\t</ip-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"fe80::1\"/>\n\t\t\t\t\t\t<entry name=\"fd00::1\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"vmenet0\">\n\t\t\t\t\t<description>vmenet0</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:03</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"utun3\">\n\t\t\t\t\t<description>utun3</description>\n\t\t\t\t\t<mac-address></mac-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"fe80::2\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"utun2\">\n\t\t\t\t\t<description>utun2</description>\n\t\t\t\t\t<mac-address></mac-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"fe80::3\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"utun1\">\n\t\t\t\t\t<description>utun1</description>\n\t\t\t\t\t<mac-address></mac-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"fe80::4\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"llw0\">\n\t\t\t\t\t<description>llw0</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:04</mac-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"fe80::5\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"bridge0\">\n\t\t\t\t\t<description>bridge0</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:05</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"ap1\">\n\t\t\t\t\t<description>ap1</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:06</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"en1\">\n\t\t\t\t\t<description>en1</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:05</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"en6\">\n\t\t\t\t\t<description>en6</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:07</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"awdl0\">\n\t\t\t\t\t<description>awdl0</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:04</mac-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"fe80::5\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"en5\">\n\t\t\t\t\t<description>en5</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:08</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"en4\">\n\t\t\t\t\t<description>en4</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:09</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"en0\">\n\t\t\t\t\t<description>en0</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:0a</mac-address>\n\t\t\t\t\t<ip-address>\n\t\t\t\t\t\t<entry name=\"192.0.2.2\"/>\n\t\t\t\t\t</ip-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"fe80::6\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"anpi1\">\n\t\t\t\t\t<description>anpi1</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:0b</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"en2\">\n\t\t\t\t\t<description>en2</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:0c</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"en3\">\n\t\t\t\t\t<description>en3</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:0d</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"anpi2\">\n\t\t\t\t\t<description>anpi2</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:0e</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"utun0\">\n\t\t\t\t\t<description>utun0</description>\n\t\t\t\t\t<mac-address></mac-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"fe80::7\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"stf0\">\n\t\t\t\t\t<description>stf0</description>\n\t\t\t\t\t<mac-address></mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"anpi0\">\n\t\t\t\t\t<description>anpi0</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:0f</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"gif0\">\n\t\t\t\t\t<description>gif0</description>\n\t\t\t\t\t<mac-address></mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"lo0\">\n\t\t\t\t\t<description>lo0</description>\n\t\t\t\t\t<mac-address></mac-address>\n\t\t\t\t\t<ip-address>\n\t\t\t\t\t\t<entry name=\"127.0.0.1\"/>\n\t\t\t\t\t</ip-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"::1\"/>\n\t\t\t\t\t\t<entry name=\"fe80::8\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t</network-interface>\n\t\t</entry>\n\t\t<entry name=\"anti-malware\">\n\t\t\t<list>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Cortex XDR\" version=\"9.0.0\" vendor=\"Palo Alto Networks, Inc.\" defver=\"2026.07.25\" engver=\"\" datemon=\"07\" dateday=\"25\" dateyear=\"2026\" prodType=\"3\" osType=\"4\"/>\n\t\t\t\t\t\t<real-time-protection>yes</real-time-protection>\n\t\t\t\t\t\t<last-full-scan-time>07/20/2026 12:50:41</last-full-scan-time>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Xprotect\" version=\"5352\" vendor=\"Apple Inc.\" defver=\"5352\" engver=\"\" datemon=\"07\" dateday=\"24\" dateyear=\"2026\" prodType=\"3\" osType=\"4\"/>\n\t\t\t\t\t\t<real-time-protection>no</real-time-protection>\n\t\t\t\t\t\t<last-full-scan-time>n/a</last-full-scan-time>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Gatekeeper\" version=\"15.7.7\" vendor=\"Apple Inc.\" defver=\"\" engver=\"\" datemon=\"\" dateday=\"\" dateyear=\"\" prodType=\"3\" osType=\"4\"/>\n\t\t\t\t\t\t<real-time-protection>yes</real-time-protection>\n\t\t\t\t\t\t<last-full-scan-time>n/a</last-full-scan-time>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t</list>\n\t\t</entry>\n\t\t<entry name=\"disk-backup\">\n\t\t\t<list>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Google Drive\" version=\"128.0\" vendor=\"Google Inc.\"/>\n\t\t\t\t\t\t<last-backup-time>n/a</last-backup-time>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Time Machine\" version=\"1.3\" vendor=\"Apple Inc.\"/>\n\t\t\t\t\t\t<last-backup-time>n/a</last-backup-time>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t</list>\n\t\t</entry>\n\t\t<entry name=\"disk-encryption\">\n\t\t\t<list>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"FileVault\" version=\"15.7.7\" vendor=\"Apple Inc.\"/>\n\t\t\t\t\t\t<drives>\n\t\t\t\t\t\t\t<entry>\n\t\t\t\t\t\t\t\t<drive-name>Macintosh HD - Data</drive-name>\n\t\t\t\t\t\t\t\t<enc-state>encrypted</enc-state>\n\t\t\t\t\t\t\t</entry>\n\t\t\t\t\t\t\t<entry>\n\t\t\t\t\t\t\t\t<drive-name>Macintosh HD</drive-name>\n\t\t\t\t\t\t\t\t<enc-state>encrypted</enc-state>\n\t\t\t\t\t\t\t</entry>\n\t\t\t\t\t\t\t<entry>\n\t\t\t\t\t\t\t\t<drive-name>All</drive-name>\n\t\t\t\t\t\t\t\t<enc-state>encrypted</enc-state>\n\t\t\t\t\t\t\t</entry>\n\t\t\t\t\t\t</drives>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t</list>\n\t\t</entry>\n\t\t<entry name=\"firewall\">\n\t\t\t<list>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Mac OS X Builtin Firewall\" version=\"15.7.7\" vendor=\"Apple Inc.\"/>\n\t\t\t\t\t\t<is-enabled>yes</is-enabled>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Packet Filter\" version=\"15.7.7\" vendor=\"OpenBSD\"/>\n\t\t\t\t\t\t<is-enabled>yes</is-enabled>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t</list>\n\t\t</entry>\n\t\t<entry name=\"data-loss-prevention\">\n\t\t\t<list>\n\t\t\t</list>\n\t\t</entry>\n\t\t<entry name=\"patch-management\">\n\t\t\t<list>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Jamf Pro\" version=\"11.25.2\" vendor=\"JAMF Software\"/>\n\t\t\t\t\t\t<is-enabled>yes</is-enabled>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Microsoft AutoUpdate\" version=\"4.84\" vendor=\"Microsoft Corporation\"/>\n\t\t\t\t\t\t<is-enabled>no</is-enabled>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Software Update\" version=\"3.0\" vendor=\"Apple Inc.\"/>\n\t\t\t\t\t\t<is-enabled>yes</is-enabled>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t</list>\n\t\t\t<missing-patches>\n\t\t\t</missing-patches>\n\t\t</entry>\n\t\t<entry name=\"certificate\">\n\t\t\t<list>\n\t\t\t</list>\n\t\t</entry>\n\t</categories>\n\t<custom-checks>\n\t\t<plist>\n\t\t\t<entry name=\"com.jamfsoftware.jamf\">\n\t\t\t\t<exist>yes</exist>\n\t\t\t\t<value></value>\n\t\t\t\t<preference-value>\n\t\t\t\t\t<entry name=\"jss_url\">\n\t\t\t\t\t\t<exist>yes</exist>\n\t\t\t\t\t\t<value>https://jss.example.com:8443/</value>\n\t\t\t\t\t</entry>\n\t\t\t\t</preference-value>\n\t\t\t</entry>\n\t\t</plist>\n\t</custom-checks>\n</hip-report>",
+      "raw_patches_xml": "<missing-patches>\n\t\t\t\t<entry>\n\t\t\t\t\t<title>Safari26.5.2SequoiaAuto-26.5.2</title>\n\t\t\t\t\t<description>Title: Safari, Version: 26.5.2, Size: 226530KiB, Recommended: YES, </description>\n\t\t\t\t\t<product></product>\n\t\t\t\t\t<vendor></vendor>\n\t\t\t\t\t<info-url></info-url>\n\t\t\t\t\t<kb-article-id>127685</kb-article-id>\n\t\t\t\t\t<security-bulletin-id></security-bulletin-id>\n\t\t\t\t\t<severity>moderate</severity>\n\t\t\t\t\t<category>update</category>\n\t\t\t\t\t<is-installed>n/a</is-installed>\n\t\t\t\t\t<deadline-info>n/a</deadline-info>\n\t\t\t\t</entry>\n\t\t\t\t<entry>\n\t\t\t\t\t<title>macOS Tahoe 26.5.2-25F84</title>\n\t\t\t\t\t<description>Title: macOS Tahoe 26.5.2, Version: 26.5.2, Size: 9819136KiB, Recommended: YES, Action: restart, </description>\n\t\t\t\t\t<product>macOS Tahoe</product>\n\t\t\t\t\t<vendor></vendor>\n\t\t\t\t\t<info-url></info-url>\n\t\t\t\t\t<kb-article-id>127595</kb-article-id>\n\t\t\t\t\t<security-bulletin-id></security-bulletin-id>\n\t\t\t\t\t<severity>important</severity>\n\t\t\t\t\t<category>update</category>\n\t\t\t\t\t<is-installed>n/a</is-installed>\n\t\t\t\t\t<deadline-info>n/a</deadline-info>\n\t\t\t\t</entry>\n\t\t\t</missing-patches>"
+    },
+    "1": {
+      "raw_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<hip-report>\n\t<generate-time>07/25/2026 16:07:45</generate-time>\n\t<hip-report-version>4</hip-report-version>\n\t<categories>\n\t\t<entry name=\"host-info\">\n\t\t\t<client-version>26.2.1.26</client-version>\n\t\t\t<os>Apple Mac OS X 15.7.7</os>\n\t\t\t<os-vendor>Apple</os-vendor>\n\t\t\t<domain></domain>\n\t\t\t<host-name>testhost</host-name>\n\t\t\t<host-id>00:00:5e:00:53:01</host-id>\n\t\t\t<network-interface>\n\t\t\t\t<entry name=\"ap1\">\n\t\t\t\t\t<description>ap1</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:06</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"bridge100\">\n\t\t\t\t\t<description>bridge100</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:02</mac-address>\n\t\t\t\t\t<ip-address>\n\t\t\t\t\t\t<entry name=\"192.0.2.1\"/>\n\t\t\t\t\t</ip-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"fe80::1\"/>\n\t\t\t\t\t\t<entry name=\"fd00::1\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"vmenet0\">\n\t\t\t\t\t<description>vmenet0</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:03</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"utun3\">\n\t\t\t\t\t<description>utun3</description>\n\t\t\t\t\t<mac-address></mac-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"fe80::2\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"utun2\">\n\t\t\t\t\t<description>utun2</description>\n\t\t\t\t\t<mac-address></mac-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"fe80::3\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"utun1\">\n\t\t\t\t\t<description>utun1</description>\n\t\t\t\t\t<mac-address></mac-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"fe80::4\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"en6\">\n\t\t\t\t\t<description>en6</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:07</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"llw0\">\n\t\t\t\t\t<description>llw0</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:04</mac-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"fe80::5\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"bridge0\">\n\t\t\t\t\t<description>bridge0</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:05</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"en1\">\n\t\t\t\t\t<description>en1</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:05</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"gif0\">\n\t\t\t\t\t<description>gif0</description>\n\t\t\t\t\t<mac-address></mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"awdl0\">\n\t\t\t\t\t<description>awdl0</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:04</mac-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"fe80::5\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"en5\">\n\t\t\t\t\t<description>en5</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:08</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"en4\">\n\t\t\t\t\t<description>en4</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:09</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"en0\">\n\t\t\t\t\t<description>en0</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:0a</mac-address>\n\t\t\t\t\t<ip-address>\n\t\t\t\t\t\t<entry name=\"192.0.2.2\"/>\n\t\t\t\t\t</ip-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"fe80::6\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"anpi1\">\n\t\t\t\t\t<description>anpi1</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:0b</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"en2\">\n\t\t\t\t\t<description>en2</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:0c</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"en3\">\n\t\t\t\t\t<description>en3</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:0d</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"anpi2\">\n\t\t\t\t\t<description>anpi2</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:0e</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"en7\">\n\t\t\t\t\t<description>en7</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:10</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"utun0\">\n\t\t\t\t\t<description>utun0</description>\n\t\t\t\t\t<mac-address></mac-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"fe80::7\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"stf0\">\n\t\t\t\t\t<description>stf0</description>\n\t\t\t\t\t<mac-address></mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"anpi0\">\n\t\t\t\t\t<description>anpi0</description>\n\t\t\t\t\t<mac-address>00:00:5e:00:53:0f</mac-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"lo0\">\n\t\t\t\t\t<description>lo0</description>\n\t\t\t\t\t<mac-address></mac-address>\n\t\t\t\t\t<ip-address>\n\t\t\t\t\t\t<entry name=\"127.0.0.1\"/>\n\t\t\t\t\t</ip-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"::1\"/>\n\t\t\t\t\t\t<entry name=\"fe80::8\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t</network-interface>\n\t\t</entry>\n\t\t<entry name=\"anti-malware\">\n\t\t\t<list>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Cortex XDR\" version=\"9.0.0\" vendor=\"Palo Alto Networks, Inc.\" defver=\"2026.07.25\" engver=\"\" datemon=\"07\" dateday=\"25\" dateyear=\"2026\" prodType=\"3\" osType=\"4\"/>\n\t\t\t\t\t\t<real-time-protection>yes</real-time-protection>\n\t\t\t\t\t\t<last-full-scan-time>07/20/2026 12:50:41</last-full-scan-time>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Xprotect\" version=\"5352\" vendor=\"Apple Inc.\" defver=\"5352\" engver=\"\" datemon=\"07\" dateday=\"24\" dateyear=\"2026\" prodType=\"3\" osType=\"4\"/>\n\t\t\t\t\t\t<real-time-protection>no</real-time-protection>\n\t\t\t\t\t\t<last-full-scan-time>n/a</last-full-scan-time>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Gatekeeper\" version=\"15.7.7\" vendor=\"Apple Inc.\" defver=\"\" engver=\"\" datemon=\"\" dateday=\"\" dateyear=\"\" prodType=\"3\" osType=\"4\"/>\n\t\t\t\t\t\t<real-time-protection>yes</real-time-protection>\n\t\t\t\t\t\t<last-full-scan-time>n/a</last-full-scan-time>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t</list>\n\t\t</entry>\n\t\t<entry name=\"disk-backup\">\n\t\t\t<list>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Google Drive\" version=\"128.0\" vendor=\"Google Inc.\"/>\n\t\t\t\t\t\t<last-backup-time>n/a</last-backup-time>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Time Machine\" version=\"1.3\" vendor=\"Apple Inc.\"/>\n\t\t\t\t\t\t<last-backup-time>n/a</last-backup-time>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t</list>\n\t\t</entry>\n\t\t<entry name=\"disk-encryption\">\n\t\t\t<list>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"FileVault\" version=\"15.7.7\" vendor=\"Apple Inc.\"/>\n\t\t\t\t\t\t<drives>\n\t\t\t\t\t\t\t<entry>\n\t\t\t\t\t\t\t\t<drive-name>Macintosh HD - Data</drive-name>\n\t\t\t\t\t\t\t\t<enc-state>encrypted</enc-state>\n\t\t\t\t\t\t\t</entry>\n\t\t\t\t\t\t\t<entry>\n\t\t\t\t\t\t\t\t<drive-name>Macintosh HD</drive-name>\n\t\t\t\t\t\t\t\t<enc-state>encrypted</enc-state>\n\t\t\t\t\t\t\t</entry>\n\t\t\t\t\t\t\t<entry>\n\t\t\t\t\t\t\t\t<drive-name>All</drive-name>\n\t\t\t\t\t\t\t\t<enc-state>encrypted</enc-state>\n\t\t\t\t\t\t\t</entry>\n\t\t\t\t\t\t</drives>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t</list>\n\t\t</entry>\n\t\t<entry name=\"firewall\">\n\t\t\t<list>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Mac OS X Builtin Firewall\" version=\"15.7.7\" vendor=\"Apple Inc.\"/>\n\t\t\t\t\t\t<is-enabled>yes</is-enabled>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Packet Filter\" version=\"15.7.7\" vendor=\"OpenBSD\"/>\n\t\t\t\t\t\t<is-enabled>yes</is-enabled>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t</list>\n\t\t</entry>\n\t\t<entry name=\"data-loss-prevention\">\n\t\t\t<list>\n\t\t\t</list>\n\t\t</entry>\n\t\t<entry name=\"patch-management\">\n\t\t\t<list>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Jamf Pro\" version=\"11.25.2\" vendor=\"JAMF Software\"/>\n\t\t\t\t\t\t<is-enabled>yes</is-enabled>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Microsoft AutoUpdate\" version=\"4.84\" vendor=\"Microsoft Corporation\"/>\n\t\t\t\t\t\t<is-enabled>no</is-enabled>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Software Update\" version=\"3.0\" vendor=\"Apple Inc.\"/>\n\t\t\t\t\t\t<is-enabled>yes</is-enabled>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t</list>\n\t\t\t<missing-patches>\n\t\t\t</missing-patches>\n\t\t</entry>\n\t\t<entry name=\"certificate\">\n\t\t\t<list>\n\t\t\t</list>\n\t\t</entry>\n\t</categories>\n\t<custom-checks>\n\t\t<plist>\n\t\t\t<entry name=\"com.jamfsoftware.jamf\">\n\t\t\t\t<exist>yes</exist>\n\t\t\t\t<value></value>\n\t\t\t\t<preference-value>\n\t\t\t\t\t<entry name=\"jss_url\">\n\t\t\t\t\t\t<exist>yes</exist>\n\t\t\t\t\t\t<value>https://jss.example.com:8443/</value>\n\t\t\t\t\t</entry>\n\t\t\t\t</preference-value>\n\t\t\t</entry>\n\t\t</plist>\n\t</custom-checks>\n</hip-report>",
+      "raw_patches_xml": "<missing-patches>\n\t\t\t\t<entry>\n\t\t\t\t\t<title>Safari26.5.2SequoiaAuto-26.5.2</title>\n\t\t\t\t\t<description>Title: Safari, Version: 26.5.2, Size: 226530KiB, Recommended: YES, </description>\n\t\t\t\t\t<product></product>\n\t\t\t\t\t<vendor></vendor>\n\t\t\t\t\t<info-url></info-url>\n\t\t\t\t\t<kb-article-id>127685</kb-article-id>\n\t\t\t\t\t<security-bulletin-id></security-bulletin-id>\n\t\t\t\t\t<severity>moderate</severity>\n\t\t\t\t\t<category>update</category>\n\t\t\t\t\t<is-installed>n/a</is-installed>\n\t\t\t\t\t<deadline-info>n/a</deadline-info>\n\t\t\t\t</entry>\n\t\t\t\t<entry>\n\t\t\t\t\t<title>macOS Tahoe 26.5.2-25F84</title>\n\t\t\t\t\t<description>Title: macOS Tahoe 26.5.2, Version: 26.5.2, Size: 9819136KiB, Recommended: YES, Action: restart, </description>\n\t\t\t\t\t<product>macOS Tahoe</product>\n\t\t\t\t\t<vendor></vendor>\n\t\t\t\t\t<info-url></info-url>\n\t\t\t\t\t<kb-article-id>127595</kb-article-id>\n\t\t\t\t\t<security-bulletin-id></security-bulletin-id>\n\t\t\t\t\t<severity>important</severity>\n\t\t\t\t\t<category>update</category>\n\t\t\t\t\t<is-installed>n/a</is-installed>\n\t\t\t\t\t<deadline-info>n/a</deadline-info>\n\t\t\t\t</entry>\n\t\t\t</missing-patches>"
+    }
+  },
+  "windows": {
+    "platform": "windows",
+    "collection": null,
+    "next_check": null,
+    "gateways": [],
+    "cycles": [
+      {
+        "index": 0,
+        "started_at": "2026-07-23T12:28:18.748000+00:00",
+        "generate_time": "2026-07-23T12:28:19+00:00",
+        "duration_s": 8.0,
+        "partial": false,
+        "policy": {
+          "collection_hip_data": true,
+          "max_wait_time": 20,
+          "default_categories": [
+            "host-info",
+            "data-loss-prevention",
+            "patch-management",
+            "firewall",
+            "anti-malware",
+            "disk-backup",
+            "disk-encryption"
+          ],
+          "exclusion_categories": [],
+          "custom_check": {
+            "windows": {
+              "registry_key": [],
+              "process_list": []
+            },
+            "mac_os": {
+              "plist": [],
+              "process_list": []
+            }
+          },
+          "certs": [],
+          "raw": {
+            "collection_hip_data": true,
+            "max_wait_time": 20,
+            "certs": [],
+            "default_categories": [
+              "host-info",
+              "data-loss-prevention",
+              "patch-management",
+              "firewall",
+              "anti-malware",
+              "disk-backup",
+              "disk-encryption"
+            ],
+            "exclusion_categories": [],
+            "custom_check": {
+              "windows": {
+                "registry_key": [],
+                "process_list": []
+              },
+              "mac_os": {
+                "plist": [],
+                "process_list": []
+              }
+            }
+          }
+        },
+        "report": {
+          "version": "4",
+          "host_info": {
+            "client_version": "26.2.2.19",
+            "os": "Microsoft Windows 11 Enterprise , 64-bit",
+            "os_vendor": "Microsoft",
+            "domain": "example.com",
+            "host_name": "testhost",
+            "host_id": "00000000-0000-0000-0000-000000000002",
+            "host_id_kind": "machine-guid",
+            "interfaces": [
+              {
+                "name": "{00000000-0000-0000-0000-000000000003}",
+                "description": "PA Virtual Ethernet Adapter Secure",
+                "mac": "00-00-5E-00-53-01",
+                "ipv4": [
+                  "192.0.2.1"
+                ],
+                "ipv6": [
+                  "fe80::1"
+                ]
+              },
+              {
+                "name": "{00000000-0000-0000-0000-000000000004}",
+                "description": "Intel(R) Wi-Fi 7 BE201 320MHz #4",
+                "mac": "00-00-5E-00-53-02",
+                "ipv4": [
+                  "169.254.1.1"
+                ],
+                "ipv6": [
+                  "fe80::2"
+                ]
+              },
+              {
+                "name": "{00000000-0000-0000-0000-000000000005}",
+                "description": "Intel(R) Wi-Fi 7 BE201 320MHz",
+                "mac": "00-00-5E-00-53-03",
+                "ipv4": [
+                  "192.0.2.2"
+                ],
+                "ipv6": [
+                  "fe80::3"
+                ]
+              },
+              {
+                "name": "{00000000-0000-0000-0000-000000000006}",
+                "description": "Intel(R) Wi-Fi 7 BE201 320MHz #5",
+                "mac": "00-00-5E-00-53-04",
+                "ipv4": [
+                  "169.254.1.2"
+                ],
+                "ipv6": [
+                  "fe80::4"
+                ]
+              },
+              {
+                "name": "{00000000-0000-0000-0000-000000000007}",
+                "description": "Software Loopback Interface 1",
+                "mac": null,
+                "ipv4": [
+                  "127.0.0.1"
+                ],
+                "ipv6": [
+                  "::1"
+                ]
+              }
+            ]
+          },
+          "categories": [
+            {
+              "name": "anti-malware",
+              "products": [
+                {
+                  "name": "Microsoft Defender ATP",
+                  "version": "10.0.26200.8246",
+                  "vendor": "Microsoft Corporation",
+                  "def_version": "1.455.279.0",
+                  "def_date": "2026-07-23",
+                  "attributes": {
+                    "engver": "1.1.26060.3008",
+                    "prodType": "3",
+                    "osType": "1",
+                    "real-time-protection": "yes",
+                    "last-full-scan-time": "01/01/1970 01:00:00"
+                  },
+                  "signature": 3194,
+                  "errors": [],
+                  "status": "ok",
+                  "status_reason": "real-time-protection is yes and no OPSWAT error covers it."
+                },
+                {
+                  "name": "Windows Defender",
+                  "version": "4.18.26060.3008",
+                  "vendor": "Microsoft Corporation",
+                  "def_version": "1.455.279.0",
+                  "def_date": "2026-07-23",
+                  "attributes": {
+                    "engver": "1.1.26060.3008",
+                    "prodType": "3",
+                    "osType": "1",
+                    "real-time-protection": "yes",
+                    "last-full-scan-time": "01/01/1970 01:00:00"
+                  },
+                  "signature": 477,
+                  "errors": [],
+                  "status": "ok",
+                  "status_reason": "real-time-protection is yes and no OPSWAT error covers it."
+                }
+              ],
+              "missing_patches": [],
+              "patches_source": null,
+              "status": "ok",
+              "status_reason": "All 2 products report a good value."
+            },
+            {
+              "name": "disk-backup",
+              "products": [
+                {
+                  "name": "Windows File History",
+                  "version": "10.0.26100.8457",
+                  "vendor": "Microsoft Corporation",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "last-backup-time": "n/a"
+                  },
+                  "signature": 936,
+                  "errors": [],
+                  "status": "unknown",
+                  "status_reason": "This product reports no attribute whose value can be judged."
+                },
+                {
+                  "name": "Microsoft OneDrive",
+                  "version": "26.108.0607.0002",
+                  "vendor": "Microsoft Corporation",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "last-backup-time": "n/a"
+                  },
+                  "signature": 842,
+                  "errors": [],
+                  "status": "unknown",
+                  "status_reason": "This product reports no attribute whose value can be judged."
+                },
+                {
+                  "name": "Windows Backup and Restore",
+                  "version": "10.0.26100.8457",
+                  "vendor": "Microsoft Corporation",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "last-backup-time": "n/a"
+                  },
+                  "signature": 935,
+                  "errors": [],
+                  "status": "unknown",
+                  "status_reason": "This product reports no attribute whose value can be judged."
+                }
+              ],
+              "missing_patches": [],
+              "patches_source": null,
+              "status": "unknown",
+              "status_reason": "3 of 3 products could not be queried."
+            },
+            {
+              "name": "disk-encryption",
+              "products": [
+                {
+                  "name": "BitLocker Drive Encryption",
+                  "version": "10.0.26100.8115",
+                  "vendor": "Microsoft Corporation",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "drives": [
+                      {
+                        "drive-name": "C:\\",
+                        "enc-state": "encrypted"
+                      },
+                      {
+                        "drive-name": "All",
+                        "enc-state": "encrypted"
+                      }
+                    ]
+                  },
+                  "drives": [
+                    {
+                      "name": "C:\\",
+                      "enc_state": "encrypted"
+                    },
+                    {
+                      "name": "All",
+                      "enc_state": "encrypted"
+                    }
+                  ],
+                  "signature": 882,
+                  "errors": [],
+                  "status": "ok",
+                  "status_reason": "All 2 drives report enc-state encrypted."
+                }
+              ],
+              "missing_patches": [],
+              "patches_source": null,
+              "status": "ok",
+              "status_reason": "All 1 product reports a good value."
+            },
+            {
+              "name": "firewall",
+              "products": [
+                {
+                  "name": "Windows Firewall",
+                  "version": "10.0.26100.8115",
+                  "vendor": "Microsoft Corporation",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "is-enabled": "yes"
+                  },
+                  "signature": 288,
+                  "errors": [],
+                  "status": "ok",
+                  "status_reason": "is-enabled is yes and no OPSWAT error covers it."
+                }
+              ],
+              "missing_patches": [],
+              "patches_source": null,
+              "status": "ok",
+              "status_reason": "All 1 product reports a good value."
+            },
+            {
+              "name": "data-loss-prevention",
+              "products": [],
+              "missing_patches": [],
+              "patches_source": null,
+              "status": "not-detected",
+              "status_reason": "No products were detected in this category."
+            },
+            {
+              "name": "patch-management",
+              "products": [
+                {
+                  "name": "Microsoft Intune Management Extension",
+                  "version": "1.103.101.0",
+                  "vendor": "Microsoft Corporation",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "is-enabled": "n/a"
+                  },
+                  "signature": 3298,
+                  "errors": [
+                    {
+                      "code": -12,
+                      "code_meaning": "An error when a method call was made on a component that does not implement it.",
+                      "method": 1012,
+                      "method_name": null,
+                      "signature": 3298,
+                      "category_id": 12,
+                      "category": "patch-management",
+                      "product": "Microsoft Intune Management Extension",
+                      "source": "PACompliance",
+                      "raw_message": "CollectComplianceDataForPatchManagement: Opswat Error(-12): An error when a method call was made on a component that does not implement it, Signature: 3298, Category: 12, Method: 1012, OESIS (V4 ver: 4.3.5495.0)"
+                    }
+                  ],
+                  "status": "unknown",
+                  "status_reason": "is-enabled is n/a, which is neither yes nor no."
+                },
+                {
+                  "name": "System Center Configuration Manager Client",
+                  "version": "5.00.9146.1009",
+                  "vendor": "Microsoft Corporation",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "is-enabled": "yes"
+                  },
+                  "signature": 1139,
+                  "errors": [],
+                  "status": "ok",
+                  "status_reason": "is-enabled is yes and no OPSWAT error covers it."
+                },
+                {
+                  "name": "Dell Command | Update",
+                  "version": "5.7.0.97",
+                  "vendor": "Dell Inc.",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "is-enabled": "n/a"
+                  },
+                  "signature": 3905,
+                  "errors": [
+                    {
+                      "code": -12,
+                      "code_meaning": "An error when a method call was made on a component that does not implement it.",
+                      "method": 1012,
+                      "method_name": null,
+                      "signature": 3905,
+                      "category_id": 12,
+                      "category": "patch-management",
+                      "product": "Dell Command | Update",
+                      "source": "PACompliance",
+                      "raw_message": "CollectComplianceDataForPatchManagement: Opswat Error(-12): An error when a method call was made on a component that does not implement it, Signature: 3905, Category: 12, Method: 1012, OESIS (V4 ver: 4.3.5495.0)"
+                    }
+                  ],
+                  "status": "unknown",
+                  "status_reason": "is-enabled is n/a, which is neither yes nor no."
+                },
+                {
+                  "name": "Windows Update Agent",
+                  "version": "1451.2601.23012.0",
+                  "vendor": "Microsoft Corporation",
+                  "def_version": null,
+                  "def_date": null,
+                  "attributes": {
+                    "is-enabled": "yes"
+                  },
+                  "signature": 1103,
+                  "errors": [],
+                  "status": "ok",
+                  "status_reason": "is-enabled is yes and no OPSWAT error covers it."
+                }
+              ],
+              "missing_patches": [],
+              "patches_source": null,
+              "status": "unknown",
+              "status_reason": "2 of 4 products could not be queried."
+            },
+            {
+              "name": "certificate",
+              "products": [],
+              "missing_patches": [],
+              "patches_source": null,
+              "status": "not-detected",
+              "status_reason": "No products were detected in this category."
+            }
+          ],
+          "custom_checks": null
+        },
+        "opswat_errors": [
+          {
+            "code": -12,
+            "code_meaning": "An error when a method call was made on a component that does not implement it.",
+            "method": 1012,
+            "method_name": null,
+            "signature": 3298,
+            "category_id": 12,
+            "category": "patch-management",
+            "product": "Microsoft Intune Management Extension",
+            "source": "PACompliance",
+            "raw_message": "CollectComplianceDataForPatchManagement: Opswat Error(-12): An error when a method call was made on a component that does not implement it, Signature: 3298, Category: 12, Method: 1012, OESIS (V4 ver: 4.3.5495.0)"
+          },
+          {
+            "code": -12,
+            "code_meaning": "An error when a method call was made on a component that does not implement it.",
+            "method": 1012,
+            "method_name": null,
+            "signature": 3905,
+            "category_id": 12,
+            "category": "patch-management",
+            "product": "Dell Command | Update",
+            "source": "PACompliance",
+            "raw_message": "CollectComplianceDataForPatchManagement: Opswat Error(-12): An error when a method call was made on a component that does not implement it, Signature: 3905, Category: 12, Method: 1012, OESIS (V4 ver: 4.3.5495.0)"
+          }
+        ],
+        "category_timings": {
+          "host-info": 0,
+          "anti-malware": 3,
+          "disk-backup": 0,
+          "disk-encryption": 0,
+          "firewall": 0,
+          "data-loss-prevention": 0,
+          "patch-management": 1,
+          "All": 6
+        },
+        "dispatch": {
+          "sent": true,
+          "succeeded": true,
+          "status_code": 0
+        },
+        "counts": {
+          "warn": 0,
+          "unknown": 5,
+          "errors": 2,
+          "missing_patches": 0
+        }
+      }
+    ]
+  },
+  "windowsRaw": {
+    "0": {
+      "raw_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<hip-report>\n\t<generate-time>07/23/2026 14:28:19</generate-time>\n\t<hip-report-version>4</hip-report-version>\n\t<categories>\n\t\t<entry name=\"host-info\">\n\t\t\t<client-version>26.2.2.19</client-version>\n\t\t\t<os>Microsoft Windows 11 Enterprise , 64-bit</os>\n\t\t\t<os-vendor>Microsoft</os-vendor>\n\t\t\t<domain>example.com</domain>\n\t\t\t<host-name>testhost</host-name>\n\t\t\t<host-id>00000000-0000-0000-0000-000000000002</host-id>\n\t\t\t<network-interface>\n\t\t\t\t<entry name=\"{00000000-0000-0000-0000-000000000003}\">\n\t\t\t\t\t<description>PA Virtual Ethernet Adapter Secure</description>\n\t\t\t\t\t<mac-address>00-00-5E-00-53-01</mac-address>\n\t\t\t\t\t<ip-address>\n\t\t\t\t\t\t<entry name=\"192.0.2.1\"/>\n\t\t\t\t\t</ip-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"fe80::1\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"{00000000-0000-0000-0000-000000000004}\">\n\t\t\t\t\t<description>Intel(R) Wi-Fi 7 BE201 320MHz #4</description>\n\t\t\t\t\t<mac-address>00-00-5E-00-53-02</mac-address>\n\t\t\t\t\t<ip-address>\n\t\t\t\t\t\t<entry name=\"169.254.1.1\"/>\n\t\t\t\t\t</ip-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"fe80::2\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"{00000000-0000-0000-0000-000000000005}\">\n\t\t\t\t\t<description>Intel(R) Wi-Fi 7 BE201 320MHz</description>\n\t\t\t\t\t<mac-address>00-00-5E-00-53-03</mac-address>\n\t\t\t\t\t<ip-address>\n\t\t\t\t\t\t<entry name=\"192.0.2.2\"/>\n\t\t\t\t\t</ip-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"fe80::3\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"{00000000-0000-0000-0000-000000000006}\">\n\t\t\t\t\t<description>Intel(R) Wi-Fi 7 BE201 320MHz #5</description>\n\t\t\t\t\t<mac-address>00-00-5E-00-53-04</mac-address>\n\t\t\t\t\t<ip-address>\n\t\t\t\t\t\t<entry name=\"169.254.1.2\"/>\n\t\t\t\t\t</ip-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"fe80::4\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t\t<entry name=\"{00000000-0000-0000-0000-000000000007}\">\n\t\t\t\t\t<description>Software Loopback Interface 1</description>\n\t\t\t\t\t<mac-address></mac-address>\n\t\t\t\t\t<ip-address>\n\t\t\t\t\t\t<entry name=\"127.0.0.1\"/>\n\t\t\t\t\t</ip-address>\n\t\t\t\t\t<ipv6-address>\n\t\t\t\t\t\t<entry name=\"::1\"/>\n\t\t\t\t\t</ipv6-address>\n\t\t\t\t</entry>\n\t\t\t</network-interface>\n\t\t</entry>\n\t\t<entry name=\"anti-malware\">\n\t\t\t<list>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Microsoft Defender ATP\" version=\"10.0.26200.8246\" vendor=\"Microsoft Corporation\" defver=\"1.455.279.0\" engver=\"1.1.26060.3008\" datemon=\"07\" dateday=\"23\" dateyear=\"2026\" prodType=\"3\" osType=\"1\"/>\n\t\t\t\t\t\t<real-time-protection>yes</real-time-protection>\n\t\t\t\t\t\t<last-full-scan-time>01/01/1970 01:00:00</last-full-scan-time>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Windows Defender\" version=\"4.18.26060.3008\" vendor=\"Microsoft Corporation\" defver=\"1.455.279.0\" engver=\"1.1.26060.3008\" datemon=\"07\" dateday=\"23\" dateyear=\"2026\" prodType=\"3\" osType=\"1\"/>\n\t\t\t\t\t\t<real-time-protection>yes</real-time-protection>\n\t\t\t\t\t\t<last-full-scan-time>01/01/1970 01:00:00</last-full-scan-time>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t</list>\n\t\t</entry>\n\t\t<entry name=\"disk-backup\">\n\t\t\t<list>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Windows File History\" version=\"10.0.26100.8457\" vendor=\"Microsoft Corporation\"/>\n\t\t\t\t\t\t<last-backup-time>n/a</last-backup-time>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Microsoft OneDrive\" version=\"26.108.0607.0002\" vendor=\"Microsoft Corporation\"/>\n\t\t\t\t\t\t<last-backup-time>n/a</last-backup-time>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Windows Backup and Restore\" version=\"10.0.26100.8457\" vendor=\"Microsoft Corporation\"/>\n\t\t\t\t\t\t<last-backup-time>n/a</last-backup-time>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t</list>\n\t\t</entry>\n\t\t<entry name=\"disk-encryption\">\n\t\t\t<list>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"BitLocker Drive Encryption\" version=\"10.0.26100.8115\" vendor=\"Microsoft Corporation\"/>\n\t\t\t\t\t\t<drives>\n\t\t\t\t\t\t\t<entry>\n\t\t\t\t\t\t\t\t<drive-name>C:\\</drive-name>\n\t\t\t\t\t\t\t\t<enc-state>encrypted</enc-state>\n\t\t\t\t\t\t\t</entry>\n\t\t\t\t\t\t\t<entry>\n\t\t\t\t\t\t\t\t<drive-name>All</drive-name>\n\t\t\t\t\t\t\t\t<enc-state>encrypted</enc-state>\n\t\t\t\t\t\t\t</entry>\n\t\t\t\t\t\t</drives>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t</list>\n\t\t</entry>\n\t\t<entry name=\"firewall\">\n\t\t\t<list>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Windows Firewall\" version=\"10.0.26100.8115\" vendor=\"Microsoft Corporation\"/>\n\t\t\t\t\t\t<is-enabled>yes</is-enabled>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t</list>\n\t\t</entry>\n\t\t<entry name=\"data-loss-prevention\">\n\t\t\t<list>\n\t\t\t</list>\n\t\t</entry>\n\t\t<entry name=\"patch-management\">\n\t\t\t<list>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Microsoft Intune Management Extension\" version=\"1.103.101.0\" vendor=\"Microsoft Corporation\"/>\n\t\t\t\t\t\t<is-enabled>n/a</is-enabled>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"System Center Configuration Manager Client\" version=\"5.00.9146.1009\" vendor=\"Microsoft Corporation\"/>\n\t\t\t\t\t\t<is-enabled>yes</is-enabled>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Dell Command | Update\" version=\"5.7.0.97\" vendor=\"Dell Inc.\"/>\n\t\t\t\t\t\t<is-enabled>n/a</is-enabled>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t\t<entry>\n\t\t\t\t\t<ProductInfo>\n\t\t\t\t\t\t<Prod name=\"Windows Update Agent\" version=\"1451.2601.23012.0\" vendor=\"Microsoft Corporation\"/>\n\t\t\t\t\t\t<is-enabled>yes</is-enabled>\n\t\t\t\t\t</ProductInfo>\n\t\t\t\t</entry>\n\t\t\t</list>\n\t\t\t<missing-patches>\n\t\t\t</missing-patches>\n\t\t</entry>\n\t\t<entry name=\"certificate\">\n\t\t\t<list>\n\t\t\t</list>\n\t\t</entry>\n\t</categories>\n</hip-report>",
+      "raw_patches_xml": null
+    }
+  },
+  "empty": {
+    "platform": "unknown",
+    "collection": null,
+    "next_check": null,
+    "gateways": [],
+    "cycles": []
+  }
+}
