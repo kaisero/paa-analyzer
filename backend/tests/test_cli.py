@@ -86,3 +86,23 @@ class TestCliMain:
         assert "_meta" in data
         assert "data" in data
         assert data["_meta"]["type"] == "state"
+
+    def test_creates_hip_file(self, sample_zip_file, tmp_path, monkeypatch):
+        output_dir = tmp_path / "output"
+        monkeypatch.setattr(sys, "argv", ["paa-parse", str(sample_zip_file), str(output_dir)])
+        from paa_analyzer.cli import main
+
+        main()
+        hip_file = output_dir / "hip.json"
+        assert hip_file.exists()
+        hip_data = json.loads(hip_file.read_text())
+        # The sample bundle carries two rotations each of PACompliance.log and
+        # PAComplianceMp.log (see conftest.build_sample_zip), matching the two
+        # cycles the HIP unit tests exercise for the same fixtures.
+        assert len(hip_data["cycles"]) == 2
+        # Unlike the API (which serves raw XML from a separate endpoint), the
+        # CLI has no separate raw endpoint, so hip.json carries the full model.
+        assert "_raw" in hip_data
+
+        manifest = json.loads((output_dir / "manifest.json").read_text())
+        assert manifest["total_hip_cycles"] == 2

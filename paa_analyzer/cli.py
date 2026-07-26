@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from paa_analyzer import parsers, parsers_win
+from paa_analyzer.hip import build_hip_data
 from paa_analyzer.taxonomy import (
     LOG_SOURCES,
     PACLI_FILES,
@@ -44,6 +45,7 @@ def main() -> None:
 
     # Extract and get timezone context
     tz_offset: str | None = None
+    platform = "unknown"
     manifest: list[dict[str, Any]] = []
     all_state: dict[str, dict[str, Any]] = {}
     all_logs: dict[str, dict[str, Any]] = {}
@@ -51,12 +53,15 @@ def main() -> None:
     errors: list[dict[str, str]] = []
 
     with zipfile.ZipFile(zip_path, "r") as zf:
-        # First pass: find timezone from pacli_status
+        # First pass: find timezone from pacli_status and detect platform
         for info in zf.infolist():
             if info.filename.endswith("pacli_status.log"):
                 text = zf.read(info).decode("utf-8", errors="replace")
                 tz_offset = parsers.extract_tz_offset(text)
-                break
+            if "Machine Info/" in info.filename:
+                platform = "windows"
+            elif info.filename.endswith("sw_vers.txt") or info.filename.endswith("launchctl_list.txt"):
+                platform = "macos"
 
         # Second pass: parse everything
         for info in zf.infolist():
@@ -138,6 +143,13 @@ def main() -> None:
         out_file = logs_dir / f"{key}.json"
         out_file.write_text(json.dumps(log, indent=2, default=str), encoding="utf-8")
 
+    # Build and write the HIP domain model. Unlike the API (which serves raw
+    # cycle XML from a separate endpoint to keep the main response cheap), the
+    # CLI has no separate raw endpoint, so hip.json carries the full model
+    # including the `_raw` key.
+    hip_data = build_hip_data(all_logs, all_state, platform, tz_offset)
+    (output_dir / "hip.json").write_text(json.dumps(hip_data, indent=2, default=str), encoding="utf-8")
+
     # Write manifest
     summary = {
         "source_file": zip_path.name,
@@ -147,6 +159,7 @@ def main() -> None:
         "parsed_state": len(all_state),
         "parsed_logs": len(all_logs),
         "total_log_entries": sum(lg["_meta"]["entry_count"] for lg in all_logs.values()),
+        "total_hip_cycles": len(hip_data["cycles"]),
         "skipped_files": skipped,
         "errors": errors,
         "state_files": sorted(all_state.keys()),
@@ -158,6 +171,7 @@ def main() -> None:
     print(f"\nDone in {elapsed:.1f}s")
     print(f"  State: {len(all_state)} files → {state_dir}/")
     print(f"  Logs:  {len(all_logs)} sources, {summary['total_log_entries']:,} entries → {logs_dir}/")
+    print(f"  HIP:   {summary['total_hip_cycles']} cycles → {output_dir}/hip.json")
     print(f"  Skipped: {len(skipped)} files")
     if errors:
         print(f"  Errors: {len(errors)}")
