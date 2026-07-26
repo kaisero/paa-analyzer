@@ -10,8 +10,9 @@ const macos = hipFixture.macos as unknown as HipData;
 const windows = hipFixture.windows as unknown as HipData;
 
 function renderList(hip: HipData) {
-  // sessionId is real but view stays Grid in every test below, so useHipRaw
-  // stays disabled and no MSW handler is needed for this suite.
+  // sessionId is real: most tests below never leave the default View mode,
+  // but a couple do flip to Raw, which fetches via useHipRaw. That's served
+  // by the global MSW handler in test/handlers.ts, not anything added here.
   return renderWithProviders(
     <ComplianceChecklist cycle={hip.cycles[0]} sessionId="s1" />,
   );
@@ -84,7 +85,7 @@ describe('ComplianceChecklist', () => {
     expect(screen.getByText('No custom checks collected for this platform.')).toBeInTheDocument();
   });
 
-  it('flips to XML and renders the labelled hip-report document', async () => {
+  it('flips to Raw and renders the labelled hip-report document', async () => {
     const user = userEvent.setup();
     renderList(macos);
     await user.click(screen.getByText('Raw'));
@@ -95,10 +96,10 @@ describe('ComplianceChecklist', () => {
     expect(pre?.textContent).toContain('hip-report-version');
   });
 
-  it('still offers XML and JSON when the cycle carries no report', () => {
+  it('still offers Raw and JSON when the cycle carries no report', () => {
     // Regression guard for I3: the `!report` guard used to run before the
-    // view dispatch, so a truncated cycle with no report lost XML/JSON
-    // entirely — exactly the cycle where raw XML matters most.
+    // view dispatch, so a truncated cycle with no report lost Raw/JSON
+    // entirely — exactly the cycle where the raw document matters most.
     const noReport = { ...macos.cycles[0], report: null };
     renderWithProviders(<ComplianceChecklist cycle={noReport} sessionId="s1" />);
     expect(screen.getByText('Raw')).toBeInTheDocument();
