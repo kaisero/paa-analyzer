@@ -1,8 +1,7 @@
 """Tests for paa_analyzer.hip.status and paa_analyzer.hip.build_hip_data.
 
 Every HIP input here is a redacted real fixture in backend/tests/fixtures/hip/
-run through the real parsers — no hand-authored HIP log lines or HIP XML (see
-.superpowers/sdd/global-constraints.md).
+run through the real parsers — no hand-authored HIP log lines or HIP XML.
 """
 
 from pathlib import Path

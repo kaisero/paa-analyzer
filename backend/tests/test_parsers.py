@@ -276,8 +276,7 @@ class TestSystemInfo:
 
 class TestHipStatus:
     # Legacy 2-column form (Gateway / Last HIP Report, no Status column). No
-    # real bundle exhibiting this layout is available -- see
-    # .superpowers/sdd/global-constraints.md -- but it is wired into
+    # real bundle exhibiting this layout is available, but it is wired into
     # backend/tests/conftest.py's build_sample_zip() and the e2e tests, so it
     # is kept here as a regression case proving that form still parses.
     LEGACY_SAMPLE = """\
@@ -362,6 +361,15 @@ Austria                 2026-04-03 06:57:30
         assert south_korea["gateway"] == "South Korea"
         assert south_korea["status"] == "Failed to send HIP report to Sout"
         assert south_korea["status_kind"] == "failed"
+
+    def test_unknown_status_kind_for_unrecognized_status_string(self):
+        # Direct unit test of _hip_status_kind() with an unrecognized status.
+        # This tests the fallback branch at parsers.py:198, which is most likely
+        # to matter in production (any future agent status text outside the three
+        # known prefixes lands here). We use a synthetic string to test the
+        # classification logic itself, not fabricated bundle data.
+        result = parsers._hip_status_kind("Some unknown status")
+        assert result == "unknown"
 
 
 class TestProtection:

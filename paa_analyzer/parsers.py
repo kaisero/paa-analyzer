@@ -211,6 +211,13 @@ def hip_status(text: str, tz: str | None = None, **_: Any) -> Record:
     length). A 2-column table yields gateways with `status: None` /
     `status_kind: "unknown"`; a 3-column table also yields `status` /
     `status_kind`.
+
+    The agent truncates the Status column to its display width, so a real
+    status value can be cut mid-word (e.g. "Failed to send HIP report to Finl").
+    Column-width parsing assumes: (a) values in other columns do not overflow
+    their header-derived width (confirmed only for Status, where real data shows
+    truncation); (b) a table with no dashed separator line yields no gateways,
+    since the separator anchors the column detection.
     """
     data: Record = {"collection": "", "next_check": None, "gateways": []}
     column_starts: list[int] | None = None
