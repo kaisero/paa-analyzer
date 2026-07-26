@@ -46,7 +46,13 @@ def parse_hip_report(xml_text: str, platform: str) -> dict[str, Any] | None:
     `xml_text` is the full log message (e.g. "GetHipReport report <?xml
     ...>...</hip-report>"), not a pre-sliced XML string -- the document is
     located between the first "<?xml" and the closing "</hip-report>" and
-    parsed from there. Returns None if either boundary is missing.
+    parsed from there. Returns None if either boundary is missing, and also
+    if the sliced text is present but not well-formed XML (e.g. an
+    unescaped "&" or a stray control character in a host/product/domain
+    name, or a non-timestamped line from another thread landing mid-XML via
+    parsers.structured_log()) -- this degrades exactly like the missing-
+    boundary case rather than raising ET.ParseError into the caller, so one
+    malformed cycle never fails the whole bundle's parse.
 
     `platform` is accepted for symmetry with the rest of the cycle-assembly
     API (Task 4) but does not influence parsing: host_id_kind is derived
@@ -60,7 +66,10 @@ def parse_hip_report(xml_text: str, platform: str) -> dict[str, Any] | None:
         return None
     end += len(_REPORT_END)
 
-    root = ET.fromstring(xml_text[start:end])
+    try:
+        root = ET.fromstring(xml_text[start:end])
+    except ET.ParseError:
+        return None
 
     host_info: dict[str, Any] | None = None
     categories: list[dict[str, Any]] = []

@@ -39,6 +39,10 @@ def parse_missing_patches(fragment_text: str) -> list[dict[str, Any]]:
     """Parse a <missing-patches>...</missing-patches> fragment (as embedded
     in a GetMissingPatchesReport log message) into a list of MissingPatch
     dicts. An empty fragment -- or text with no fragment at all -- yields [].
+    So does a fragment that is present but not well-formed XML (e.g. an
+    unescaped "&" in a patch title/description): this degrades the same way
+    as the missing-fragment case rather than raising ET.ParseError into the
+    caller, so one malformed cycle never fails the whole bundle's parse.
     """
     start = fragment_text.find(_FRAGMENT_START)
     if start == -1:
@@ -48,7 +52,10 @@ def parse_missing_patches(fragment_text: str) -> list[dict[str, Any]]:
         return []
     end += len(_FRAGMENT_END)
 
-    root = ET.fromstring(fragment_text[start:end])
+    try:
+        root = ET.fromstring(fragment_text[start:end])
+    except ET.ParseError:
+        return []
 
     patches = []
     for entry in root.findall("entry"):

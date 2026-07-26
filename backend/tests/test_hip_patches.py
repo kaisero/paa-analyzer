@@ -78,3 +78,20 @@ class TestEmptyFragment:
 
     def test_text_with_no_missing_patches_tag_yields_empty_list(self):
         assert parse_missing_patches("no xml here at all") == []
+
+
+class TestMalformedXml:
+    """One malformed character in a real patch fragment must degrade to [],
+    not propagate ET.ParseError -- see
+    docs/plans/hip-analytics-foundation.md's Important 2 finding. The input
+    is the real fixture message with a single unescaped "&" injected into
+    its <title> element, not hand-authored XML."""
+
+    def test_unescaped_ampersand_returns_empty_list_instead_of_raising(self):
+        message = _missing_patches_message("PAComplianceMp.log")
+        assert "<title>Safari26.5.2SequoiaAuto-26.5.2</title>" in message
+        malformed = message.replace(
+            "<title>Safari26.5.2SequoiaAuto-26.5.2</title>",
+            "<title>Safari & Friends</title>",
+        )
+        assert parse_missing_patches(malformed) == []

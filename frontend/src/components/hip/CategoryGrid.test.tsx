@@ -87,6 +87,22 @@ describe('CategoryGrid — Windows', () => {
   });
 });
 
+describe('CategoryGrid — cycle with no report', () => {
+  // A cycle whose XML was not well-formed (e.g. an unescaped "&") now
+  // degrades to report: null instead of failing the whole bundle's parse
+  // (paa_analyzer/hip/report.py's ET.ParseError fix) -- this was previously
+  // unreachable from any real fixture, since none is malformed. Built from a
+  // real cycle with only `report` overridden, not fabricated data.
+  const cycleWithNoReport = { ...macos.cycles[0], report: null };
+
+  it('explains the missing report instead of crashing', () => {
+    render(<CategoryGrid cycle={cycleWithNoReport} />);
+    expect(
+      screen.getByText(/This cycle carries no HIP report/),
+    ).toBeInTheDocument();
+  });
+});
+
 describe('CategoryGrid — layout config', () => {
   it('covers every category the fixtures report with products', () => {
     const named = new Set(CATEGORY_LAYOUT.map((l) => l.name));

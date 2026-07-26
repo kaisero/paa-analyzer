@@ -312,3 +312,21 @@ class TestCustomChecks:
         report = parse_hip_report(WIN_MESSAGE, "windows")
         assert report is not None
         assert report["custom_checks"] is None
+
+
+# ── malformed XML ─────────────────────────────────────────────────────────────
+
+
+class TestMalformedXml:
+    """One malformed character in a real report must degrade to None, not
+    propagate ET.ParseError -- see docs/plans/hip-analytics-foundation.md's
+    Important 2 finding. The input is the real fixture message with a single
+    unescaped "&" injected into its <os> element, not hand-authored XML."""
+
+    def test_unescaped_ampersand_returns_none_instead_of_raising(self):
+        assert "<os>Apple Mac OS X 15.7.7</os>" in MAC_MESSAGE
+        malformed = MAC_MESSAGE.replace(
+            "<os>Apple Mac OS X 15.7.7</os>",
+            "<os>Apple Mac OS X 15.7.7 & Friends</os>",
+        )
+        assert parse_hip_report(malformed, "macos") is None
