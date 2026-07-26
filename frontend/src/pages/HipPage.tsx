@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { Spin, Empty } from 'antd';
 import { useHip } from '../api/hooks';
+import { HipReportPanel } from '../components/hip/HipReportPanel';
 
 export function HipPage() {
   const { sessionId } = useParams<{ sessionId: string }>();
@@ -66,9 +67,7 @@ export function HipPage() {
             {hip.collection ?? 'unknown'}
           </div>
         </div>
-        <div style={{ color: 'var(--text-dim)', fontSize: 12 }}>
-          Report view coming soon.
-        </div>
+        <HipReportPanel hip={hip} sessionId={sessionId} />
       </div>
     </div>
   );

@@ -105,3 +105,25 @@ body {
 .animate-fade-in {
   animation: fade-in 0.4s ease-out;
 }
+
+/* HIP report grid — 4 columns; each child carries its span hint as a custom
+   property set by CategoryGrid, so the media queries below can clamp them
+   without fighting inline styles. */
+.hip-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.hip-grid > * { grid-column: span var(--hip-span, 1); min-width: 0; }
+
+@media (max-width: 1080px) {
+  .hip-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hip-grid > * { grid-column: span var(--hip-span-sm, 2); }
+}
+
+@media (max-width: 680px) {
+  .hip-grid { grid-template-columns: minmax(0, 1fr); }
+  .hip-grid > * { grid-column: span 1; }
+}

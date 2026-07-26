@@ -18,6 +18,16 @@ Object.defineProperty(window, 'matchMedia', {
   }),
 });
 
+// antd's portal-based components (Tooltip, Select dropdowns) observe their
+// trigger element; jsdom ships no ResizeObserver.
+if (!('ResizeObserver' in globalThis)) {
+  globalThis.ResizeObserver = class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
+}
+
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => {
   server.resetHandlers();
