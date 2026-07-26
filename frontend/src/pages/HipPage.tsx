@@ -19,7 +19,7 @@ export function HipPage() {
   // Keyed off cycles, never gateways: a bundle can carry HIP cycles with
   // zero gateway rows (e.g. a hip_status log that only holds an elevation
   // error), so gateways alone is not a reliable "nothing here" signal.
-  if (!hip || hip.cycles.length === 0) {
+  if (!hip?.cycles?.length) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
         <Empty

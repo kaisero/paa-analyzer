@@ -74,6 +74,30 @@ class TestGetHip:
             "cycles": [],
         }
 
+    def test_empty_shape_for_a_session_whose_parse_failed(self, app_client):
+        """The parse-failure path (backend/api/sessions.py) stores `hip={}`
+        for an errored session, not the build_hip_data() shape -- get_hip()
+        must still hand back the documented empty shape rather than `{}`, or
+        the frontend HIP page crashes on `hip.cycles.length` (see
+        HipPage.test.tsx's matching case)."""
+        resp = app_client.post(
+            "/api/v1/sessions",
+            files={"file": ("bad.zip", b"not-actually-a-zip", "application/zip")},
+        )
+        assert resp.status_code == 201
+        session = resp.json()["data"]
+        assert session["parse_status"] == "error"
+
+        hip_resp = app_client.get(f"/api/v1/sessions/{session['id']}/hip")
+        assert hip_resp.status_code == 200
+        assert hip_resp.json()["data"] == {
+            "platform": "unknown",
+            "collection": None,
+            "next_check": None,
+            "gateways": [],
+            "cycles": [],
+        }
+
 
 class TestGetHipRaw:
     def test_returns_raw_xml_for_a_valid_cycle(self, app_client, session_id):

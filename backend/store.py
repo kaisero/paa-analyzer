@@ -15,6 +15,21 @@ from paa_analyzer.taxonomy import PACLI_COMMAND_MAP
 _STANDARD_FIELDS = {"timestamp", "level", "message", "host", "pid", "beautified"}
 
 
+def _empty_hip() -> dict[str, Any]:
+    """The documented empty HipData shape -- matches what
+    `paa_analyzer.hip.build_hip_data()` returns for empty logs/state with
+    platform "unknown", which is also `Session.platform`'s default. Returns a
+    fresh dict (with fresh, unaliased `gateways`/`cycles` lists) on every
+    call, since callers may go on to mutate what they get back."""
+    return {
+        "platform": "unknown",
+        "collection": None,
+        "next_check": None,
+        "gateways": [],
+        "cycles": [],
+    }
+
+
 class SessionStore:
     def __init__(self) -> None:
         self._sessions: dict[str, dict[str, Any]] = {}
@@ -275,18 +290,22 @@ class SessionStore:
     def get_state(self, sid: str, key: str) -> dict[str, Any] | None:
         return self._state.get(sid, {}).get(key)
 
-    def get_hip(self, sid: str) -> dict[str, Any] | None:
+    def get_hip(self, sid: str) -> dict[str, Any]:
         """The HIP model for a session, with the raw-XML `_raw` key stripped.
 
         The whole point of the raw/structured split is that this stays
-        small, so `_raw` never leaves this method. None only when the
-        session was never stored; a session whose bundle had no compliance
-        logs still gets the full empty shape (`cycles: []`), since
-        build_hip_data() always runs during parsing.
+        small, so `_raw` never leaves this method. A session whose bundle
+        had no compliance logs still gets the full empty shape
+        (`cycles: []`), since build_hip_data() always runs during parsing.
+        The same empty shape is returned for a session that was never
+        stored, or whose stored HIP value is otherwise falsy -- notably the
+        parse-failure path in `backend.api.sessions`, which stores `{}` for
+        `hip` because there is no parsed bundle to build a model from.
+        Callers therefore never need to null-check this method's result.
         """
         hip = self._hip.get(sid)
-        if hip is None:
-            return None
+        if not hip:
+            return _empty_hip()
         return {key: value for key, value in hip.items() if key != "_raw"}
 
     def get_hip_raw(self, sid: str, index: str) -> dict[str, Any] | None:

@@ -41,4 +41,21 @@ describe('HipPage', () => {
     });
     expect(screen.getByText(/PACompliance.log/)).toBeInTheDocument();
   });
+
+  it('does not crash on a malformed payload with no cycles key', async () => {
+    // Regression for the errored-session crash: backend/api/sessions.py's
+    // parse-failure path used to store `hip={}` verbatim, so the API could
+    // return `{}` instead of the documented empty shape. `hip.cycles.length`
+    // would then throw on `undefined.length` and React unmounts the whole
+    // tree. The page must degrade to the empty state instead.
+    server.use(
+      http.get('/api/v1/sessions/:id/hip', () => HttpResponse.json({ data: {} })),
+    );
+
+    renderHipPage();
+
+    await waitFor(() => {
+      expect(screen.getByText('No HIP Data Found')).toBeInTheDocument();
+    });
+  });
 });
