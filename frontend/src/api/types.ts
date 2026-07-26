@@ -172,11 +172,16 @@ export interface HipHostInfo {
   interfaces: HipInterface[];
 }
 
+export interface HipCustomChecks {
+  kind: 'plist' | 'registry' | 'unknown';
+  entries: unknown[];
+}
+
 export interface HipReport {
   version: string | null;
   host_info: HipHostInfo | null;
   categories: HipCategory[];
-  custom_checks: { kind: 'plist' | 'registry' | 'unknown'; entries: unknown[] } | null;
+  custom_checks: HipCustomChecks | null;
 }
 
 export interface HipPolicy {
