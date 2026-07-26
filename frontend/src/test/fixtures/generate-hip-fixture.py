@@ -85,7 +85,12 @@ def _strip_raw(hip_data: dict[str, Any]) -> dict[str, Any]:
 
 
 def main() -> None:
-    macos_full = build_hip_data(_macos_logs(), _hip_status_state(), "macos")
+    # tz_offset matches the "+0200" already passed to hip_status() below (the
+    # real bundle-wide offset) -- backend/pipeline.py always supplies it, so
+    # the fixture must too. Omitting it would silently exercise
+    # cycle_scalars.generate_time()'s quarter-hour-snap fallback instead of
+    # the path production actually takes (Minor 3 finding).
+    macos_full = build_hip_data(_macos_logs(), _hip_status_state(), "macos", tz_offset="+0200")
     windows_full = build_hip_data(_windows_logs(), {}, "windows")
     # A real, exercised code path (not fabricated data): a bundle with no
     # PACompliance*/PAComplianceMp* entries and no hip_status state at all,
