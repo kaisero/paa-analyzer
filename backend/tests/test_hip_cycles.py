@@ -152,3 +152,25 @@ class TestPairCycles:
         pairs, unpaired_mp = pair_cycles([], mp_cycles)
         assert pairs == []
         assert unpaired_mp == mp_cycles
+
+    def test_partial_mp_cycle_cannot_claim_a_pairing(self):
+        """A rotation-truncated leading Mp fragment (partial=True) carries
+        an arbitrary start_ts -- its first surviving entry's own timestamp,
+        not a genuine policy-line boundary -- so it must never claim a
+        compliance cycle's pairing even when that timestamp lands well
+        within tolerance of a real one. Built by slicing off the real Mp
+        fixture's own leading policy line, per the brief's instruction not
+        to hand-author new HIP log lines."""
+        compliance_cycle = split_cycles(_entries("PACompliance.log"))[0]
+        mp_entries = _entries("PAComplianceMp.log")
+        # Drop the leading "Try to parse hip policy" line so the remaining
+        # entries form a partial cycle whose start_ts is still within
+        # milliseconds of the real (non-partial) start_ts.
+        partial_mp_cycle = split_cycles(mp_entries[1:5])[0]
+        assert partial_mp_cycle["partial"] is True
+        assert partial_mp_cycle["start_ts"] == pytest.approx(compliance_cycle["start_ts"], abs=1.0)
+
+        pairs, unpaired_mp = pair_cycles([compliance_cycle], [partial_mp_cycle])
+
+        assert pairs == [(compliance_cycle, None)]
+        assert unpaired_mp == [partial_mp_cycle]

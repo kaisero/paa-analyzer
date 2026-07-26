@@ -73,15 +73,26 @@ def pair_cycles(
       matching Mp cycle was found, else `(compliance_cycle, None)`.
     - `unpaired_mp` lists every Mp cycle that could not be matched — either
       no compliance cycle's `start_ts` was within `tolerance_s` seconds, or
-      the closest one had already been claimed by an earlier Mp cycle. Mp
-      cycles are never silently dropped; every one lands in exactly one of
-      `pairs` (as the matched half) or `unpaired_mp`.
+      the closest one had already been claimed by an earlier Mp cycle, or
+      the Mp cycle itself is `partial` (see below). Mp cycles are never
+      silently dropped; every one lands in exactly one of `pairs` (as the
+      matched half) or `unpaired_mp`.
 
     Mp cycles are processed in the order given. For each, the nearest
     not-yet-claimed compliance cycle within `tolerance_s` is claimed —
     ties broken by whichever compliance cycle comes first in
     `compliance_cycles`. Each compliance cycle takes at most one Mp cycle.
     A `start_ts` of None never matches (it can't be compared by distance).
+
+    A `partial` Mp cycle (a rotation-truncated leading fragment with no
+    policy-line boundary of its own -- see `split_cycles`) is never eligible
+    to claim a pairing: its `start_ts` is just its first surviving entry's
+    own timestamp, not a genuine cycle boundary, so it would otherwise
+    compete for pairing on equal footing with a real cycle and could win it
+    on proximity alone -- silently misattributing patches to the wrong
+    compliance cycle while pushing the genuine Mp cycle into `unpaired_mp`
+    with no signal that anything went wrong. It always lands in
+    `unpaired_mp` instead.
     """
     unclaimed = {i for i, c in enumerate(compliance_cycles) if c.get("start_ts") is not None}
     assigned: dict[int, Cycle] = {}
@@ -91,7 +102,7 @@ def pair_cycles(
         mp_ts = mp.get("start_ts")
         best_idx: int | None = None
         best_delta: float | None = None
-        if mp_ts is not None:
+        if mp_ts is not None and not mp.get("partial"):
             for idx in sorted(unclaimed):
                 compliance_ts = compliance_cycles[idx]["start_ts"]
                 if compliance_ts is None:
