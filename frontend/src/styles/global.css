@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-  --accent: #FA582D;
-  --accent-hover: #FF6E45;
-  --accent-dim: rgba(250, 88, 45, 0.12);
-  --accent-border: rgba(250, 88, 45, 0.45);
+  --accent: #00c8e5;
+  --accent-hover: #3ED8F0;
+  --accent-dim: rgba(0, 200, 229, 0.12);
+  --accent-border: rgba(0, 200, 229, 0.45);
   --bg: #0C0F14;
   --surface: #131920;
   --elevated: #1C2535;
@@ -14,7 +14,7 @@
   --text-sec: #8FA4BC;
   --text-dim: #5C6E84;
   --row-alt: rgba(255, 255, 255, 0.025);
-  --row-hover: rgba(250, 88, 45, 0.06);
+  --row-hover: rgba(0, 200, 229, 0.06);
   --err: #F0564A;
   --err-bg: rgba(240, 86, 74, 0.15);
   --err-border: rgba(240, 86, 74, 0.40);
@@ -45,7 +45,13 @@
   --text-sec: #526071;
   --text-dim: #7C8A9C;
   --row-alt: rgba(15, 23, 42, 0.03);
-  --row-hover: rgba(250, 88, 45, 0.07);
+  --row-hover: rgba(14, 124, 140, 0.07);
+  /* Same hue (187.6deg), darker: the bright cyan reads 2.0:1 on white and the
+     accent is used as text, so light mode needs its own shade at 4.9:1. */
+  --accent: #0E7C8C;
+  --accent-hover: #0A6C7A;
+  --accent-dim: rgba(14, 124, 140, 0.10);
+  --accent-border: rgba(14, 124, 140, 0.40);
   --err: #C4372C;
   --err-bg: rgba(196, 55, 44, 0.10);
   --err-border: rgba(196, 55, 44, 0.35);
@@ -94,7 +100,7 @@ body {
 
 @keyframes progress-glow {
   0%, 100% { box-shadow: 0 0 8px var(--accent-dim); }
-  50% { box-shadow: 0 0 20px rgba(250, 88, 45, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(0, 200, 229, 0.3); }
 }
 
 @keyframes fade-in {

@@ -6,8 +6,22 @@ import './styles/global.css';
 import App from './App';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 
+/**
+ * Accent — Prisma cyan.
+ *
+ * Two values, one hue (187.6°): the bright cyan reads at 8.8:1 on the dark
+ * canvas but only 2.0:1 on white, and the accent is used as *text* (the
+ * wordmark, the pacli prompt, the report heading), so light mode takes a
+ * darker shade of the same colour at 4.9:1. Keep both in sync with the
+ * `--accent*` custom properties in styles/global.css.
+ */
+const ACCENT = { dark: '#00c8e5', light: '#0E7C8C' } as const;
+const ACCENT_RGB = { dark: '0,200,229', light: '14,124,140' } as const;
+
+/** Accent at a given alpha, for the tints antd wants as literals. */
+const tint = (mode: 'dark' | 'light', alpha: number) => `rgba(${ACCENT_RGB[mode]},${alpha})`;
+
 const sharedToken = {
-  colorPrimary: '#FA582D',
   borderRadius: 0,
   borderRadiusLG: 0,
   borderRadiusSM: 0,
@@ -18,9 +32,10 @@ const sharedToken = {
   fontSizeSM: 11,
 };
 
-const sharedComponents = {
+/** Component overrides that depend on the accent, so they differ per theme. */
+const sharedComponents = (mode: 'dark' | 'light') => ({
   Tabs: {
-    inkBarColor: '#FA582D',
+    inkBarColor: ACCENT[mode],
     itemActiveColor: '#E8EEF4',
     itemHoverColor: '#E8EEF4',
     itemSelectedColor: '#E8EEF4',
@@ -28,9 +43,9 @@ const sharedComponents = {
     horizontalItemPadding: '14px 18px',
   },
   Input: {
-    activeBorderColor: 'rgba(250,88,45,0.6)',
-    hoverBorderColor: 'rgba(250,88,45,0.4)',
-    activeShadow: '0 0 0 2px rgba(250,88,45,0.2)',
+    activeBorderColor: tint(mode, 0.6),
+    hoverBorderColor: tint(mode, 0.4),
+    activeShadow: `0 0 0 2px ${tint(mode, 0.2)}`,
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: 12,
   },
@@ -39,20 +54,23 @@ const sharedComponents = {
   Card: { headerBg: '#1C2535', headerFontSize: 11, headerHeight: 36 },
   Select: {
     selectorBg: '#1C2535',
-    optionSelectedBg: 'rgba(250,88,45,0.12)',
-    activeBorderColor: 'rgba(250,88,45,0.6)',
+    optionSelectedBg: tint(mode, 0.12),
+    activeBorderColor: tint(mode, 0.6),
   },
   DatePicker: {
-    activeBorderColor: 'rgba(250,88,45,0.6)',
-    hoverBorderColor: 'rgba(250,88,45,0.4)',
-    activeShadow: '0 0 0 2px rgba(250,88,45,0.2)',
+    activeBorderColor: tint(mode, 0.6),
+    hoverBorderColor: tint(mode, 0.4),
+    activeShadow: `0 0 0 2px ${tint(mode, 0.2)}`,
   },
-};
+});
+
+const lightComponents = sharedComponents('light');
 
 const darkTokens: ThemeConfig = {
   algorithm: antdTheme.darkAlgorithm,
   token: {
     ...sharedToken,
+    colorPrimary: ACCENT.dark,
     colorBgBase: '#0C0F14',
     colorBgContainer: '#131920',
     colorBgElevated: '#1C2535',
@@ -68,7 +86,7 @@ const darkTokens: ThemeConfig = {
     colorInfo: '#4D9FDC',
   },
   components: {
-    ...sharedComponents,
+    ...sharedComponents('dark'),
     Layout: {
       headerBg: '#131920',
       bodyBg: '#0C0F14',
@@ -79,9 +97,9 @@ const darkTokens: ThemeConfig = {
     Menu: {
       darkItemBg: '#131920',
       darkSubMenuItemBg: '#131920',
-      darkItemSelectedBg: 'rgba(250,88,45,0.12)',
+      darkItemSelectedBg: tint('dark', 0.12),
       darkItemSelectedColor: '#E8EEF4',
-      darkItemHoverBg: 'rgba(250,88,45,0.06)',
+      darkItemHoverBg: tint('dark', 0.06),
       darkItemHoverColor: '#E8EEF4',
       itemHeight: 30,
       itemMarginBlock: 0,
@@ -93,7 +111,7 @@ const darkTokens: ThemeConfig = {
     },
     Table: {
       headerBg: '#1C2535',
-      rowHoverBg: 'rgba(250,88,45,0.06)',
+      rowHoverBg: tint('dark', 0.06),
       borderColor: '#1E2632',
       headerColor: '#8FA4BC',
       headerSortActiveBg: '#1C2535',
@@ -107,6 +125,7 @@ const lightTokens: ThemeConfig = {
   algorithm: antdTheme.defaultAlgorithm,
   token: {
     ...sharedToken,
+    colorPrimary: ACCENT.light,
     colorBgBase: '#F0F4F8',
     colorBgContainer: '#FFFFFF',
     colorBgElevated: '#E8EEF4',
@@ -122,15 +141,15 @@ const lightTokens: ThemeConfig = {
     colorInfo: '#1D6FAE',
   },
   components: {
-    ...sharedComponents,
+    ...lightComponents,
     Tabs: {
-      ...sharedComponents.Tabs,
+      ...lightComponents.Tabs,
       itemActiveColor: '#0F172A',
       itemHoverColor: '#0F172A',
       itemSelectedColor: '#0F172A',
     },
-    Card: { ...sharedComponents.Card, headerBg: '#E8EEF4' },
-    Select: { ...sharedComponents.Select, selectorBg: '#FFFFFF' },
+    Card: { ...lightComponents.Card, headerBg: '#E8EEF4' },
+    Select: { ...lightComponents.Select, selectorBg: '#FFFFFF' },
     Layout: {
       headerBg: '#FFFFFF',
       bodyBg: '#F0F4F8',
@@ -141,9 +160,9 @@ const lightTokens: ThemeConfig = {
     Menu: {
       itemBg: '#FFFFFF',
       subMenuItemBg: '#FFFFFF',
-      itemSelectedBg: 'rgba(250,88,45,0.08)',
+      itemSelectedBg: tint('light', 0.08),
       itemSelectedColor: '#0F172A',
-      itemHoverBg: 'rgba(250,88,45,0.05)',
+      itemHoverBg: tint('light', 0.05),
       itemHoverColor: '#0F172A',
       itemHeight: 30,
       itemMarginBlock: 0,
@@ -155,7 +174,7 @@ const lightTokens: ThemeConfig = {
     },
     Table: {
       headerBg: '#E8EEF4',
-      rowHoverBg: 'rgba(250,88,45,0.05)',
+      rowHoverBg: tint('light', 0.05),
       borderColor: '#DAE2EC',
       headerColor: '#526071',
       fontSize: 12,
