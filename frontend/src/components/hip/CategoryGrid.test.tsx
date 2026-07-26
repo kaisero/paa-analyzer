@@ -22,7 +22,6 @@ describe('CategoryGrid — macOS', () => {
     const { container } = render(<CategoryGrid cycle={macos.cycles[0]} />);
 
     expect(cardTitles(container)).toEqual([
-      'host info',
       'custom checks',
       'anti-malware',
       'firewall',
@@ -53,7 +52,6 @@ describe('CategoryGrid — Windows', () => {
     const { container } = render(<CategoryGrid cycle={windows.cycles[0]} />);
 
     expect(cardTitles(container)).toEqual([
-      'host info',
       'anti-malware',
       'firewall',
       'disk-encryption',

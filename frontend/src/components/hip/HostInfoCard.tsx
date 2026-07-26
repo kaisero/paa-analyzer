@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Button } from 'antd';
 import type { HipHostInfo } from '../../api/types';
-import { HipCard } from './HipCard';
 
 // The host-id field carries different things per platform; the parser already
 // resolved which (Decision 10), so the UI only has to label it.
@@ -31,13 +30,11 @@ function Field({ label, value }: { label: string; value: string }) {
 
 interface Props {
   hostInfo: HipHostInfo;
-  /** HIP report schema version, shown as provenance in the card header. */
-  reportVersion?: string | null;
   /** Full-width card (no custom checks beside it): pair up the fields. */
   wide?: boolean;
 }
 
-export function HostInfoCard({ hostInfo, reportVersion, wide = false }: Props) {
+export function HostInfoCard({ hostInfo, wide = false }: Props) {
   const [showInterfaces, setShowInterfaces] = useState(false);
   const interfaces = hostInfo.interfaces ?? [];
 
@@ -50,16 +47,7 @@ export function HostInfoCard({ hostInfo, reportVersion, wide = false }: Props) {
   ];
 
   return (
-    <HipCard
-      title="host info"
-      extra={
-        reportVersion ? (
-          <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text-dim)' }}>
-            report v{reportVersion}
-          </span>
-        ) : undefined
-      }
-    >
+    <div>
       <div
         style={{
           display: 'grid',
@@ -125,6 +113,6 @@ export function HostInfoCard({ hostInfo, reportVersion, wide = false }: Props) {
           )}
         </div>
       )}
-    </HipCard>
+    </div>
   );
 }

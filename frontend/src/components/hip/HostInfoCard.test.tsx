@@ -12,7 +12,7 @@ const winHost = windows.cycles[0].report!.host_info!;
 
 describe('HostInfoCard', () => {
   it('labels the macOS host id as a MAC address', () => {
-    render(<HostInfoCard hostInfo={macHost} reportVersion={macos.cycles[0].report!.version} />);
+    render(<HostInfoCard hostInfo={macHost} />);
 
     expect(screen.getByText('Apple Mac OS X 15.7.7')).toBeInTheDocument();
     expect(screen.getByText('MAC address')).toBeInTheDocument();

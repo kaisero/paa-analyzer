@@ -71,7 +71,6 @@ export function CategoryGrid({ cycle }: Props) {
           <GridItem span={report.custom_checks ? 2 : GRID_COLUMNS}>
             <HostInfoCard
               hostInfo={report.host_info}
-              reportVersion={report.version}
               wide={!report.custom_checks}
             />
           </GridItem>
