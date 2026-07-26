@@ -140,7 +140,7 @@ export interface HipProduct {
   attributes: Record<string, unknown>;
   drives?: HipDrive[];
   errors: OpswatError[];
-  status: 'ok' | 'warn' | 'unknown' | 'not-detected';
+  status: 'ok' | 'warn' | 'unknown';
   status_reason: string | null;
 }
 

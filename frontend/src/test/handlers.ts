@@ -118,7 +118,7 @@ const handlers = [
   http.get('/api/v1/sessions/:id/hip/cycles/:index/raw', ({ params }) => {
     const raw = (hipFixture.macosRaw as Record<string, unknown>)[params.index as string];
     if (!raw) {
-      return new HttpResponse(null, { status: 404 });
+      return HttpResponse.json({ detail: 'HIP cycle not found' }, { status: 404 });
     }
     return HttpResponse.json({ data: raw });
   }),
