@@ -8,8 +8,8 @@ interface Props {
 
 const tabItems = [
   { key: 'agent-status', label: 'Overview' },
-  { key: 'logs', label: 'Log Viewer' },
   { key: 'hip', label: 'HIP' },
+  { key: 'logs', label: 'Log Viewer' },
 ];
 
 export function TopNav({ sessionId }: Props) {
