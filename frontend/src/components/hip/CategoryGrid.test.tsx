@@ -66,6 +66,15 @@ describe('CategoryGrid — Windows', () => {
     expect(spans.reduce((sum, s) => sum + Number(s), 0) % 4).toBe(0);
   });
 
+  it('passes wide to HostInfoCard so its fields pair up two-across', () => {
+    render(<CategoryGrid cycle={windows.cycles[0]} />);
+
+    const grid = screen.getByText('machine GUID').parentElement;
+    expect(grid?.style.gridTemplateColumns).toBe(
+      'minmax(0, auto) minmax(0, 1fr) minmax(0, auto) minmax(0, 1fr)',
+    );
+  });
+
   it('omits the missing-patches block when the cycle reported none', () => {
     render(<CategoryGrid cycle={windows.cycles[0]} />);
     expect(screen.queryByText(/missing patches/)).not.toBeInTheDocument();

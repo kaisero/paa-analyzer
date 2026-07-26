@@ -80,7 +80,7 @@ export function CycleHeader({ cycles, selectedIndex, onSelect, viewMode, onViewM
           {counts && (
             <>
               <Count value={counts.warn} label="warn" color="var(--warn)" />
-              <Count value={counts.unknown} label="unknown" color="var(--err)" />
+              <Count value={counts.unknown} label="unknown" color="var(--info)" />
               <Count value={counts.errors} label="errors" color="var(--err)" />
               <Count value={counts.missing_patches} label="missing patches" color="var(--warn)" />
             </>

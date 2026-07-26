@@ -18,7 +18,9 @@ export function HipReportPanel({ hip, sessionId }: Props) {
   const [viewMode, setViewMode] = useState<HipViewMode>('Grid');
 
   const cycle = hip.cycles.find((c) => c.index === selectedIndex) ?? hip.cycles[0];
-  const wantsRaw = viewMode !== 'Grid';
+  // Only XML mode needs the raw documents; JSON mode renders the structured
+  // model the frontend actually consumes, for debugging that model.
+  const wantsRaw = viewMode === 'XML';
   const { data: rawData, isLoading: rawLoading } = useHipRaw(
     sessionId,
     String(cycle.index),
@@ -61,10 +63,10 @@ export function HipReportPanel({ hip, sessionId }: Props) {
         </div>
       )}
 
-      {viewMode === 'JSON' && !rawLoading && (
+      {viewMode === 'JSON' && (
         <RawBlock
           label={`cycle ${cycle.index} — parsed model`}
-          text={JSON.stringify({ ...cycle, raw: raw ?? null }, null, 2)}
+          text={JSON.stringify(cycle, null, 2)}
           emptyNote="No cycle data."
         />
       )}

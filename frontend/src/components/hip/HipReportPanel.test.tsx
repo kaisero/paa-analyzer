@@ -9,7 +9,6 @@ import { HipReportPanel } from './HipReportPanel';
 
 const macos = hipFixture.macos as unknown as HipData;
 const windows = hipFixture.windows as unknown as HipData;
-const macosRaw = hipFixture.macosRaw as Record<string, { raw_xml: string }>;
 
 function renderPanel(hip: HipData) {
   return renderWithProviders(<HipReportPanel hip={hip} sessionId="test123" />);
@@ -48,17 +47,20 @@ describe('HipReportPanel', () => {
     await waitFor(() =>
       expect(screen.getByText(new RegExp('<hip-report'))).toBeInTheDocument(),
     );
-    expect(macosRaw['0'].raw_xml).toContain('<hip-report');
   });
 
-  it('shows the parsed model with the raw documents in JSON mode', async () => {
+  it('shows the structured model, not the raw XML, in JSON mode', async () => {
+    // No `server.use` override for the raw endpoint here: if JSON mode fetched
+    // it, MSW's `onUnhandledRequest: 'error'` would fail this test.
     const user = userEvent.setup();
     renderPanel(macos);
 
     await user.click(screen.getByText('JSON'));
 
     expect(await screen.findByText('cycle 0 — parsed model')).toBeInTheDocument();
-    expect(screen.getByText(/"raw_patches_xml"/)).toBeInTheDocument();
+    expect(screen.getByText(/"counts"/)).toBeInTheDocument();
+    expect(screen.queryByText(/"raw_xml"/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/"raw_patches_xml"/)).not.toBeInTheDocument();
   });
 
   it('notes the absent missing-patches document on the Windows bundle', async () => {

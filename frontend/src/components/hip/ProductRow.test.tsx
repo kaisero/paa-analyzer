@@ -33,6 +33,16 @@ describe('ProductRow', () => {
     expect(screen.queryByText(/ err$/)).not.toBeInTheDocument();
   });
 
+  it('renders the definitions version and date extras', () => {
+    const product = antiMalware.products.find((p) => p.name === 'Cortex XDR')!;
+    render(<ProductRow product={product} />);
+
+    expect(screen.getByText('definitions')).toBeInTheDocument();
+    expect(screen.getByText(product.def_version!)).toBeInTheDocument();
+    expect(screen.getByText('definition date')).toBeInTheDocument();
+    expect(screen.getByText(product.def_date!)).toBeInTheDocument();
+  });
+
   it('lists per-drive encryption state instead of the raw drives attribute', () => {
     const product = diskEncryption.products[0];
     render(<ProductRow product={product} />);

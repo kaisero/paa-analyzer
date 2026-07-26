@@ -29,6 +29,17 @@ describe('HostInfoCard', () => {
     expect(screen.getByText(winHost.domain!)).toBeInTheDocument();
   });
 
+  it('pairs fields two-across in the full-width layout', () => {
+    // Windows is the real case that drives `wide`: no custom checks beside
+    // it, so CategoryGrid gives host info the full span-4 row.
+    render(<HostInfoCard hostInfo={winHost} wide />);
+
+    const grid = screen.getByText('machine GUID').parentElement;
+    expect(grid?.style.gridTemplateColumns).toBe(
+      'minmax(0, auto) minmax(0, 1fr) minmax(0, auto) minmax(0, 1fr)',
+    );
+  });
+
   it('keeps interfaces collapsed until the toggle is used', async () => {
     const user = userEvent.setup();
     render(<HostInfoCard hostInfo={macHost} />);

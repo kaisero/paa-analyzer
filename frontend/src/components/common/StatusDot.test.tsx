@@ -9,11 +9,11 @@ const macos = hipFixture.macos as unknown as HipData;
 const antiMalware = macos.cycles[0].report!.categories.find((c) => c.name === 'anti-malware')!;
 
 describe('StatusDot', () => {
-  it('labels each status the fixture carries', () => {
+  it('renders each status the fixture carries', () => {
     render(
       <div>
         {antiMalware.products.map((p) => (
-          <StatusDot key={p.name} status={p.status} label={p.name ?? ''} />
+          <StatusDot key={p.name} status={p.status} />
         ))}
       </div>,
     );
