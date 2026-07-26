@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Button } from 'antd';
 import type { HipHostInfo } from '../../api/types';
 
 // The host-id field carries different things per platform; the parser already
@@ -30,11 +29,9 @@ function Field({ label, value }: { label: string; value: string }) {
 
 interface Props {
   hostInfo: HipHostInfo;
-  /** Full-width card (no custom checks beside it): pair up the fields. */
-  wide?: boolean;
 }
 
-export function HostInfoCard({ hostInfo, wide = false }: Props) {
+export function HostInfoCard({ hostInfo }: Props) {
   const [showInterfaces, setShowInterfaces] = useState(false);
   const interfaces = hostInfo.interfaces ?? [];
 
@@ -51,9 +48,7 @@ export function HostInfoCard({ hostInfo, wide = false }: Props) {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: wide
-            ? 'minmax(0, auto) minmax(0, 1fr) minmax(0, auto) minmax(0, 1fr)'
-            : 'minmax(0, auto) minmax(0, 1fr)',
+          gridTemplateColumns: 'minmax(0, auto) minmax(0, 1fr)',
           columnGap: 12,
           rowGap: 3,
         }}
@@ -67,15 +62,14 @@ export function HostInfoCard({ hostInfo, wide = false }: Props) {
 
       {interfaces.length > 0 && (
         <div style={{ marginTop: 6 }}>
-          <Button
-            type="link"
-            size="small"
-            style={{ padding: 0, height: 'auto', fontSize: 11 }}
+          <button
+            type="button"
+            className="hip-ghost-btn"
             onClick={() => setShowInterfaces((v) => !v)}
           >
             {showInterfaces ? 'hide' : 'show'} {interfaces.length} interface
             {interfaces.length === 1 ? '' : 's'}
-          </Button>
+          </button>
           {showInterfaces && (
             <div
               style={{

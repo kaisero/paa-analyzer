@@ -18,7 +18,7 @@ export function HipCard({ title, extra, bodyPadding = '8px 12px', children }: Pr
       size="small"
       title={title}
       extra={extra}
-      style={{ background: 'var(--surface)', borderColor: 'var(--border)', height: '100%' }}
+      style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
       styles={{
         header: {
           borderBottom: '1px solid var(--border)',

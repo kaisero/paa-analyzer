@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { hipFixture } from '../../test/handlers';
+import hipFixture from '../../test/fixtures/hip.json';
 import type { HipData } from '../../api/types';
 import { HostInfoCard } from './HostInfoCard';
 
@@ -27,17 +27,6 @@ describe('HostInfoCard', () => {
     expect(screen.getByText('machine GUID')).toBeInTheDocument();
     expect(screen.getByText('domain')).toBeInTheDocument();
     expect(screen.getByText(winHost.domain!)).toBeInTheDocument();
-  });
-
-  it('pairs fields two-across in the full-width layout', () => {
-    // Windows is the real case that drives `wide`: no custom checks beside
-    // it, so the checklist row gives host info the full-width layout.
-    render(<HostInfoCard hostInfo={winHost} wide />);
-
-    const grid = screen.getByText('machine GUID').parentElement;
-    expect(grid?.style.gridTemplateColumns).toBe(
-      'minmax(0, auto) minmax(0, 1fr) minmax(0, auto) minmax(0, 1fr)',
-    );
   });
 
   it('keeps interfaces collapsed until the toggle is used', async () => {

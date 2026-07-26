@@ -37,7 +37,7 @@ export function SystemCard({ report }: Props) {
       ) : report.host_info ? (
         // report.host_info is HipHostInfo | null — HostInfoCard's prop is not
         // nullable, so this must be guarded here rather than passed through.
-        <HostInfoCard hostInfo={report.host_info} wide />
+        <HostInfoCard hostInfo={report.host_info} />
       ) : (
         <div style={{ color: 'var(--text-dim)', fontSize: 12 }}>No host info in this report.</div>
       )}
