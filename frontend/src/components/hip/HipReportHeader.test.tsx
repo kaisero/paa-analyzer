@@ -45,6 +45,30 @@ describe('HipReportHeader', () => {
     expect(within(screen.getByText('Missing Patches').parentElement!).getByText('2')).toBeInTheDocument();
   });
 
+  it('labels cycle duration with its unit', () => {
+    renderHeader();
+    expect(macos.cycles[0].duration_s).toBe(7);
+    expect(
+      within(screen.getByText('Cycle Duration').parentElement!).getByText('7s'),
+    ).toBeInTheDocument();
+  });
+
+  it('renders a dash, not a bare zero, when duration was never logged', () => {
+    // Flips one field to null on a real fixture cycle to exercise the
+    // rendering branch — it fabricates no diagnostic content (same pattern
+    // as the partial-cycle test below).
+    const noDuration: HipData = {
+      ...macos,
+      cycles: [{ ...macos.cycles[0], duration_s: null }, ...macos.cycles.slice(1)],
+    };
+    renderWithProviders(
+      <HipReportHeader hip={noDuration} selectedIndex={noDuration.cycles[0].index} onSelect={() => {}} />,
+    );
+    expect(
+      within(screen.getByText('Cycle Duration').parentElement!).getByText('—'),
+    ).toBeInTheDocument();
+  });
+
   it('marks a partial cycle', () => {
     // The fixture carries no partial cycle (Global Constraints: never invent
     // HIP test data). This flips one boolean on a real fixture cycle purely
@@ -69,6 +93,16 @@ describe('HipReportHeader', () => {
     // antd's Select calls onChange(value, option); only the value matters
     // here.
     expect(onSelect.mock.calls[0][0]).toBe(second.index);
+  });
+
+  it('renders a dash for next check when no scheduled time was reported', () => {
+    // Flips next_check to null on a real fixture slice — the same
+    // fabricate-nothing pattern as the partial-cycle test above.
+    const noNextCheck: HipData = { ...macos, next_check: null };
+    renderWithProviders(
+      <HipReportHeader hip={noNextCheck} selectedIndex={noNextCheck.cycles[0].index} onSelect={() => {}} />,
+    );
+    expect(screen.getByText(/next check: —/)).toBeInTheDocument();
   });
 
   it('does not render a platform switch — platform is fixed by the bundle', () => {

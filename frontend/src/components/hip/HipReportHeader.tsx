@@ -2,9 +2,8 @@ import { Select } from 'antd';
 import type { HipData } from '../../api/types';
 
 /** Local-time label, matching the log viewer's timestamp convention. */
-// eslint-disable-next-line react-refresh/only-export-components
-export function fmtCycleTime(iso: string | null): string {
-  if (!iso) return 'unknown time';
+function fmtCycleTime(iso: string | null): string {
+  if (!iso) return '—';
   const d = new Date(iso);
   if (isNaN(d.getTime())) return iso;
   const pad = (n: number) => String(n).padStart(2, '0');
@@ -13,13 +12,21 @@ export function fmtCycleTime(iso: string | null): string {
   )}:${pad(d.getSeconds())}`;
 }
 
-interface CountProps { label: string; value: number; color?: string }
+interface CountProps { label: string; value: number | string; color?: string; muted?: boolean }
 
-function Count({ label, value, color }: CountProps) {
+function Count({ label, value, color, muted }: CountProps) {
   return (
     <span style={{ display: 'inline-flex', gap: 6, alignItems: 'baseline' }}>
-      <span style={{ fontSize: 11, color: 'var(--text-sec)' }}>{label}</span>
-      <b style={{ fontFamily: 'var(--mono)', fontSize: 13, color: color ?? 'var(--text)' }}>
+      <span style={{ fontSize: 11, color: muted ? 'var(--text-dim)' : 'var(--text-sec)' }}>
+        {label}
+      </span>
+      <b
+        style={{
+          fontFamily: 'var(--mono)',
+          fontSize: 13,
+          color: muted ? 'var(--text-dim)' : (color ?? 'var(--text)'),
+        }}
+      >
         {value}
       </b>
     </span>
@@ -85,7 +92,11 @@ export function HipReportHeader({ hip, selectedIndex, onSelect }: Props) {
         <Count label="Unknown" value={unknown} color={unknown ? 'var(--info)' : undefined} />
         <Count label="Errors" value={errors} color={errors ? 'var(--err)' : undefined} />
         <Count label="Missing Patches" value={missingPatches} />
-        <Count label="Duration" value={cycle.duration_s ?? 0} />
+        <Count
+          label="Cycle Duration"
+          value={cycle.duration_s != null ? `${cycle.duration_s}s` : '—'}
+          muted
+        />
         {cycle.partial && (
           <span
             style={{
