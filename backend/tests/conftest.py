@@ -358,6 +358,7 @@ def app_client() -> Iterator[TestClient]:
     global_store._dbs.clear()
     global_store._log_meta.clear()
     global_store._state.clear()
+    global_store._hip.clear()
 
 
 @pytest.fixture

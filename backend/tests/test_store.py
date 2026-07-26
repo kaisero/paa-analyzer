@@ -57,6 +57,7 @@ class TestSessionLifecycle:
         assert "test123" not in st._dbs
         assert "test123" not in st._log_meta
         assert "test123" not in st._state
+        assert "test123" not in st._hip
 
     def test_multiple_sessions_independent(self):
         from backend.tests.conftest import build_sample_zip
