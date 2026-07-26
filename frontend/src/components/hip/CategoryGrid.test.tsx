@@ -27,7 +27,6 @@ describe('CategoryGrid — macOS', () => {
       'disk-encryption',
       'disk-backup',
       'patch-management',
-      'missing patches (2)',
     ]);
 
     const spans = gridItems(container).map((el) => el.style.getPropertyValue('--hip-span'));

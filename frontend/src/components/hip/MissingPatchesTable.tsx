@@ -1,7 +1,7 @@
 import { Table } from 'antd';
 import type { TableColumnsType } from 'antd';
 import type { MissingPatch } from '../../api/types';
-import { HipCard } from './HipCard';
+import { titleCase } from './hipVerdict';
 
 const SEVERITY_COLOR: Record<string, string> = {
   critical: 'var(--err)',
@@ -12,9 +12,16 @@ const SEVERITY_COLOR: Record<string, string> = {
 
 interface Row extends MissingPatch {
   key: number;
+  /**
+   * Owning HIP category, index-aligned with the incoming `categoryNames` prop
+   * (null when the table is used inside a single category's checklist row,
+   * where `categoryNames` is omitted because the category is already obvious
+   * from context).
+   */
+  hipCategory: string | null;
 }
 
-const columns: TableColumnsType<Row> = [
+const BASE_COLUMNS: TableColumnsType<Row> = [
   {
     title: 'Severity',
     dataIndex: 'severity',
@@ -89,24 +96,42 @@ interface Props {
   patches: MissingPatch[];
   /** Which log the patches came from — they arrive in a separate document. */
   source?: string | null;
+  /**
+   * Owning HIP category per patch, index-aligned with `patches`. Supplied only
+   * when patches are aggregated across categories; the patch itself carries no
+   * such field (`MissingPatch.category` is the patch's own kind, e.g. "update").
+   */
+  categoryNames?: Array<string | null>;
 }
 
-export function MissingPatchesTable({ patches, source }: Props) {
-  const rows: Row[] = patches.map((p, i) => ({ ...p, key: i }));
+export function MissingPatchesTable({ patches, source, categoryNames }: Props) {
+  const rows: Row[] = patches.map((p, i) => ({
+    ...p,
+    key: i,
+    hipCategory: categoryNames?.[i] ?? null,
+  }));
+
+  const columns: TableColumnsType<Row> = [
+    ...(categoryNames
+      ? [{
+          title: 'Category',
+          dataIndex: 'hipCategory',
+          key: 'hipCategory',
+          width: 150,
+          render: (v: string | null) => titleCase(v),
+        }]
+      : []),
+    ...BASE_COLUMNS,
+  ];
 
   return (
-    <HipCard
-      title={`missing patches (${patches.length})`}
-      bodyPadding={0}
-      extra={
-        source ? (
-          <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text-dim)' }}>
-            from {source}
-          </span>
-        ) : undefined
-      }
-    >
+    <div>
+      {source && (
+        <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text-dim)', padding: '6px 12px' }}>
+          from {source}
+        </div>
+      )}
       <Table<Row> columns={columns} dataSource={rows} size="small" pagination={false} />
-    </HipCard>
+    </div>
   );
 }
