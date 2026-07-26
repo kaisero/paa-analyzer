@@ -12,7 +12,6 @@ describe('CustomChecksCard', () => {
   it('renders the plist entry and its nested preference value', () => {
     render(<CustomChecksCard customChecks={checks} />);
 
-    expect(screen.getByText('plist')).toBeInTheDocument();
     expect(screen.getByText('com.jamfsoftware.jamf')).toBeInTheDocument();
     expect(screen.getByText('jss_url')).toBeInTheDocument();
     expect(screen.getByText('https://jss.example.com:8443/')).toBeInTheDocument();

@@ -1,5 +1,4 @@
 import type { HipReport } from '../../api/types';
-import { HipCard } from './HipCard';
 
 type CustomChecks = NonNullable<HipReport['custom_checks']>;
 
@@ -79,23 +78,18 @@ interface Props {
 }
 
 /**
- * Renders whatever the custom-check subtree contains. The shape differs per
- * platform (`plist` on macOS, `registry` on Windows), so nothing here is keyed
- * on a specific member name: scalars become a line, nested arrays become
- * indented lines.
+ * Renders whatever the custom-check subtree contains — no `HipCard`: it now
+ * sits inside a `ChecklistRow`, whose verdict line already states the kind,
+ * so the old `extra={kind}` chrome goes with the card. Nothing else about
+ * this component changes: the shape still differs per platform (`plist` on
+ * macOS, `registry` on Windows), so nothing here is keyed on a specific
+ * member name.
  */
 export function CustomChecksCard({ customChecks }: Props) {
   const entries = customChecks.entries ?? [];
 
   return (
-    <HipCard
-      title="custom checks"
-      extra={
-        <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text-dim)' }}>
-          {customChecks.kind}
-        </span>
-      }
-    >
+    <div>
       {entries.length === 0 && (
         <div style={{ color: 'var(--text-dim)', fontSize: 11 }}>No custom checks reported.</div>
       )}
@@ -123,6 +117,6 @@ export function CustomChecksCard({ customChecks }: Props) {
           </div>
         );
       })}
-    </HipCard>
+    </div>
   );
 }
