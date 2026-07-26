@@ -19,8 +19,8 @@ describe('CustomChecksCard', () => {
   });
 
   it('is not rendered at all for the Windows fixture, which has no custom checks', () => {
-    // Guard for CategoryGrid's `report.custom_checks &&` branch: the Windows
-    // bundle emits no custom-check subtree.
+    // Guard for the checklist row's `report.custom_checks &&` branch: the
+    // Windows bundle emits no custom-check subtree.
     expect(windows.cycles[0].report!.custom_checks).toBeNull();
   });
 });

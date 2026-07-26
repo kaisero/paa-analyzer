@@ -42,31 +42,9 @@ export function HipPage() {
     );
   }
 
-  const cycleCount = hip.cycles.length;
-
   return (
     <div style={{ height: '100%', overflowY: 'auto', padding: 24 }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <div
-          style={{
-            borderWidth: 1,
-            borderStyle: 'solid',
-            borderColor: 'var(--border)',
-            borderLeftWidth: 3,
-            borderLeftColor: 'var(--accent)',
-            background: 'var(--surface)',
-            padding: '18px 22px',
-            marginBottom: 28,
-          }}
-        >
-          <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>
-            Host Information Profile
-          </h2>
-          <div style={{ marginTop: 8, fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text-sec)' }}>
-            {hip.platform.toUpperCase()} &middot; {cycleCount} cycle{cycleCount === 1 ? '' : 's'} &middot; collection:{' '}
-            {hip.collection ?? 'unknown'}
-          </div>
-        </div>
         <HipReportPanel hip={hip} sessionId={sessionId} />
       </div>
     </div>

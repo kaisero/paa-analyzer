@@ -31,7 +31,7 @@ describe('HostInfoCard', () => {
 
   it('pairs fields two-across in the full-width layout', () => {
     // Windows is the real case that drives `wide`: no custom checks beside
-    // it, so CategoryGrid gives host info the full span-4 row.
+    // it, so the checklist row gives host info the full-width layout.
     render(<HostInfoCard hostInfo={winHost} wide />);
 
     const grid = screen.getByText('machine GUID').parentElement;

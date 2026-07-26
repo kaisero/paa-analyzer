@@ -20,9 +20,10 @@ describe('HipPage', () => {
     renderHipPage();
 
     await waitFor(() => {
-      expect(screen.getByText('Host Information Profile')).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'HIP Report' })).toBeInTheDocument();
     });
 
+    // HipReportHeader (Task 4) carries platform and cycle count now.
     // hipFixture.macos is the real generated fixture -- 2 cycles.
     expect(screen.getByText(/2 cycles/)).toBeInTheDocument();
   });

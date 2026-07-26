@@ -67,7 +67,7 @@ describe('HipReportHeader', () => {
     const second = macos.cycles[1];
     await user.click(await screen.findByTitle(new RegExp(`Cycle ${second.index}`)));
     // antd's Select calls onChange(value, option); only the value matters
-    // here (same form as CycleHeader.test.tsx).
+    // here.
     expect(onSelect.mock.calls[0][0]).toBe(second.index);
   });
 
