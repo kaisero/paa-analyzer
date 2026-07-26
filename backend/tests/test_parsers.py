@@ -276,9 +276,11 @@ class TestSystemInfo:
 
 class TestHipStatus:
     # Legacy 2-column form (Gateway / Last HIP Report, no Status column). No
-    # real bundle exhibiting this layout is available, but it is wired into
-    # backend/tests/conftest.py's build_sample_zip() and the e2e tests, so it
-    # is kept here as a regression case proving that form still parses.
+    # real bundle exhibiting this layout is available. conftest.py's
+    # build_sample_zip() now sets SAMPLE_PACLI_HIP_STATUS from the real,
+    # redacted 3-column fixture (backend/tests/fixtures/hip/), so this class
+    # is the sole remaining regression guard proving the legacy 2-column form
+    # still parses.
     LEGACY_SAMPLE = """\
 HIP Collection: Enabled
 Next HIP Check: 2026-04-04 20:49:25
