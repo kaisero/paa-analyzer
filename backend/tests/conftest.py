@@ -6,6 +6,7 @@ import json
 import zipfile
 from collections.abc import Iterator
 from io import BytesIO
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -16,6 +17,8 @@ from backend.pipeline import parse_zip
 from backend.store import store as global_store
 
 # ── Sample data ───────────────────────────────────────────────────────────
+
+_HIP_FIXTURES = Path(__file__).parent / "fixtures" / "hip"
 
 SAMPLE_PACLI_STATUS = """\
 State: Enabled
@@ -94,14 +97,18 @@ US Northwest             5        us-northwest.gw.example.com
 Austria                  1        austria.gw.example.com
 """
 
-SAMPLE_PACLI_HIP_STATUS = """\
-HIP Collection: Enabled
-Next HIP Check: 2026-04-04 20:49:25
+# Real, redacted `pacli hip-status` output (see backend/tests/fixtures/hip/) --
+# used verbatim rather than a hand-authored table, per the project's ban on
+# fabricated HIP test data. Ten gateways, the current 3-column layout.
+SAMPLE_PACLI_HIP_STATUS = (_HIP_FIXTURES / "pacli_hip_status.log").read_text()
 
-Gateway              Last HIP Report
--------              ---------------
-Austria              2026-04-03 06:57:30
-"""
+# Real, redacted PACompliance / PAComplianceMp log rotations from a macOS
+# bundle (see backend/tests/fixtures/hip/) -- two HIP cycles' worth of
+# OPSWAT/compliance log lines, kept verbatim rather than hand-authored.
+SAMPLE_PACOMPLIANCE = (_HIP_FIXTURES / "PACompliance.log").read_text()
+SAMPLE_PACOMPLIANCE_1 = (_HIP_FIXTURES / "PACompliance.1.log").read_text()
+SAMPLE_PACOMPLIANCE_MP = (_HIP_FIXTURES / "PAComplianceMp.log").read_text()
+SAMPLE_PACOMPLIANCE_MP_1 = (_HIP_FIXTURES / "PAComplianceMp.1.log").read_text()
 
 SAMPLE_PACLI_PROTECT = """\
 Protection Features
@@ -282,6 +289,12 @@ def build_sample_zip() -> bytes:
         zf.writestr("traffic_log_json.txt", SAMPLE_TRAFFIC_JSON)
         # Structured log with embedded JSON
         zf.writestr("Logs/System/PAS.log", SAMPLE_PAS_LOG)
+        # HIP compliance logs (real, redacted fixtures) with a rotation each,
+        # so build_hip_data sees the same two cycles the HIP unit tests do.
+        zf.writestr("Logs/System/PACompliance.log", SAMPLE_PACOMPLIANCE)
+        zf.writestr("Logs/System/PACompliance.1.log", SAMPLE_PACOMPLIANCE_1)
+        zf.writestr("Logs/System/PAComplianceMp.log", SAMPLE_PACOMPLIANCE_MP)
+        zf.writestr("Logs/System/PAComplianceMp.1.log", SAMPLE_PACOMPLIANCE_MP_1)
     return buf.getvalue()
 
 

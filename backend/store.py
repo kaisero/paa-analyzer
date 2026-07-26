@@ -21,11 +21,19 @@ class SessionStore:
         self._dbs: dict[str, sqlite3.Connection] = {}  # session -> SQLite connection
         self._log_meta: dict[str, dict[str, dict[str, Any]]] = {}  # session -> source_key -> {module, component, name}
         self._state: dict[str, dict[str, dict[str, Any]]] = {}  # session -> state_key -> data
+        self._hip: dict[str, dict[str, Any]] = {}  # session -> HipData (see paa_analyzer.hip.build_hip_data)
 
-    def add_session(self, session_dict: dict[str, Any], logs: dict[str, Any], state: dict[str, dict[str, Any]]) -> None:
+    def add_session(
+        self,
+        session_dict: dict[str, Any],
+        logs: dict[str, Any],
+        state: dict[str, dict[str, Any]],
+        hip: dict[str, Any],
+    ) -> None:
         sid = session_dict["id"]
         self._sessions[sid] = session_dict
         self._state[sid] = state
+        self._hip[sid] = hip
         self._log_meta[sid] = {}
 
         conn = sqlite3.connect(":memory:", check_same_thread=False)
@@ -96,6 +104,7 @@ class SessionStore:
             conn.close()
         self._log_meta.pop(sid, None)
         self._state.pop(sid, None)
+        self._hip.pop(sid, None)
         return True
 
     def get_log_sources(self, sid: str) -> list[LogSource]:
@@ -265,6 +274,30 @@ class SessionStore:
 
     def get_state(self, sid: str, key: str) -> dict[str, Any] | None:
         return self._state.get(sid, {}).get(key)
+
+    def get_hip(self, sid: str) -> dict[str, Any] | None:
+        """The HIP model for a session, with the raw-XML `_raw` key stripped.
+
+        The whole point of the raw/structured split is that this stays
+        small, so `_raw` never leaves this method. None only when the
+        session was never stored; a session whose bundle had no compliance
+        logs still gets the full empty shape (`cycles: []`), since
+        build_hip_data() always runs during parsing.
+        """
+        hip = self._hip.get(sid)
+        if hip is None:
+            return None
+        return {key: value for key, value in hip.items() if key != "_raw"}
+
+    def get_hip_raw(self, sid: str, index: str) -> dict[str, Any] | None:
+        """The raw XML for one HIP cycle. `index` is the cycle's `str`-keyed
+        position in `_raw` (build_hip_data keys it that way so the shape
+        survives a JSON round-trip) -- an int here would never match."""
+        hip = self._hip.get(sid)
+        if hip is None:
+            return None
+        raw: dict[str, Any] = hip.get("_raw") or {}
+        return raw.get(index)
 
 
 store = SessionStore()

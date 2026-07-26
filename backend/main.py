@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from backend.api import dashboard, logs, sessions, state
+from backend.api import dashboard, hip, logs, sessions, state
 
 try:
     __version__ = version("paa-analyzer")
@@ -32,6 +32,7 @@ def create_app() -> FastAPI:
     app.include_router(logs.router, prefix="/api/v1")
     app.include_router(state.router, prefix="/api/v1")
     app.include_router(dashboard.router, prefix="/api/v1")
+    app.include_router(hip.router, prefix="/api/v1")
 
     # Serve frontend static files (after API routes so /api/* takes priority)
     dist = Path(__file__).parent.parent / "frontend" / "dist"

@@ -292,6 +292,17 @@ class TestParseZipStructure:
         assert manifest["parse_time_ms"] >= 0
         assert isinstance(manifest["timezone_offset"], str)
 
+    def test_manifest_total_hip_cycles(self, parsed_result):
+        """The sample bundle's PACompliance/.1 + PAComplianceMp/.1 fixtures
+        collapse into two HIP cycles, same as the paa_analyzer.hip unit
+        tests exercising those fixtures directly."""
+        assert parsed_result["manifest"]["total_hip_cycles"] == 2
+
+    def test_hip_data_present_and_matches_manifest(self, parsed_result):
+        hip = parsed_result["hip"]
+        assert hip["platform"] == "macos"
+        assert len(hip["cycles"]) == parsed_result["manifest"]["total_hip_cycles"]
+
     def test_state_has_meta_and_data(self, parsed_result):
         for key, entry in parsed_result["state"].items():
             assert "_meta" in entry, f"State entry {key} missing _meta"

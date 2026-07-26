@@ -66,7 +66,7 @@ async def create_session_stream(file: UploadFile) -> StreamingResponse:
         except Exception as e:
             session.parse_status = "error"
             session.parse_error = str(e)
-            store.add_session(session.model_dump(mode="json"), {}, {})
+            store.add_session(session.model_dump(mode="json"), {}, {}, {})
             yield f"data: {json.dumps({'stage': 'error', 'progress': -1, 'detail': str(e)})}\n\n"
             return
 
@@ -78,7 +78,7 @@ async def create_session_stream(file: UploadFile) -> StreamingResponse:
         session.total_log_entries = manifest["total_log_entries"]
         session.total_log_sources = manifest["total_log_sources"]
         session.total_state_files = manifest["total_state_files"]
-        store.add_session(session.model_dump(mode="json"), result["logs"], result["state"])
+        store.add_session(session.model_dump(mode="json"), result["logs"], result["state"], result["hip"])
 
         complete_event = {
             "stage": "complete",
@@ -115,7 +115,7 @@ async def create_session(file: UploadFile) -> DataResponse:
     except Exception as e:
         session.parse_status = "error"
         session.parse_error = str(e)
-        store.add_session(session.model_dump(mode="json"), {}, {})
+        store.add_session(session.model_dump(mode="json"), {}, {}, {})
         return DataResponse(data=session.model_dump(mode="json"))
 
     manifest = result["manifest"]
@@ -126,7 +126,7 @@ async def create_session(file: UploadFile) -> DataResponse:
     session.total_log_sources = manifest["total_log_sources"]
     session.total_state_files = manifest["total_state_files"]
 
-    store.add_session(session.model_dump(mode="json"), result["logs"], result["state"])
+    store.add_session(session.model_dump(mode="json"), result["logs"], result["state"], result["hip"])
     return DataResponse(data=session.model_dump(mode="json"))
 
 
