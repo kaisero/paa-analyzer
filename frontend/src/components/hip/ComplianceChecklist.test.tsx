@@ -83,4 +83,26 @@ describe('ComplianceChecklist', () => {
     renderList(windows);
     expect(screen.getByText('No custom checks collected for this platform.')).toBeInTheDocument();
   });
+
+  it('flips to XML and renders the labelled hip-report document', async () => {
+    const user = userEvent.setup();
+    renderList(macos);
+    await user.click(screen.getByText('XML'));
+    const label = await screen.findByText('hip-report — PACompliance');
+    // A real document rendered, not the empty-state note.
+    expect(screen.queryByText(/no hip-report document/i)).not.toBeInTheDocument();
+    const pre = label.parentElement!.querySelector('pre');
+    expect(pre?.textContent).toContain('hip-report-version');
+  });
+
+  it('still offers XML and JSON when the cycle carries no report', () => {
+    // Regression guard for I3: the `!report` guard used to run before the
+    // view dispatch, so a truncated cycle with no report lost XML/JSON
+    // entirely — exactly the cycle where raw XML matters most.
+    const noReport = { ...macos.cycles[0], report: null };
+    renderWithProviders(<ComplianceChecklist cycle={noReport} sessionId="s1" />);
+    expect(screen.getByText('XML')).toBeInTheDocument();
+    expect(screen.getByText('JSON')).toBeInTheDocument();
+    expect(screen.getByText(/carries no HIP report/)).toBeInTheDocument();
+  });
 });

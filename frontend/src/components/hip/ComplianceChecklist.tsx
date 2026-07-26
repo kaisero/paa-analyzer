@@ -62,26 +62,18 @@ export function ComplianceChecklist({ cycle, sessionId }: Props) {
 
   const toggle = <ModuleToggle modes={['Grid', 'XML', 'JSON']} value={view} onChange={setView} />;
 
-  if (!report) {
-    return (
-      <HipCard title="Compliance Checklist" extra={toggle}>
-        <div style={{ color: 'var(--text-dim)', fontSize: 12 }}>
-          This cycle carries no HIP report — the log was most likely truncated by
-          rotation before the report was written.
-        </div>
-      </HipCard>
-    );
-  }
-
   // The panel title stays "Compliance Checklist" in every view mode — Grid
   // used to bake the category count into the title ("Categories · 7") while
   // XML/JSON showed the plain title, so switching modes changed the header's
-  // shape. The count is now a separate note next to the toggle instead.
-  const countNote = (
+  // shape. The count is now a separate note next to the toggle instead. It
+  // is only meaningful when a report exists, which XML and JSON must handle
+  // too (unlike Grid, they must not bail out on a missing report — a
+  // truncated cycle is exactly when raw XML matters most).
+  const countNote = report ? (
     <span style={{ fontFamily: 'var(--sans)', fontWeight: 400, fontSize: 11, color: 'var(--text-dim)' }}>
-      {report.categories.length} categories
+      {report.categories.length} {report.categories.length === 1 ? 'category' : 'categories'}
     </span>
-  );
+  ) : null;
 
   if (view === 'XML') {
     return (
@@ -108,18 +100,34 @@ export function ComplianceChecklist({ cycle, sessionId }: Props) {
         title="Compliance Checklist"
         extra={<div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>{countNote}{toggle}</div>}
       >
-        <RawBlock
-          label={`cycle ${cycle.index} categories — parsed model`}
-          text={JSON.stringify(report.categories, null, 2)}
-          emptyNote="No categories in this report."
-        />
-        {/* The checklist folds categories AND custom checks into one list, so
-            its JSON view has to show both documents, not just categories. */}
-        <RawBlock
-          label={`cycle ${cycle.index} custom_checks — parsed model`}
-          text={JSON.stringify(report.custom_checks, null, 2)}
-          emptyNote="No custom checks in this report."
-        />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <RawBlock
+            label={`cycle ${cycle.index} categories — parsed model`}
+            text={report ? JSON.stringify(report.categories, null, 2) : undefined}
+            emptyNote="No categories in this report."
+          />
+          {/* The checklist folds categories AND custom checks into one list,
+              so its JSON view has to show both documents, not just
+              categories. */}
+          <RawBlock
+            label={`cycle ${cycle.index} custom_checks — parsed model`}
+            text={report ? JSON.stringify(report.custom_checks, null, 2) : undefined}
+            emptyNote="No custom checks in this report."
+          />
+        </div>
+      </HipCard>
+    );
+  }
+
+  // Grid needs a real report from here on — this guard sits after the
+  // XML/JSON returns so a truncated cycle can still be inspected as raw XML.
+  if (!report) {
+    return (
+      <HipCard title="Compliance Checklist" extra={<div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>{countNote}{toggle}</div>}>
+        <div style={{ color: 'var(--text-dim)', fontSize: 12 }}>
+          This cycle carries no HIP report — the log was most likely truncated by
+          rotation before the report was written.
+        </div>
       </HipCard>
     );
   }
@@ -128,8 +136,8 @@ export function ComplianceChecklist({ cycle, sessionId }: Props) {
   const controls = (
     <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
       {countNote}
-      <button type="button" onClick={() => setOpen(new Set(allKeys))} style={btn}>Expand All</button>
-      <button type="button" onClick={() => setOpen(new Set())} style={btn}>Collapse All</button>
+      <button type="button" onClick={() => setOpen(new Set(allKeys))} className="hip-ghost-btn">Expand All</button>
+      <button type="button" onClick={() => setOpen(new Set())} className="hip-ghost-btn">Collapse All</button>
       {toggle}
     </div>
   );
@@ -172,7 +180,9 @@ export function ComplianceChecklist({ cycle, sessionId }: Props) {
               </>
             }
           >
-            {category.products.map((p) => <ProductRow key={p.name} product={p} />)}
+            {category.products.map((p, i) => (
+              <ProductRow key={p.name} product={p} divider={i > 0} />
+            ))}
             {orphans.length > 0 && (
               <div style={{ marginTop: 12 }}>
                 <div style={sectionHeading}>Other OPSWAT errors ({orphans.length})</div>
@@ -200,7 +210,7 @@ export function ComplianceChecklist({ cycle, sessionId }: Props) {
         expandable={ccEntries > 0}
         open={open.has(CUSTOM_CHECKS_KEY)}
         onToggle={() => toggleRow(CUSTOM_CHECKS_KEY)}
-        stats={<span>{ccEntries} entries</span>}
+        stats={<span>{ccEntries} {ccEntries === 1 ? 'entry' : 'entries'}</span>}
       >
         {/* cc is HipCustomChecks | null; CustomChecksCard's prop is not
             nullable, so this must be guarded rather than passed through.
@@ -212,8 +222,3 @@ export function ComplianceChecklist({ cycle, sessionId }: Props) {
     </HipCard>
   );
 }
-
-const btn: CSSProperties = {
-  background: 'transparent', border: '1px solid var(--border)',
-  color: 'var(--text-sec)', fontSize: 11, padding: '4px 10px', cursor: 'pointer',
-};
