@@ -142,7 +142,7 @@ export function LogTable({
       dataIndex: 'timestamp', key: 'timestamp', width: tsCol.width,
       resizable: true, onResize: handleResize('timestamp'),
       render: (val: string) => (
-        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'var(--text3)', whiteSpace: 'nowrap' }}>
+        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
           {val ? fmtTs(val) : ''}
         </span>
       ),
@@ -155,7 +155,7 @@ export function LogTable({
       title: 'Source', dataIndex: 'source', key: 'source', width: srcCol.width,
       resizable: true, onResize: handleResize('source'), ellipsis: true,
       render: (val: string) => (
-        <span title={val || ''} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'var(--blue)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
+        <span title={val || ''} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'var(--info)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
           {val || ''}
         </span>
       ),
@@ -184,7 +184,7 @@ export function LogTable({
           <Popover content={columnSettings} title="Columns" trigger="click" placement="bottomRight">
             <SettingOutlined
               onClick={(e) => e.stopPropagation()}
-              style={{ fontSize: 12, color: 'var(--text3)', cursor: 'pointer' }}
+              style={{ fontSize: 12, color: 'var(--text-dim)', cursor: 'pointer' }}
             />
           </Popover>
         </span>
@@ -204,12 +204,12 @@ export function LogTable({
               {record.beautified && (
                 <FormatPainterOutlined
                   onClick={(e) => { e.stopPropagation(); onToggleBeautify(gIdx); }}
-                  style={{ fontSize: 12, color: showBeautified ? 'var(--blue)' : 'var(--text3)', cursor: 'pointer', padding: 2, opacity: showBeautified ? 1 : undefined }}
+                  style={{ fontSize: 12, color: showBeautified ? 'var(--info)' : 'var(--text-dim)', cursor: 'pointer', padding: 2, opacity: showBeautified ? 1 : undefined }}
                 />
               )}
               <CodeOutlined
                 onClick={(e) => { e.stopPropagation(); onToggleRawView(gIdx); }}
-                style={{ fontSize: 12, color: showRaw ? 'var(--blue)' : 'var(--text3)', cursor: 'pointer', padding: 2, opacity: showRaw ? 1 : undefined }}
+                style={{ fontSize: 12, color: showRaw ? 'var(--info)' : 'var(--text-dim)', cursor: 'pointer', padding: 2, opacity: showRaw ? 1 : undefined }}
               />
             </span>
             {/* Message text */}
@@ -219,12 +219,12 @@ export function LogTable({
               WebkitBoxOrient: expanded || showBeautified ? undefined : 'vertical',
               overflow: expanded || showBeautified ? 'visible' : 'hidden',
               whiteSpace: 'pre-wrap', wordBreak: 'break-word',
-              color: 'var(--text2)', fontFamily: "'JetBrains Mono', monospace", fontSize: 12,
+              color: 'var(--text-sec)', fontFamily: "'JetBrains Mono', monospace", fontSize: 12,
               paddingRight: 40,
             }}>
               {displayMsg}
               {!expanded && !showBeautified && multiline && (
-                <span style={{ display: 'block', color: 'var(--text3)', fontSize: 10, letterSpacing: 2, lineHeight: 1, marginTop: 1 }}>
+                <span style={{ display: 'block', color: 'var(--text-dim)', fontSize: 10, letterSpacing: 2, lineHeight: 1, marginTop: 1 }}>
                   &middot;&middot;&middot;
                 </span>
               )}
@@ -236,17 +236,16 @@ export function LogTable({
                 style={{
                   marginTop: 8,
                   padding: 8,
-                  background: 'var(--bg)',
+                  background: 'var(--elevated)',
                   border: '1px solid var(--border)',
-                  borderRadius: 4,
-                  fontFamily: "'JetBrains Mono', monospace",
+                  borderLeft: '3px solid var(--accent)',
+                  fontFamily: 'var(--mono)',
                   fontSize: 11,
-                  color: 'var(--text2)',
+                  color: 'var(--text-sec)',
                   whiteSpace: 'pre-wrap',
                   wordBreak: 'break-word',
                   overflow: 'auto',
                   maxHeight: 400,
-                  margin: '8px 0 0 0',
                 }}
               >
                 {JSON.stringify(record, null, 2)}

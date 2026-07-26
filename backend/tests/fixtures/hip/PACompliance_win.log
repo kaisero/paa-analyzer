@@ -1,0 +1,542 @@
+2026-07-23T14:28:18.748+02:00 <debug> TESTHOST [24808:24812] Try to parse hip policy: {"collection_hip_data":true,"max_wait_time":20,"certs":[],"default_categories":["host-info","data-loss-prevention","patch-management","firewall","anti-malware","disk-backup","disk-encryption"],"exclusion_categories":[],"custom_check":{"windows":{"registry_key":[],"process_list":[]},"mac_os":{"plist":[],"process_list":[]}}} 
+2026-07-23T14:28:18.749+02:00 <debug> TESTHOST [24808:24812] HIP policy parsing is completed
+2026-07-23T14:28:18.749+02:00 <info> TESTHOST [24808:24812] checking if file: C:\ProgramData\Palo Alto Networks\Prisma Access Agent\Data\OPSWAT\libs\libwaapi.dll is signed by OPSWAT
+2026-07-23T14:28:18.864+02:00 <info> TESTHOST [24808:24812] Found 2 signatures on file C:\ProgramData\Palo Alto Networks\Prisma Access Agent\Data\OPSWAT\libs\libwaapi.dll
+2026-07-23T14:28:18.864+02:00 <info> TESTHOST [24808:24812] file C:\ProgramData\Palo Alto Networks\Prisma Access Agent\Data\OPSWAT\libs\libwaapi.dll is officially signed by OPSWAT Inc.
+2026-07-23T14:28:18.865+02:00 <info> TESTHOST [24808:24812] Successfully verified OPSWAT signature for: C:\ProgramData\Palo Alto Networks\Prisma Access Agent\Data\OPSWAT\libs\libwaapi.dll
+2026-07-23T14:28:19.395+02:00 <debug> TESTHOST [24808:24812] Opswat version "4.3.5495.0" 
+2026-07-23T14:28:19.591+02:00 <debug> TESTHOST [24808:24812] OS information collection completed successfully
+2026-07-23T14:28:19.618+02:00 <info> TESTHOST [24808:24812] find JoinDomain is : 
+2026-07-23T14:28:19.619+02:00 <debug> TESTHOST [24808:24812] Category host-info: took 0 seconds
+2026-07-23T14:28:20.478+02:00 <debug> TESTHOST [24808:24812] StartComplianceData (DETECT_PRODUCTS) output: {
+    "result" : {
+            "detected_products" : [                    
+                    {
+                        "display_name" : "n/a",
+                        "vendor" : {
+                                "name" : "Microsoft Corporation",
+                                "id" : 90
+                            },
+                        "categories" : [
+                                15,
+                                5
+                            ],
+                        "signature" : 3194,
+                        "product" : {
+                                "name" : "Microsoft Defender ATP",
+                                "id" : 3082
+                            },
+                        "sig_name" : "Microsoft Defender ATP",
+                        "labels" : {
+                                "pua" : false,
+                                "toolbar" : false,
+                                "bloatware" : false,
+                                "adware" : false,
+                                "edrxdr" : true
+                            }
+                    },                    
+                    {
+                        "categories" : [
+                                5
+                            ],
+                        "vendor" : {
+                                "name" : "Microsoft Corporation",
+                                "id" : 90
+                            },
+                        "display_name" : "n/a",
+                        "signature" : 477,
+                        "product" : {
+                                "name" : "Windows Defender",
+                                "id" : 362
+                            },
+                        "sig_name" : "Windows Defender",
+                        "labels" : {
+                                "pua" : false,
+                                "toolbar" : false,
+                                "bloatware" : false,
+                                "adware" : false
+                            }
+                    }
+                ],
+            "method" : 0,
+            "code" : 0,
+            "timing" : 859,
+            "timestamp" : "1784809699"
+        }
+}
+2026-07-23T14:28:20.480+02:00 <debug> TESTHOST [24808:24812] StartComplianceData: product: Microsoft Defender ATP (10.0.26200.8246), vendor: Microsoft Corporation, signature: 3194 
+2026-07-23T14:28:21.610+02:00 <debug> TESTHOST [24808:24812] StartComplianceData: product: Windows Defender (4.18.26060.3008), vendor: Microsoft Corporation, signature: 477 
+2026-07-23T14:28:22.650+02:00 <debug> TESTHOST [24808:24812] Category anti-malware: took 3 seconds
+2026-07-23T14:28:22.942+02:00 <debug> TESTHOST [24808:24812] StartComplianceData (DETECT_PRODUCTS) output: {
+    "result" : {
+            "detected_products" : [                    
+                    {
+                        "categories" : [
+                                2
+                            ],
+                        "vendor" : {
+                                "name" : "Microsoft Corporation",
+                                "id" : 90
+                            },
+                        "display_name" : "n/a",
+                        "signature" : 936,
+                        "product" : {
+                                "name" : "Windows File History",
+                                "id" : 924
+                            },
+                        "sig_name" : "Windows File History",
+                        "labels" : {
+                                "pua" : false,
+                                "toolbar" : false,
+                                "bloatware" : false,
+                                "adware" : false
+                            }
+                    },                    
+                    {
+                        "display_name" : "Microsoft OneDrive",
+                        "vendor" : {
+                                "name" : "Microsoft Corporation",
+                                "id" : 90
+                            },
+                        "categories" : [
+                                2,
+                                9
+                            ],
+                        "signature" : 842,
+                        "product" : {
+                                "name" : "Microsoft OneDrive",
+                                "id" : 833
+                            },
+                        "sig_name" : "Microsoft OneDrive",
+                        "labels" : {
+                                "pua" : false,
+                                "toolbar" : false,
+                                "bloatware" : false,
+                                "adware" : false
+                            }
+                    },                    
+                    {
+                        "categories" : [
+                                2
+                            ],
+                        "vendor" : {
+                                "name" : "Microsoft Corporation",
+                                "id" : 90
+                            },
+                        "display_name" : "n/a",
+                        "signature" : 935,
+                        "product" : {
+                                "name" : "Windows Backup and Restore",
+                                "id" : 923
+                            },
+                        "sig_name" : "Windows Backup and Restore",
+                        "labels" : {
+                                "pua" : false,
+                                "toolbar" : false,
+                                "bloatware" : false,
+                                "adware" : false
+                            }
+                    }
+                ],
+            "method" : 0,
+            "code" : 0,
+            "timing" : 297,
+            "timestamp" : "1784809702"
+        }
+}
+2026-07-23T14:28:22.950+02:00 <debug> TESTHOST [24808:24812] StartComplianceData: product: Windows File History (10.0.26100.8457), vendor: Microsoft Corporation, signature: 936 
+2026-07-23T14:28:23.011+02:00 <debug> TESTHOST [24808:24812] StartComplianceData: product: Microsoft OneDrive (26.108.0607.0002), vendor: Microsoft Corporation, signature: 842 
+2026-07-23T14:28:23.019+02:00 <debug> TESTHOST [24808:24812] StartComplianceData: product: Windows Backup and Restore (10.0.26100.8457), vendor: Microsoft Corporation, signature: 935 
+2026-07-23T14:28:23.020+02:00 <debug> TESTHOST [24808:24812] Category disk-backup: took 0 seconds
+2026-07-23T14:28:23.179+02:00 <debug> TESTHOST [24808:24812] StartComplianceData (DETECT_PRODUCTS) output: {
+    "result" : {
+            "detected_products" : [                    
+                    {
+                        "categories" : [
+                                3
+                            ],
+                        "vendor" : {
+                                "name" : "Microsoft Corporation",
+                                "id" : 90
+                            },
+                        "display_name" : "n/a",
+                        "signature" : 882,
+                        "product" : {
+                                "name" : "BitLocker Drive Encryption",
+                                "id" : 873
+                            },
+                        "sig_name" : "BitLocker Drive Encryption",
+                        "labels" : {
+                                "pua" : false,
+                                "toolbar" : false,
+                                "bloatware" : false,
+                                "adware" : false
+                            }
+                    }
+                ],
+            "method" : 0,
+            "code" : 0,
+            "timing" : 156,
+            "timestamp" : "1784809703"
+        }
+}
+2026-07-23T14:28:23.189+02:00 <debug> TESTHOST [24808:24812] StartComplianceData: product: BitLocker Drive Encryption (10.0.26100.8115), vendor: Microsoft Corporation, signature: 882 
+2026-07-23T14:28:23.262+02:00 <debug> TESTHOST [24808:24812] CollectComplianceDataForDisks: prod id 882, {
+    "result" : {
+            "signature" : 882,
+            "encryption_active" : true,
+            "timestamp" : "1784809703",
+            "locations" : [                    
+                    {
+                        "type" : "physical",
+                        "state" : "encrypted",
+                        "strength" : 256,
+                        "path" : "C:\\",
+                        "encryptable" : true,
+                        "algorithm" : "aes"
+                    }
+                ],
+            "fully_encrypted" : true,
+            "timing" : 78,
+            "support_wde" : true,
+            "method" : 1009,
+            "code" : 0
+        }
+}
+2026-07-23T14:28:23.262+02:00 <debug> TESTHOST [24808:24812] Category disk-encryption: took 0 seconds
+2026-07-23T14:28:23.403+02:00 <debug> TESTHOST [24808:24812] StartComplianceData (DETECT_PRODUCTS) output: {
+    "result" : {
+            "detected_products" : [                    
+                    {
+                        "categories" : [
+                                7
+                            ],
+                        "vendor" : {
+                                "name" : "Microsoft Corporation",
+                                "id" : 90
+                            },
+                        "display_name" : "Windows Firewall Configuration Provider",
+                        "signature" : 288,
+                        "product" : {
+                                "name" : "Windows Firewall",
+                                "id" : 283
+                            },
+                        "sig_name" : "Windows Firewall",
+                        "labels" : {
+                                "pua" : false,
+                                "toolbar" : false,
+                                "bloatware" : false,
+                                "adware" : false
+                            }
+                    }
+                ],
+            "method" : 0,
+            "code" : 0,
+            "timing" : 140,
+            "timestamp" : "1784809703"
+        }
+}
+2026-07-23T14:28:23.411+02:00 <debug> TESTHOST [24808:24812] StartComplianceData: product: Windows Firewall (10.0.26100.8115), vendor: Microsoft Corporation, signature: 288 
+2026-07-23T14:28:23.477+02:00 <debug> TESTHOST [24808:24812] Category firewall: took 0 seconds
+2026-07-23T14:28:23.588+02:00 <debug> TESTHOST [24808:24812] StartComplianceData (DETECT_PRODUCTS) output: {
+    "result" : {
+            "detected_products" : [
+                ],
+            "method" : 0,
+            "code" : 0,
+            "timing" : 109,
+            "timestamp" : "1784809703"
+        }
+}
+2026-07-23T14:28:23.588+02:00 <debug> TESTHOST [24808:24812] StartComplianceData: WAAPI_MID_DETECT_PRODUCTS, no products detected for category: 11
+2026-07-23T14:28:23.588+02:00 <debug> TESTHOST [24808:24812] Category data-loss-prevention: took 0 seconds
+2026-07-23T14:28:23.718+02:00 <debug> TESTHOST [24808:24812] StartComplianceData (DETECT_PRODUCTS) output: {
+    "result" : {
+            "detected_products" : [                    
+                    {
+                        "display_name" : "Microsoft Intune Management Extension",
+                        "vendor" : {
+                                "name" : "Microsoft Corporation",
+                                "id" : 90
+                            },
+                        "categories" : [
+                                12
+                            ],
+                        "signature" : 3298,
+                        "product" : {
+                                "name" : "Microsoft Intune Management Extension",
+                                "id" : 3146
+                            },
+                        "sig_name" : "Microsoft Intune Management Extension",
+                        "labels" : {
+                                "pua" : false,
+                                "toolbar" : false,
+                                "bloatware" : false,
+                                "adware" : false
+                            }
+                    },                    
+                    {
+                        "categories" : [
+                                12
+                            ],
+                        "vendor" : {
+                                "name" : "Microsoft Corporation",
+                                "id" : 90
+                            },
+                        "display_name" : "n/a",
+                        "signature" : 1139,
+                        "product" : {
+                                "name" : "System Center Configuration Manager Client",
+                                "id" : 1125
+                            },
+                        "sig_name" : "System Center Configuration Manager Client",
+                        "labels" : {
+                                "pua" : false,
+                                "toolbar" : false,
+                                "bloatware" : false,
+                                "adware" : false
+                            }
+                    },                    
+                    {
+                        "display_name" : "Dell Command | Update",
+                        "vendor" : {
+                                "name" : "Dell Inc.",
+                                "id" : 196
+                            },
+                        "categories" : [
+                                12
+                            ],
+                        "signature" : 3905,
+                        "product" : {
+                                "name" : "Dell Command | Update",
+                                "id" : 3536
+                            },
+                        "sig_name" : "Dell Command | Update",
+                        "labels" : {
+                                "pua" : false,
+                                "toolbar" : false,
+                                "bloatware" : false,
+                                "adware" : false
+                            }
+                    },                    
+                    {
+                        "categories" : [
+                                12
+                            ],
+                        "vendor" : {
+                                "name" : "Microsoft Corporation",
+                                "id" : 90
+                            },
+                        "display_name" : "n/a",
+                        "signature" : 1103,
+                        "product" : {
+                                "name" : "Windows Update Agent",
+                                "id" : 1090
+                            },
+                        "sig_name" : "Windows Update Agent",
+                        "labels" : {
+                                "pua" : false,
+                                "toolbar" : false,
+                                "bloatware" : false,
+                                "adware" : false
+                            }
+                    }
+                ],
+            "method" : 0,
+            "code" : 0,
+            "timing" : 141,
+            "timestamp" : "1784809703"
+        }
+}
+2026-07-23T14:28:23.726+02:00 <debug> TESTHOST [24808:24812] StartComplianceData: product: Microsoft Intune Management Extension (1.103.101.0), vendor: Microsoft Corporation, signature: 3298 
+2026-07-23T14:28:23.726+02:00 <error> TESTHOST [24808:24812] CollectComplianceDataForPatchManagement: Opswat Error(-12): An error when a method call was made on a component that does not implement it, Signature: 3298, Category: 12, Method: 1012, OESIS (V4 ver: 4.3.5495.0) 
+2026-07-23T14:28:23.755+02:00 <debug> TESTHOST [24808:24812] StartComplianceData: product: System Center Configuration Manager Client (5.00.9146.1009), vendor: Microsoft Corporation, signature: 1139 
+2026-07-23T14:28:25.471+02:00 <debug> TESTHOST [24808:24812] StartComplianceData: product: Dell Command | Update (5.7.0.97), vendor: Dell Inc., signature: 3905 
+2026-07-23T14:28:25.472+02:00 <error> TESTHOST [24808:24812] CollectComplianceDataForPatchManagement: Opswat Error(-12): An error when a method call was made on a component that does not implement it, Signature: 3905, Category: 12, Method: 1012, OESIS (V4 ver: 4.3.5495.0) 
+2026-07-23T14:28:25.480+02:00 <debug> TESTHOST [24808:24812] StartComplianceData: product: Windows Update Agent (1451.2601.23012.0), vendor: Microsoft Corporation, signature: 1103 
+2026-07-23T14:28:25.549+02:00 <debug> TESTHOST [24808:24812] Category patch-management: took 1 seconds
+2026-07-23T14:28:25.549+02:00 <debug> TESTHOST [24808:24812] Category All: took 6 seconds
+2026-07-23T14:28:25.554+02:00 <debug> TESTHOST [24808:24812] Process check completed sucessfully
+2026-07-23T14:28:25.554+02:00 <debug> TESTHOST [24808:24812] Compliance::CollectRegistryChecks started
+2026-07-23T14:28:25.554+02:00 <debug> TESTHOST [24808:24812] CollectRegistryChecks completed
+2026-07-23T14:28:25.555+02:00 <debug> TESTHOST [24808:24812] GetHipReport report <?xml version="1.0" encoding="UTF-8"?>
+<hip-report>
+	<generate-time>07/23/2026 14:28:19</generate-time>
+	<hip-report-version>4</hip-report-version>
+	<categories>
+		<entry name="host-info">
+			<client-version>26.2.2.19</client-version>
+			<os>Microsoft Windows 11 Enterprise , 64-bit</os>
+			<os-vendor>Microsoft</os-vendor>
+			<domain>example.com</domain>
+			<host-name>testhost</host-name>
+			<host-id>00000000-0000-0000-0000-000000000002</host-id>
+			<network-interface>
+				<entry name="{00000000-0000-0000-0000-000000000003}">
+					<description>PA Virtual Ethernet Adapter Secure</description>
+					<mac-address>00-00-5E-00-53-01</mac-address>
+					<ip-address>
+						<entry name="192.0.2.1"/>
+					</ip-address>
+					<ipv6-address>
+						<entry name="fe80::1"/>
+					</ipv6-address>
+				</entry>
+				<entry name="{00000000-0000-0000-0000-000000000004}">
+					<description>Intel(R) Wi-Fi 7 BE201 320MHz #4</description>
+					<mac-address>00-00-5E-00-53-02</mac-address>
+					<ip-address>
+						<entry name="169.254.1.1"/>
+					</ip-address>
+					<ipv6-address>
+						<entry name="fe80::2"/>
+					</ipv6-address>
+				</entry>
+				<entry name="{00000000-0000-0000-0000-000000000005}">
+					<description>Intel(R) Wi-Fi 7 BE201 320MHz</description>
+					<mac-address>00-00-5E-00-53-03</mac-address>
+					<ip-address>
+						<entry name="192.0.2.2"/>
+					</ip-address>
+					<ipv6-address>
+						<entry name="fe80::3"/>
+					</ipv6-address>
+				</entry>
+				<entry name="{00000000-0000-0000-0000-000000000006}">
+					<description>Intel(R) Wi-Fi 7 BE201 320MHz #5</description>
+					<mac-address>00-00-5E-00-53-04</mac-address>
+					<ip-address>
+						<entry name="169.254.1.2"/>
+					</ip-address>
+					<ipv6-address>
+						<entry name="fe80::4"/>
+					</ipv6-address>
+				</entry>
+				<entry name="{00000000-0000-0000-0000-000000000007}">
+					<description>Software Loopback Interface 1</description>
+					<mac-address></mac-address>
+					<ip-address>
+						<entry name="127.0.0.1"/>
+					</ip-address>
+					<ipv6-address>
+						<entry name="::1"/>
+					</ipv6-address>
+				</entry>
+			</network-interface>
+		</entry>
+		<entry name="anti-malware">
+			<list>
+				<entry>
+					<ProductInfo>
+						<Prod name="Microsoft Defender ATP" version="10.0.26200.8246" vendor="Microsoft Corporation" defver="1.455.279.0" engver="1.1.26060.3008" datemon="07" dateday="23" dateyear="2026" prodType="3" osType="1"/>
+						<real-time-protection>yes</real-time-protection>
+						<last-full-scan-time>01/01/1970 01:00:00</last-full-scan-time>
+					</ProductInfo>
+				</entry>
+				<entry>
+					<ProductInfo>
+						<Prod name="Windows Defender" version="4.18.26060.3008" vendor="Microsoft Corporation" defver="1.455.279.0" engver="1.1.26060.3008" datemon="07" dateday="23" dateyear="2026" prodType="3" osType="1"/>
+						<real-time-protection>yes</real-time-protection>
+						<last-full-scan-time>01/01/1970 01:00:00</last-full-scan-time>
+					</ProductInfo>
+				</entry>
+			</list>
+		</entry>
+		<entry name="disk-backup">
+			<list>
+				<entry>
+					<ProductInfo>
+						<Prod name="Windows File History" version="10.0.26100.8457" vendor="Microsoft Corporation"/>
+						<last-backup-time>n/a</last-backup-time>
+					</ProductInfo>
+				</entry>
+				<entry>
+					<ProductInfo>
+						<Prod name="Microsoft OneDrive" version="26.108.0607.0002" vendor="Microsoft Corporation"/>
+						<last-backup-time>n/a</last-backup-time>
+					</ProductInfo>
+				</entry>
+				<entry>
+					<ProductInfo>
+						<Prod name="Windows Backup and Restore" version="10.0.26100.8457" vendor="Microsoft Corporation"/>
+						<last-backup-time>n/a</last-backup-time>
+					</ProductInfo>
+				</entry>
+			</list>
+		</entry>
+		<entry name="disk-encryption">
+			<list>
+				<entry>
+					<ProductInfo>
+						<Prod name="BitLocker Drive Encryption" version="10.0.26100.8115" vendor="Microsoft Corporation"/>
+						<drives>
+							<entry>
+								<drive-name>C:\</drive-name>
+								<enc-state>encrypted</enc-state>
+							</entry>
+							<entry>
+								<drive-name>All</drive-name>
+								<enc-state>encrypted</enc-state>
+							</entry>
+						</drives>
+					</ProductInfo>
+				</entry>
+			</list>
+		</entry>
+		<entry name="firewall">
+			<list>
+				<entry>
+					<ProductInfo>
+						<Prod name="Windows Firewall" version="10.0.26100.8115" vendor="Microsoft Corporation"/>
+						<is-enabled>yes</is-enabled>
+					</ProductInfo>
+				</entry>
+			</list>
+		</entry>
+		<entry name="data-loss-prevention">
+			<list>
+			</list>
+		</entry>
+		<entry name="patch-management">
+			<list>
+				<entry>
+					<ProductInfo>
+						<Prod name="Microsoft Intune Management Extension" version="1.103.101.0" vendor="Microsoft Corporation"/>
+						<is-enabled>n/a</is-enabled>
+					</ProductInfo>
+				</entry>
+				<entry>
+					<ProductInfo>
+						<Prod name="System Center Configuration Manager Client" version="5.00.9146.1009" vendor="Microsoft Corporation"/>
+						<is-enabled>yes</is-enabled>
+					</ProductInfo>
+				</entry>
+				<entry>
+					<ProductInfo>
+						<Prod name="Dell Command | Update" version="5.7.0.97" vendor="Dell Inc."/>
+						<is-enabled>n/a</is-enabled>
+					</ProductInfo>
+				</entry>
+				<entry>
+					<ProductInfo>
+						<Prod name="Windows Update Agent" version="1451.2601.23012.0" vendor="Microsoft Corporation"/>
+						<is-enabled>yes</is-enabled>
+					</ProductInfo>
+				</entry>
+			</list>
+			<missing-patches>
+			</missing-patches>
+		</entry>
+		<entry name="certificate">
+			<list>
+			</list>
+		</entry>
+	</categories>
+</hip-report>
+2026-07-23T14:28:26.915+02:00 <debug> TESTHOST [24808:24812] Get Hip report completed
+2026-07-23T14:28:26.915+02:00 <debug> TESTHOST [24808:24812] HIP creation done, took 8 second
+2026-07-23T14:28:26.916+02:00 <debug> TESTHOST [24808:24812] Send hip report to service
+2026-07-23T14:28:26.916+02:00 <debug> TESTHOST [24808:24812] SetHipReport succeeded
+2026-07-23T14:28:26.916+02:00 <debug> TESTHOST [24808:24812] PAHipCompliance waiting for events
+2026-07-23T14:28:26.917+02:00 <debug> TESTHOST [24808:24876] HipReportChangedEvent received
+2026-07-23T14:28:26.917+02:00 <debug> TESTHOST [24808:24812] Finished with status code: 0

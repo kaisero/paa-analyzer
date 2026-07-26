@@ -12,3 +12,7 @@ dist/
 build/
 *.egg-info/
 uploads/
+.superpowers/
+prototype/
+docs/plans
+docs/specs

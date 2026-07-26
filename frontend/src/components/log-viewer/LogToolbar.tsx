@@ -1,3 +1,4 @@
+import type React from 'react';
 import { useMemo } from 'react';
 import { Input, Radio, DatePicker, Button, Flex } from 'antd';
 import { ClearOutlined } from '@ant-design/icons';
@@ -67,6 +68,21 @@ export function LogToolbar({
     return false;
   };
 
+  const labelStyle: React.CSSProperties = {
+    fontSize: 10,
+    fontWeight: 700,
+    letterSpacing: '0.12em',
+    textTransform: 'uppercase',
+    color: 'var(--text-dim)',
+    flexShrink: 0,
+  };
+
+  const groupStyle: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+  };
+
   return (
     <Flex
       gap={8}
@@ -79,56 +95,62 @@ export function LogToolbar({
       }}
     >
       {/* Search */}
-      <Input.Search
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search..."
-        allowClear
-        size="small"
-        style={{
-          flex: 1,
-          minWidth: 160,
-          fontFamily: "'JetBrains Mono', monospace",
-          fontSize: 12,
-        }}
-      />
+      <div style={groupStyle}>
+        <span style={labelStyle}>Search:</span>
+        <Input.Search
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search..."
+          allowClear
+          size="small"
+          style={{
+            width: 260,
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 12,
+          }}
+        />
+      </div>
 
       {/* Level filter */}
-      <Radio.Group
-        value={level}
-        onChange={(e) => setLevel(e.target.value)}
-        size="small"
-        optionType="button"
-        buttonStyle="solid"
-      >
-        {LEVELS.map((l) => (
-          <Radio.Button key={l} value={l} style={{ fontSize: 11 }}>
-            {LEVEL_LABELS[l]}
-          </Radio.Button>
-        ))}
-      </Radio.Group>
+      <div style={groupStyle}>
+        <span style={labelStyle}>Level:</span>
+        <Radio.Group
+          value={level}
+          onChange={(e) => setLevel(e.target.value)}
+          size="small"
+          optionType="button"
+          buttonStyle="solid"
+        >
+          {LEVELS.map((l) => (
+            <Radio.Button key={l} value={l} style={{ fontSize: 11 }}>
+              {LEVEL_LABELS[l]}
+            </Radio.Button>
+          ))}
+        </Radio.Group>
+      </div>
 
-      {/* Date range picker */}
-      <DatePicker.RangePicker
-        value={rangeValue[0] || rangeValue[1] ? rangeValue : null}
-        onChange={handleRangeChange}
-        showTime={{ format: 'HH:mm' }}
-        format="YYYY-MM-DD HH:mm"
-        disabledDate={disabledDate}
-        size="small"
-        style={{ minWidth: 360, fontFamily: "'JetBrains Mono', monospace", fontSize: 12 }}
-        placeholder={['Start date', 'End date']}
-      />
-
-      {/* Clear */}
-      <Button
-        size="small"
-        icon={<ClearOutlined />}
-        onClick={onClear}
-        style={{ fontSize: 11 }}
-      >
-        Clear
-      </Button>
+      {/* Date range + clear */}
+      <div style={groupStyle}>
+        <span style={labelStyle}>Time range:</span>
+        <DatePicker.RangePicker
+          value={rangeValue[0] || rangeValue[1] ? rangeValue : null}
+          onChange={handleRangeChange}
+          showTime={{ format: 'HH:mm' }}
+          format="YYYY-MM-DD HH:mm"
+          disabledDate={disabledDate}
+          size="small"
+          style={{ minWidth: 360, fontFamily: "'JetBrains Mono', monospace", fontSize: 12 }}
+          placeholder={['Start date', 'End date']}
+        />
+        <Button
+          size="small"
+          icon={<ClearOutlined />}
+          onClick={onClear}
+          style={{ fontSize: 11 }}
+        >
+          Clear
+        </Button>
+      </div>
     </Flex>
   );
 }

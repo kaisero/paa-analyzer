@@ -1,0 +1,660 @@
+2026-07-25T17:07:43.640+02:00 <debug> TESTHOST [57936:68208845] Try to parse hip policy: {"collection_hip_data":true,"max_wait_time":20,"certs":[],"default_categories":["host-info","data-loss-prevention","patch-management","firewall","anti-malware","disk-backup","disk-encryption"],"exclusion_categories":[],"custom_check":{"windows":{"registry_key":[{"name":"HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\CloudDomainJoin\\TenantInfo\\00000000-0000-0000-0000-000000000001","member":["DisplayName"]}],"process_list":[]},"mac_os":{"plist":[{"name":"com.jamfsoftware.jamf","member":["jss_url"]}],"process_list":[]}}} 
+2026-07-25T17:07:43.641+02:00 <debug> TESTHOST [57936:68208845] HIP policy parsing is completed
+2026-07-25T17:07:43.641+02:00 <debug> TESTHOST [57936:68208845] HasValidSignature for OPSWAT at path: /Library/Application Support/PaloAltoNetworks/Prisma Access Agent/Data/OPSWAT/libs/libwaapi.dylib
+2026-07-25T17:07:43.708+02:00 <debug> TESTHOST [57936:68208845] Requirement validation successful for OPSWAT at path: /Library/Application Support/PaloAltoNetworks/Prisma Access Agent/Data/OPSWAT/libs/libwaapi.dylib
+2026-07-25T17:07:44.797+02:00 <debug> TESTHOST [57936:68208845] Opswat version "4.3.4222.0" 
+2026-07-25T17:07:44.830+02:00 <info> TESTHOST [57936:68208845] GetJoinDomain: user find JoinDomain: 
+2026-07-25T17:07:44.830+02:00 <debug> TESTHOST [57936:68208845] Category host-info: took 0 seconds
+2026-07-25T17:07:44.966+02:00 <debug> TESTHOST [57936:68208845] StartComplianceData (DETECT_PRODUCTS) output: {
+    "result" : {
+            "timestamp" : "1784992064",
+            "code" : 0,
+            "method" : 0,
+            "timing" : 136,
+            "detected_products" : [                    
+                    {
+                        "categories" : [
+                                5
+                            ],
+                        "signature" : 100379,
+                        "labels" : {
+                                "pua" : false,
+                                "bloatware" : false,
+                                "toolbar" : false,
+                                "adware" : false
+                            },
+                        "vendor" : {
+                                "name" : "Palo Alto Networks, Inc.",
+                                "id" : 100174
+                            },
+                        "product" : {
+                                "name" : "Cortex XDR",
+                                "id" : 100321
+                            },
+                        "sig_name" : "Cortex XDR"
+                    },                    
+                    {
+                        "sig_name" : "Xprotect",
+                        "product" : {
+                                "id" : 100366,
+                                "name" : "Xprotect"
+                            },
+                        "vendor" : {
+                                "id" : 100011,
+                                "name" : "Apple Inc."
+                            },
+                        "labels" : {
+                                "adware" : false,
+                                "toolbar" : false,
+                                "bloatware" : false,
+                                "pua" : false
+                            },
+                        "signature" : 100428,
+                        "categories" : [
+                                5
+                            ]
+                    },                    
+                    {
+                        "categories" : [
+                                5
+                            ],
+                        "signature" : 100141,
+                        "labels" : {
+                                "pua" : false,
+                                "bloatware" : false,
+                                "toolbar" : false,
+                                "adware" : false
+                            },
+                        "vendor" : {
+                                "name" : "Apple Inc.",
+                                "id" : 100011
+                            },
+                        "product" : {
+                                "name" : "Gatekeeper",
+                                "id" : 100137
+                            },
+                        "sig_name" : "Gatekeeper"
+                    }
+                ]
+        }
+}
+2026-07-25T17:07:44.966+02:00 <debug> TESTHOST [57936:68208845] StartComplianceData: product: Cortex XDR (9.0.0), vendor: Palo Alto Networks, Inc., signature: 100379 
+2026-07-25T17:07:45.577+02:00 <debug> TESTHOST [57936:68208845] StartComplianceData: product: Xprotect (5352), vendor: Apple Inc., signature: 100428 
+2026-07-25T17:07:45.864+02:00 <error> TESTHOST [57936:68208845] CollectComplianceDataForAV: Opswat Error(-12): An error when a method call was made on a component that does not implement it, Signature: 100428, Category: 5, Method: 1004, OESIS (V4 ver: 4.3.4222.0) 
+2026-07-25T17:07:45.865+02:00 <debug> TESTHOST [57936:68208845] StartComplianceData: product: Gatekeeper (15.7.7), vendor: Apple Inc., signature: 100141 
+2026-07-25T17:07:45.873+02:00 <error> TESTHOST [57936:68208845] CollectComplianceDataForAV: Opswat Error(-11): An error when a method call was made on a component that does not support it, Signature: 100141, Category: 5, Method: 1001, OESIS (V4 ver: 4.3.4222.0) 
+2026-07-25T17:07:45.873+02:00 <error> TESTHOST [57936:68208845] CollectComplianceDataForAV: Opswat Error(-11): An error when a method call was made on a component that does not support it, Signature: 100141, Category: 5, Method: 1004, OESIS (V4 ver: 4.3.4222.0) 
+2026-07-25T17:07:45.873+02:00 <debug> TESTHOST [57936:68208845] Category anti-malware: took 1 seconds
+2026-07-25T17:07:45.998+02:00 <debug> TESTHOST [57936:68208845] StartComplianceData (DETECT_PRODUCTS) output: {
+    "result" : {
+            "timestamp" : "1784992065",
+            "code" : 0,
+            "method" : 0,
+            "timing" : 125,
+            "detected_products" : [                    
+                    {
+                        "sig_name" : "Google Drive",
+                        "product" : {
+                                "id" : 100067,
+                                "name" : "Google Drive"
+                            },
+                        "vendor" : {
+                                "id" : 100004,
+                                "name" : "Google Inc."
+                            },
+                        "labels" : {
+                                "adware" : false,
+                                "toolbar" : false,
+                                "bloatware" : false,
+                                "pua" : false
+                            },
+                        "signature" : 100206,
+                        "categories" : [
+                                2,
+                                9
+                            ]
+                    },                    
+                    {
+                        "categories" : [
+                                2
+                            ],
+                        "signature" : 100191,
+                        "labels" : {
+                                "pua" : false,
+                                "bloatware" : false,
+                                "toolbar" : false,
+                                "adware" : false
+                            },
+                        "vendor" : {
+                                "name" : "Apple Inc.",
+                                "id" : 100011
+                            },
+                        "product" : {
+                                "name" : "Time Machine",
+                                "id" : 100012
+                            },
+                        "sig_name" : "Time Machine"
+                    }
+                ]
+        }
+}
+2026-07-25T17:07:45.998+02:00 <debug> TESTHOST [57936:68208845] StartComplianceData: product: Google Drive (128.0), vendor: Google Inc., signature: 100206 
+2026-07-25T17:07:46.039+02:00 <debug> TESTHOST [57936:68208845] StartComplianceData: product: Time Machine (1.3), vendor: Apple Inc., signature: 100191 
+2026-07-25T17:07:46.040+02:00 <error> TESTHOST [57936:68208845] CollectComplianceDataForDLP: Opswat Error(-28): An error when an object is not found. This can be objects held internally, or objects on the endpoint, such as files, backup  times, etc, Signature: 100191, Category: 2, Method: 1008, OESIS (V4 ver: 4.3.4222.0) 
+2026-07-25T17:07:46.040+02:00 <debug> TESTHOST [57936:68208845] Category disk-backup: took 0 seconds
+2026-07-25T17:07:46.161+02:00 <debug> TESTHOST [57936:68208845] StartComplianceData (DETECT_PRODUCTS) output: {
+    "result" : {
+            "timestamp" : "1784992066",
+            "code" : 0,
+            "method" : 0,
+            "timing" : 121,
+            "detected_products" : [                    
+                    {
+                        "categories" : [
+                                3
+                            ],
+                        "signature" : 100145,
+                        "labels" : {
+                                "pua" : false,
+                                "bloatware" : false,
+                                "toolbar" : false,
+                                "adware" : false
+                            },
+                        "vendor" : {
+                                "name" : "Apple Inc.",
+                                "id" : 100011
+                            },
+                        "product" : {
+                                "name" : "FileVault",
+                                "id" : 100011
+                            },
+                        "sig_name" : "FileVault"
+                    }
+                ]
+        }
+}
+2026-07-25T17:07:46.161+02:00 <debug> TESTHOST [57936:68208845] StartComplianceData: product: FileVault (15.7.7), vendor: Apple Inc., signature: 100145 
+2026-07-25T17:07:46.271+02:00 <debug> TESTHOST [57936:68208845] CollectComplianceDataForDisks: prod id 100145, {
+    "result" : {
+            "signature" : 100145,
+            "timestamp" : "1784992066",
+            "timing" : 109,
+            "code" : 0,
+            "method" : 1009,
+            "locations" : [                    
+                    {
+                        "state" : "encrypted",
+                        "type" : "physical",
+                        "path" : "Macintosh HD - Data",
+                        "encryptable" : true,
+                        "encryption_type" : "hardware"
+                    },                    
+                    {
+                        "encryption_type" : "hardware",
+                        "encryptable" : true,
+                        "path" : "Macintosh HD",
+                        "type" : "physical",
+                        "state" : "encrypted"
+                    }
+                ],
+            "fully_encrypted" : true,
+            "support_wde" : true,
+            "encryption_active" : true
+        }
+}
+2026-07-25T17:07:46.271+02:00 <debug> TESTHOST [57936:68208845] Category disk-encryption: took 0 seconds
+2026-07-25T17:07:46.398+02:00 <debug> TESTHOST [57936:68208845] StartComplianceData (DETECT_PRODUCTS) output: {
+    "result" : {
+            "timestamp" : "1784992066",
+            "code" : 0,
+            "method" : 0,
+            "timing" : 127,
+            "detected_products" : [                    
+                    {
+                        "sig_name" : "Mac OS X Builtin Firewall",
+                        "product" : {
+                                "id" : 100022,
+                                "name" : "Mac OS X Builtin Firewall"
+                            },
+                        "vendor" : {
+                                "id" : 100011,
+                                "name" : "Apple Inc."
+                            },
+                        "labels" : {
+                                "adware" : false,
+                                "toolbar" : false,
+                                "bloatware" : false,
+                                "pua" : false
+                            },
+                        "signature" : 100189,
+                        "categories" : [
+                                7
+                            ]
+                    },                    
+                    {
+                        "categories" : [
+                                7
+                            ],
+                        "signature" : 100448,
+                        "labels" : {
+                                "pua" : false,
+                                "bloatware" : false,
+                                "toolbar" : false,
+                                "adware" : false
+                            },
+                        "vendor" : {
+                                "name" : "OpenBSD",
+                                "id" : 100230
+                            },
+                        "product" : {
+                                "name" : "Packet Filter",
+                                "id" : 100386
+                            },
+                        "sig_name" : "Packet Filter"
+                    }
+                ]
+        }
+}
+2026-07-25T17:07:46.399+02:00 <debug> TESTHOST [57936:68208845] StartComplianceData: product: Mac OS X Builtin Firewall (15.7.7), vendor: Apple Inc., signature: 100189 
+2026-07-25T17:07:46.404+02:00 <debug> TESTHOST [57936:68208845] StartComplianceData: product: Packet Filter (15.7.7), vendor: OpenBSD, signature: 100448 
+2026-07-25T17:07:46.411+02:00 <debug> TESTHOST [57936:68208845] Category firewall: took 0 seconds
+2026-07-25T17:07:46.533+02:00 <debug> TESTHOST [57936:68208845] StartComplianceData (DETECT_PRODUCTS) output: {
+    "result" : {
+            "timestamp" : "1784992066",
+            "code" : 0,
+            "method" : 0,
+            "timing" : 123,
+            "detected_products" : [
+                ]
+        }
+}
+2026-07-25T17:07:46.533+02:00 <debug> TESTHOST [57936:68208845] StartComplianceData: WAAPI_MID_DETECT_PRODUCTS, no products detected for category: 11
+2026-07-25T17:07:46.533+02:00 <debug> TESTHOST [57936:68208845] Category data-loss-prevention: took 0 seconds
+2026-07-25T17:07:46.654+02:00 <debug> TESTHOST [57936:68208845] StartComplianceData (DETECT_PRODUCTS) output: {
+    "result" : {
+            "timestamp" : "1784992066",
+            "code" : 0,
+            "method" : 0,
+            "timing" : 120,
+            "detected_products" : [                    
+                    {
+                        "categories" : [
+                                12
+                            ],
+                        "signature" : 100493,
+                        "labels" : {
+                                "pua" : false,
+                                "bloatware" : false,
+                                "toolbar" : false,
+                                "adware" : false
+                            },
+                        "vendor" : {
+                                "name" : "JAMF Software",
+                                "id" : 100093
+                            },
+                        "product" : {
+                                "name" : "Jamf Pro",
+                                "id" : 100432
+                            },
+                        "sig_name" : "Jamf Pro"
+                    },                    
+                    {
+                        "sig_name" : "Microsoft AutoUpdate",
+                        "product" : {
+                                "id" : 100455,
+                                "name" : "Microsoft AutoUpdate"
+                            },
+                        "vendor" : {
+                                "id" : 100090,
+                                "name" : "Microsoft Corporation"
+                            },
+                        "labels" : {
+                                "adware" : false,
+                                "toolbar" : false,
+                                "bloatware" : false,
+                                "pua" : false
+                            },
+                        "signature" : 100516,
+                        "categories" : [
+                                12
+                            ]
+                    },                    
+                    {
+                        "categories" : [
+                                12
+                            ],
+                        "signature" : 100192,
+                        "labels" : {
+                                "pua" : false,
+                                "bloatware" : false,
+                                "toolbar" : false,
+                                "adware" : false
+                            },
+                        "vendor" : {
+                                "name" : "Apple Inc.",
+                                "id" : 100011
+                            },
+                        "product" : {
+                                "name" : "Software Update",
+                                "id" : 100076
+                            },
+                        "sig_name" : "Software Update"
+                    }
+                ]
+        }
+}
+2026-07-25T17:07:46.655+02:00 <debug> TESTHOST [57936:68208845] StartComplianceData: product: Jamf Pro (11.25.2), vendor: JAMF Software, signature: 100493 
+2026-07-25T17:07:46.656+02:00 <debug> TESTHOST [57936:68208845] StartComplianceData: product: Microsoft AutoUpdate (4.84), vendor: Microsoft Corporation, signature: 100516 
+2026-07-25T17:07:46.657+02:00 <debug> TESTHOST [57936:68208845] StartComplianceData: product: Software Update (3.0), vendor: Apple Inc., signature: 100192 
+2026-07-25T17:07:46.658+02:00 <debug> TESTHOST [57936:68208845] Category patch-management: took 0 seconds
+2026-07-25T17:07:46.658+02:00 <debug> TESTHOST [57936:68208845] Category All: took 1 seconds
+2026-07-25T17:07:46.664+02:00 <error> TESTHOST [57936:68208845] SSL keychain find returned Error: The specified item could not be found in the keychain.
+2026-07-25T17:07:46.664+02:00 <error> TESTHOST [57936:68208845] SSL Missing keychain status : The specified keychain could not be found.
+2026-07-25T17:07:46.666+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 67979
+2026-07-25T17:07:46.666+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 67964
+2026-07-25T17:07:46.666+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 67961
+2026-07-25T17:07:46.666+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 67959
+2026-07-25T17:07:46.666+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 67946
+2026-07-25T17:07:46.667+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 58042
+2026-07-25T17:07:46.667+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 58041
+2026-07-25T17:07:46.667+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 58039
+2026-07-25T17:07:46.667+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 57958
+2026-07-25T17:07:46.667+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 57957
+2026-07-25T17:07:46.667+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 57954
+2026-07-25T17:07:46.667+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 57953
+2026-07-25T17:07:46.667+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 57949
+2026-07-25T17:07:46.667+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 57950
+2026-07-25T17:07:46.667+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 57948
+2026-07-25T17:07:46.667+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 57947
+2026-07-25T17:07:46.667+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 57943
+2026-07-25T17:07:46.667+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 57944
+2026-07-25T17:07:46.667+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 57942
+2026-07-25T17:07:46.667+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 57941
+2026-07-25T17:07:46.667+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 57940
+2026-07-25T17:07:46.667+02:00 <error> TESTHOST [57936:68208845] CheckProcessList: failed to get path of pid 57939
+2026-07-25T17:07:46.667+02:00 <debug> TESTHOST [57936:68208845] Process check completed sucessfully
+2026-07-25T17:07:46.668+02:00 <debug> TESTHOST [57936:68208845] com.jamfsoftware.jamf.plist exists in /Library/Preferences.
+2026-07-25T17:07:46.668+02:00 <debug> TESTHOST [57936:68208845] Check for preference value. Position: 0
+2026-07-25T17:07:46.668+02:00 <debug> TESTHOST [57936:68208845] jss_url is type of String.
+2026-07-25T17:07:46.668+02:00 <debug> TESTHOST [57936:68208845] Preference jss_url has string value https://jss.example.com:8443/
+2026-07-25T17:07:46.668+02:00 <debug> TESTHOST [57936:68208845] check plist/registry return TRUE for com.jamfsoftware.jamf
+2026-07-25T17:07:46.668+02:00 <debug> TESTHOST [57936:68208845] GetHipReport report <?xml version="1.0" encoding="UTF-8"?>
+<hip-report>
+	<generate-time>07/25/2026 17:07:44</generate-time>
+	<hip-report-version>4</hip-report-version>
+	<categories>
+		<entry name="host-info">
+			<client-version>26.2.1.26</client-version>
+			<os>Apple Mac OS X 15.7.7</os>
+			<os-vendor>Apple</os-vendor>
+			<domain></domain>
+			<host-name>testhost</host-name>
+			<host-id>00:00:5e:00:53:01</host-id>
+			<network-interface>
+				<entry name="bridge100">
+					<description>bridge100</description>
+					<mac-address>00:00:5e:00:53:02</mac-address>
+					<ip-address>
+						<entry name="192.0.2.1"/>
+					</ip-address>
+					<ipv6-address>
+						<entry name="fe80::1"/>
+						<entry name="fd00::1"/>
+					</ipv6-address>
+				</entry>
+				<entry name="vmenet0">
+					<description>vmenet0</description>
+					<mac-address>00:00:5e:00:53:03</mac-address>
+				</entry>
+				<entry name="utun3">
+					<description>utun3</description>
+					<mac-address></mac-address>
+					<ipv6-address>
+						<entry name="fe80::2"/>
+					</ipv6-address>
+				</entry>
+				<entry name="utun2">
+					<description>utun2</description>
+					<mac-address></mac-address>
+					<ipv6-address>
+						<entry name="fe80::3"/>
+					</ipv6-address>
+				</entry>
+				<entry name="utun1">
+					<description>utun1</description>
+					<mac-address></mac-address>
+					<ipv6-address>
+						<entry name="fe80::4"/>
+					</ipv6-address>
+				</entry>
+				<entry name="llw0">
+					<description>llw0</description>
+					<mac-address>00:00:5e:00:53:04</mac-address>
+					<ipv6-address>
+						<entry name="fe80::5"/>
+					</ipv6-address>
+				</entry>
+				<entry name="bridge0">
+					<description>bridge0</description>
+					<mac-address>00:00:5e:00:53:05</mac-address>
+				</entry>
+				<entry name="ap1">
+					<description>ap1</description>
+					<mac-address>00:00:5e:00:53:06</mac-address>
+				</entry>
+				<entry name="en1">
+					<description>en1</description>
+					<mac-address>00:00:5e:00:53:05</mac-address>
+				</entry>
+				<entry name="en6">
+					<description>en6</description>
+					<mac-address>00:00:5e:00:53:07</mac-address>
+				</entry>
+				<entry name="awdl0">
+					<description>awdl0</description>
+					<mac-address>00:00:5e:00:53:04</mac-address>
+					<ipv6-address>
+						<entry name="fe80::5"/>
+					</ipv6-address>
+				</entry>
+				<entry name="en5">
+					<description>en5</description>
+					<mac-address>00:00:5e:00:53:08</mac-address>
+				</entry>
+				<entry name="en4">
+					<description>en4</description>
+					<mac-address>00:00:5e:00:53:09</mac-address>
+				</entry>
+				<entry name="en0">
+					<description>en0</description>
+					<mac-address>00:00:5e:00:53:0a</mac-address>
+					<ip-address>
+						<entry name="192.0.2.2"/>
+					</ip-address>
+					<ipv6-address>
+						<entry name="fe80::6"/>
+					</ipv6-address>
+				</entry>
+				<entry name="anpi1">
+					<description>anpi1</description>
+					<mac-address>00:00:5e:00:53:0b</mac-address>
+				</entry>
+				<entry name="en2">
+					<description>en2</description>
+					<mac-address>00:00:5e:00:53:0c</mac-address>
+				</entry>
+				<entry name="en3">
+					<description>en3</description>
+					<mac-address>00:00:5e:00:53:0d</mac-address>
+				</entry>
+				<entry name="anpi2">
+					<description>anpi2</description>
+					<mac-address>00:00:5e:00:53:0e</mac-address>
+				</entry>
+				<entry name="utun0">
+					<description>utun0</description>
+					<mac-address></mac-address>
+					<ipv6-address>
+						<entry name="fe80::7"/>
+					</ipv6-address>
+				</entry>
+				<entry name="stf0">
+					<description>stf0</description>
+					<mac-address></mac-address>
+				</entry>
+				<entry name="anpi0">
+					<description>anpi0</description>
+					<mac-address>00:00:5e:00:53:0f</mac-address>
+				</entry>
+				<entry name="gif0">
+					<description>gif0</description>
+					<mac-address></mac-address>
+				</entry>
+				<entry name="lo0">
+					<description>lo0</description>
+					<mac-address></mac-address>
+					<ip-address>
+						<entry name="127.0.0.1"/>
+					</ip-address>
+					<ipv6-address>
+						<entry name="::1"/>
+						<entry name="fe80::8"/>
+					</ipv6-address>
+				</entry>
+			</network-interface>
+		</entry>
+		<entry name="anti-malware">
+			<list>
+				<entry>
+					<ProductInfo>
+						<Prod name="Cortex XDR" version="9.0.0" vendor="Palo Alto Networks, Inc." defver="2026.07.25" engver="" datemon="07" dateday="25" dateyear="2026" prodType="3" osType="4"/>
+						<real-time-protection>yes</real-time-protection>
+						<last-full-scan-time>07/20/2026 12:50:41</last-full-scan-time>
+					</ProductInfo>
+				</entry>
+				<entry>
+					<ProductInfo>
+						<Prod name="Xprotect" version="5352" vendor="Apple Inc." defver="5352" engver="" datemon="07" dateday="24" dateyear="2026" prodType="3" osType="4"/>
+						<real-time-protection>no</real-time-protection>
+						<last-full-scan-time>n/a</last-full-scan-time>
+					</ProductInfo>
+				</entry>
+				<entry>
+					<ProductInfo>
+						<Prod name="Gatekeeper" version="15.7.7" vendor="Apple Inc." defver="" engver="" datemon="" dateday="" dateyear="" prodType="3" osType="4"/>
+						<real-time-protection>yes</real-time-protection>
+						<last-full-scan-time>n/a</last-full-scan-time>
+					</ProductInfo>
+				</entry>
+			</list>
+		</entry>
+		<entry name="disk-backup">
+			<list>
+				<entry>
+					<ProductInfo>
+						<Prod name="Google Drive" version="128.0" vendor="Google Inc."/>
+						<last-backup-time>n/a</last-backup-time>
+					</ProductInfo>
+				</entry>
+				<entry>
+					<ProductInfo>
+						<Prod name="Time Machine" version="1.3" vendor="Apple Inc."/>
+						<last-backup-time>n/a</last-backup-time>
+					</ProductInfo>
+				</entry>
+			</list>
+		</entry>
+		<entry name="disk-encryption">
+			<list>
+				<entry>
+					<ProductInfo>
+						<Prod name="FileVault" version="15.7.7" vendor="Apple Inc."/>
+						<drives>
+							<entry>
+								<drive-name>Macintosh HD - Data</drive-name>
+								<enc-state>encrypted</enc-state>
+							</entry>
+							<entry>
+								<drive-name>Macintosh HD</drive-name>
+								<enc-state>encrypted</enc-state>
+							</entry>
+							<entry>
+								<drive-name>All</drive-name>
+								<enc-state>encrypted</enc-state>
+							</entry>
+						</drives>
+					</ProductInfo>
+				</entry>
+			</list>
+		</entry>
+		<entry name="firewall">
+			<list>
+				<entry>
+					<ProductInfo>
+						<Prod name="Mac OS X Builtin Firewall" version="15.7.7" vendor="Apple Inc."/>
+						<is-enabled>yes</is-enabled>
+					</ProductInfo>
+				</entry>
+				<entry>
+					<ProductInfo>
+						<Prod name="Packet Filter" version="15.7.7" vendor="OpenBSD"/>
+						<is-enabled>yes</is-enabled>
+					</ProductInfo>
+				</entry>
+			</list>
+		</entry>
+		<entry name="data-loss-prevention">
+			<list>
+			</list>
+		</entry>
+		<entry name="patch-management">
+			<list>
+				<entry>
+					<ProductInfo>
+						<Prod name="Jamf Pro" version="11.25.2" vendor="JAMF Software"/>
+						<is-enabled>yes</is-enabled>
+					</ProductInfo>
+				</entry>
+				<entry>
+					<ProductInfo>
+						<Prod name="Microsoft AutoUpdate" version="4.84" vendor="Microsoft Corporation"/>
+						<is-enabled>no</is-enabled>
+					</ProductInfo>
+				</entry>
+				<entry>
+					<ProductInfo>
+						<Prod name="Software Update" version="3.0" vendor="Apple Inc."/>
+						<is-enabled>yes</is-enabled>
+					</ProductInfo>
+				</entry>
+			</list>
+			<missing-patches>
+			</missing-patches>
+		</entry>
+		<entry name="certificate">
+			<list>
+			</list>
+		</entry>
+	</categories>
+	<custom-checks>
+		<plist>
+			<entry name="com.jamfsoftware.jamf">
+				<exist>yes</exist>
+				<value></value>
+				<preference-value>
+					<entry name="jss_url">
+						<exist>yes</exist>
+						<value>https://jss.example.com:8443/</value>
+					</entry>
+				</preference-value>
+			</entry>
+		</plist>
+	</custom-checks>
+</hip-report>
+2026-07-25T17:07:50.519+02:00 <debug> TESTHOST [57936:68208845] Get Hip report completed
+2026-07-25T17:07:50.531+02:00 <debug> TESTHOST [57936:68208845] HIP creation done, took 7 second
+2026-07-25T17:07:50.536+02:00 <debug> TESTHOST [57936:68208845] Send hip report to service
+2026-07-25T17:07:50.536+02:00 <debug> TESTHOST [57936:68208845] SetHipReport succeeded
+2026-07-25T17:07:50.536+02:00 <debug> TESTHOST [57936:68208845] PAHipCompliance waiting for events
+2026-07-25T17:07:50.536+02:00 <debug> TESTHOST [57936:68208854] HipReportChangedEvent received
+2026-07-25T17:07:50.536+02:00 <debug> TESTHOST [57936:68208845] Finished with status code: 0

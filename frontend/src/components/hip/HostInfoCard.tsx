@@ -1,0 +1,112 @@
+import { useState } from 'react';
+import type { HipHostInfo } from '../../api/types';
+
+// The host-id field carries different things per platform; the parser already
+// resolved which (Decision 10), so the UI only has to label it.
+const HOST_ID_LABEL: Record<HipHostInfo['host_id_kind'], string> = {
+  'mac-address': 'MAC address',
+  'machine-guid': 'machine GUID',
+  unknown: 'host ID',
+};
+
+function Field({ label, value }: { label: string; value: string }) {
+  return (
+    <>
+      <div style={{ color: 'var(--text-dim)', fontSize: 11 }}>{label}</div>
+      <div
+        style={{
+          color: 'var(--text)',
+          fontFamily: 'var(--mono)',
+          fontSize: 11,
+          wordBreak: 'break-word',
+        }}
+      >
+        {value}
+      </div>
+    </>
+  );
+}
+
+interface Props {
+  hostInfo: HipHostInfo;
+}
+
+export function HostInfoCard({ hostInfo }: Props) {
+  const [showInterfaces, setShowInterfaces] = useState(false);
+  const interfaces = hostInfo.interfaces ?? [];
+
+  const fields: Array<[string, string | null]> = [
+    ['os', hostInfo.os],
+    ['host name', hostInfo.host_name],
+    ['domain', hostInfo.domain],
+    [HOST_ID_LABEL[hostInfo.host_id_kind] ?? 'host ID', hostInfo.host_id],
+    ['client version', hostInfo.client_version],
+  ];
+
+  return (
+    <div>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'minmax(0, auto) minmax(0, 1fr)',
+          columnGap: 12,
+          rowGap: 3,
+        }}
+      >
+        {fields
+          .filter(([, value]) => value != null && value !== '')
+          .map(([label, value]) => (
+            <Field key={label} label={label} value={value as string} />
+          ))}
+      </div>
+
+      {interfaces.length > 0 && (
+        <div style={{ marginTop: 6 }}>
+          <button
+            type="button"
+            className="hip-ghost-btn"
+            onClick={() => setShowInterfaces((v) => !v)}
+          >
+            {showInterfaces ? 'hide' : 'show'} {interfaces.length} interface
+            {interfaces.length === 1 ? '' : 's'}
+          </button>
+          {showInterfaces && (
+            <div
+              style={{
+                marginTop: 6,
+                maxHeight: 260,
+                overflowY: 'auto',
+                border: '1px solid var(--border-soft)',
+              }}
+            >
+              {interfaces.map((iface, i) => {
+                const addresses = [...iface.ipv4, ...iface.ipv6].filter(Boolean).join(' · ');
+                return (
+                  <div
+                    key={`${iface.name ?? 'iface'}-${i}`}
+                    style={{
+                      padding: '4px 8px',
+                      borderTop: i > 0 ? '1px solid var(--border-soft)' : undefined,
+                      fontFamily: 'var(--mono)',
+                      fontSize: 11,
+                    }}
+                  >
+                    <div style={{ display: 'flex', gap: 8, justifyContent: 'space-between' }}>
+                      <span style={{ color: 'var(--text)' }}>{iface.name ?? '—'}</span>
+                      <span style={{ color: 'var(--text-dim)' }}>{iface.mac ?? ''}</span>
+                    </div>
+                    {addresses && (
+                      <div style={{ color: 'var(--text-sec)', wordBreak: 'break-all' }}>
+                        {addresses}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

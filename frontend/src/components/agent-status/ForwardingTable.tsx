@@ -36,7 +36,7 @@ export function ForwardingTable() {
 
   const profile = data?.data;
   if (!profile) {
-    return <div style={{ color: 'var(--text3)', fontSize: 12 }}>No forwarding profile data available.</div>;
+    return <div style={{ color: 'var(--text-dim)', fontSize: 12 }}>No forwarding profile data available.</div>;
   }
 
   const columns = [
@@ -59,7 +59,7 @@ export function ForwardingTable() {
       key: 'enabled',
       width: 72,
       render: (v: boolean) => (
-        <span style={{ color: v ? 'var(--green)' : 'var(--text3)' }}>
+        <span style={{ color: v ? 'var(--ok)' : 'var(--text-dim)' }}>
           {v ? '\u2713' : '\u2717'}
         </span>
       ),
@@ -95,13 +95,13 @@ export function ForwardingTable() {
       width: 90,
       render: (v: number, record: ForwardingRule) => {
         if (v === 0) {
-          return <span style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: 'var(--text3)' }}>0</span>;
+          return <span style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: 'var(--text-dim)' }}>0</span>;
         }
         const search = `Rule priority ${record.priority} matched`;
         return (
           <Link
             to={`/s/${sessionId}?source=Agent.Core.traffic_log_json&search=${encodeURIComponent(search)}`}
-            style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: 'var(--blue)' }}
+            style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: 'var(--info)' }}
           >
             {v.toLocaleString()}
           </Link>
@@ -111,17 +111,12 @@ export function ForwardingTable() {
   ];
 
   return (
-    <div>
-      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)', marginBottom: 12 }}>
-        Forwarding Profile
-      </div>
-      <Table
-        dataSource={profile.rules}
-        columns={columns}
-        rowKey="priority"
-        size="small"
-        pagination={false}
-      />
-    </div>
+    <Table
+      dataSource={profile.rules}
+      columns={columns}
+      rowKey="priority"
+      size="small"
+      pagination={false}
+    />
   );
 }

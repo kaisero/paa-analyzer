@@ -1,5 +1,6 @@
 import { Table, Tag } from 'antd';
 import type { StateEntry } from '../../api/types';
+import type { ViewMode } from '../common/ViewToggle';
 import { RawJsonView } from './RawJsonView';
 
 interface Extension {
@@ -15,7 +16,7 @@ interface Extension {
 
 interface Props {
   entry: StateEntry | undefined;
-  viewMode: 'Table' | 'Raw' | 'JSON';
+  viewMode: ViewMode;
 }
 
 const categoryColors: Record<string, string> = {
@@ -36,7 +37,7 @@ const columns = [
     key: 'enabled',
     width: 72,
     render: (v: boolean) => (
-      <span style={{ color: v ? 'var(--green)' : 'var(--text3)' }}>
+      <span style={{ color: v ? 'var(--ok)' : 'var(--text-dim)' }}>
         {v ? '\u2713' : '\u2717'}
       </span>
     ),
@@ -47,7 +48,7 @@ const columns = [
     key: 'active',
     width: 64,
     render: (v: boolean) => (
-      <span style={{ color: v ? 'var(--green)' : 'var(--text3)' }}>
+      <span style={{ color: v ? 'var(--ok)' : 'var(--text-dim)' }}>
         {v ? '\u2713' : '\u2717'}
       </span>
     ),
@@ -101,10 +102,10 @@ const columns = [
 
 export function SystemExtensionsTab({ entry, viewMode }: Props) {
   if (!entry) {
-    return <div style={{ color: 'var(--text3)', fontSize: 12, padding: 16 }}>No system extensions data available.</div>;
+    return <div style={{ color: 'var(--text-dim)', fontSize: 12, padding: 16 }}>No system extensions data available.</div>;
   }
 
-  if (viewMode !== 'Table') {
+  if (viewMode !== 'View') {
     return <RawJsonView entry={entry} viewMode={viewMode} />;
   }
 

@@ -2,11 +2,14 @@
 
 import json
 from datetime import UTC
+from pathlib import Path
 
 import pytest
 
 from paa_analyzer import parsers
 from paa_analyzer.parsers import beautify_message
+
+FIXTURES = Path(__file__).parent / "fixtures" / "hip"
 
 # ── Timestamp parsing ────────────────────────────────────────────────────
 
@@ -272,7 +275,13 @@ class TestSystemInfo:
 
 
 class TestHipStatus:
-    SAMPLE = """\
+    # Legacy 2-column form (Gateway / Last HIP Report, no Status column). No
+    # real bundle exhibiting this layout is available. conftest.py's
+    # build_sample_zip() now sets SAMPLE_PACLI_HIP_STATUS from the real,
+    # redacted 3-column fixture (backend/tests/fixtures/hip/), so this class
+    # is the sole remaining regression guard proving the legacy 2-column form
+    # still parses.
+    LEGACY_SAMPLE = """\
 HIP Collection: Enabled
 Next HIP Check: 2026-04-04 20:49:25
 
@@ -281,19 +290,88 @@ Gateway                 Last HIP Report
 Austria                 2026-04-03 06:57:30
 """
 
+    @pytest.fixture
+    def real(self) -> parsers.Record:
+        """The real, redacted 3-column (Name / Time / Status) fixture,
+        parsed via the real parser -- no hand-authored HIP log lines."""
+        text = (FIXTURES / "pacli_hip_status.log").read_text()
+        return parsers.hip_status(text, tz="+0200")
+
     def test_parses_collection(self):
-        result = parsers.hip_status(self.SAMPLE)
+        result = parsers.hip_status(self.LEGACY_SAMPLE)
         assert result["collection"] == "Enabled"
 
     def test_parses_next_check(self):
-        result = parsers.hip_status(self.SAMPLE)
+        result = parsers.hip_status(self.LEGACY_SAMPLE)
         assert result["next_check"] is not None
         assert "2026-04" in result["next_check"]
 
-    def test_parses_gateways(self):
-        result = parsers.hip_status(self.SAMPLE)
+    def test_legacy_two_column_table_still_parses_with_no_status(self):
+        result = parsers.hip_status(self.LEGACY_SAMPLE)
         assert len(result["gateways"]) == 1
-        assert result["gateways"][0]["gateway"] == "Austria"
+        gateway = result["gateways"][0]
+        assert gateway["gateway"] == "Austria"
+        assert gateway["last_report"] is not None
+        assert gateway["status"] is None
+        assert gateway["status_kind"] == "unknown"
+
+    def test_real_fixture_parses_collection_and_next_check(self, real: parsers.Record):
+        assert real["collection"] == "Enabled"
+        assert real["next_check"] == "2026-07-25T16:07:43+00:00"
+
+    def test_real_fixture_parses_all_gateway_rows_in_order(self, real: parsers.Record):
+        assert [g["gateway"] for g in real["gateways"]] == [
+            "EPM",
+            "Austria",
+            "Finland",
+            "Germany Central",
+            "Israel-gw",
+            "Netherlands Central",
+            "South Korea",
+            "UK",
+            "US Northwest",
+            "amsterdam-gw",
+        ]
+
+    def test_real_fixture_parses_last_report_timestamps(self, real: parsers.Record):
+        by_gateway = {g["gateway"]: g["last_report"] for g in real["gateways"]}
+        assert by_gateway["Finland"] == "2026-07-14T11:17:24+00:00"
+        assert by_gateway["South Korea"] == "2026-06-16T08:30:01+00:00"
+
+    def test_success_status_kind(self, real: parsers.Record):
+        epm = real["gateways"][0]
+        assert epm["gateway"] == "EPM"
+        assert epm["status"] == "Successfully sent HIP report"
+        assert epm["status_kind"] == "success"
+
+    def test_not_needed_status_kind(self, real: parsers.Record):
+        austria = real["gateways"][1]
+        assert austria["gateway"] == "Austria"
+        assert austria["status"] == "HIP report is not needed"
+        assert austria["status_kind"] == "not-needed"
+
+    def test_failed_status_kind_survives_source_truncation(self, real: parsers.Record):
+        # The agent itself truncates Status to its column width, so both
+        # failure rows in the real fixture are cut mid-word -- matching must
+        # be by prefix, never equality.
+        finland = real["gateways"][2]
+        assert finland["gateway"] == "Finland"
+        assert finland["status"] == "Failed to send HIP report to Finl"
+        assert finland["status_kind"] == "failed"
+
+        south_korea = real["gateways"][6]
+        assert south_korea["gateway"] == "South Korea"
+        assert south_korea["status"] == "Failed to send HIP report to Sout"
+        assert south_korea["status_kind"] == "failed"
+
+    def test_unknown_status_kind_for_unrecognized_status_string(self):
+        # Direct unit test of _hip_status_kind() with an unrecognized status.
+        # This tests the fallback branch at parsers.py:198, which is most likely
+        # to matter in production (any future agent status text outside the three
+        # known prefixes lands here). We use a synthetic string to test the
+        # classification logic itself, not fabricated bundle data.
+        result = parsers._hip_status_kind("Some unknown status")
+        assert result == "unknown"
 
 
 class TestProtection:
