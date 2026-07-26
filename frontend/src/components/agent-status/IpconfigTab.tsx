@@ -1,6 +1,7 @@
-import { Card, Descriptions } from 'antd';
+import { Descriptions } from 'antd';
 import type { StateEntry } from '../../api/types';
 import { RawJsonView } from './RawJsonView';
+import { Panel } from '../common/Panel';
 
 interface Adapter {
   name: string;
@@ -55,12 +56,7 @@ export function IpconfigTab({ entry, viewMode }: Props) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       {/* Global config */}
       {data.global && Object.keys(data.global).length > 0 && (
-        <Card
-          title="Global Configuration"
-          size="small"
-          style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
-          styles={{ header: { borderBottom: '1px solid var(--border)', color: 'var(--text)', fontSize: 12 }, body: { padding: '8px 16px' } }}
-        >
+        <Panel title="Global Configuration">
           <Descriptions column={1} size="small" colon={false}
             labelStyle={{ color: 'var(--text-dim)', width: 160, fontSize: 12 }}
             contentStyle={{ color: 'var(--text)', fontFamily: '"JetBrains Mono", monospace', fontSize: 12 }}
@@ -71,18 +67,12 @@ export function IpconfigTab({ entry, viewMode }: Props) {
               </Descriptions.Item>
             ))}
           </Descriptions>
-        </Card>
+        </Panel>
       )}
 
       {/* Adapter cards */}
       {adapters.map((adapter, idx) => (
-        <Card
-          key={idx}
-          title={adapter.name}
-          size="small"
-          style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
-          styles={{ header: { borderBottom: '1px solid var(--border)', color: 'var(--text)', fontSize: 12, fontFamily: '"JetBrains Mono", monospace' }, body: { padding: '8px 16px' } }}
-        >
+        <Panel key={idx} title={adapter.name}>
           <Descriptions column={1} size="small" colon={false}
             labelStyle={{ color: 'var(--text-dim)', width: 160, fontSize: 12 }}
             contentStyle={{ color: 'var(--text)', fontFamily: '"JetBrains Mono", monospace', fontSize: 12 }}
@@ -105,7 +95,7 @@ export function IpconfigTab({ entry, viewMode }: Props) {
                 </Descriptions.Item>
               ))}
           </Descriptions>
-        </Card>
+        </Panel>
       ))}
     </div>
   );

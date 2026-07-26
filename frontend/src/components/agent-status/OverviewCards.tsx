@@ -1,5 +1,6 @@
-import { Card, Descriptions, Spin } from 'antd';
+import { Descriptions, Spin } from 'antd';
 import type { StateBatchResponse } from '../../api/types';
+import { Panel } from '../common/Panel';
 
 interface Props {
   stateData: StateBatchResponse | undefined;
@@ -75,48 +76,42 @@ export function OverviewCards({ stateData, loading }: Props) {
 
   return (
     <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-      <Card
-        title="System"
-        size="small"
-        style={{ flex: 1, minWidth: 340, background: 'var(--surface)' }}
-        styles={{ header: { color: 'var(--text-sec)', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }, body: { padding: '8px 16px' } }}
-      >
-        <Descriptions column={1} size="small" colon={false}
-          labelStyle={{ color: 'var(--text-dim)', width: 130, fontSize: 10.5, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}
-          contentStyle={{ fontFamily: 'var(--mono)', fontSize: 11.5, color: 'var(--text)' }}
-        >
-          <Descriptions.Item label="OS">{os || 'N/A'}</Descriptions.Item>
-          <Descriptions.Item label="Architecture">{architecture}</Descriptions.Item>
-          <Descriptions.Item label="Kernel">{kernelShort}</Descriptions.Item>
-          <Descriptions.Item label="Hostname">{getField(stateData, 'Agent.Core.status', 'local_hostname')}</Descriptions.Item>
-          <Descriptions.Item label="External IP">{getField(stateData, 'System.Networking.external_ip', 'external_ip')}</Descriptions.Item>
-          <Descriptions.Item label="Bundle Time">{getField(stateData, 'Agent.Core.status', 'current_time')}</Descriptions.Item>
-        </Descriptions>
-      </Card>
+      <div style={{ flex: 1, minWidth: 340 }}>
+        <Panel title="System">
+          <Descriptions column={1} size="small" colon={false}
+            labelStyle={{ color: 'var(--text-dim)', width: 130, fontSize: 10.5, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}
+            contentStyle={{ fontFamily: 'var(--mono)', fontSize: 11.5, color: 'var(--text)' }}
+          >
+            <Descriptions.Item label="OS">{os || 'N/A'}</Descriptions.Item>
+            <Descriptions.Item label="Architecture">{architecture}</Descriptions.Item>
+            <Descriptions.Item label="Kernel">{kernelShort}</Descriptions.Item>
+            <Descriptions.Item label="Hostname">{getField(stateData, 'Agent.Core.status', 'local_hostname')}</Descriptions.Item>
+            <Descriptions.Item label="External IP">{getField(stateData, 'System.Networking.external_ip', 'external_ip')}</Descriptions.Item>
+            <Descriptions.Item label="Bundle Time">{getField(stateData, 'Agent.Core.status', 'current_time')}</Descriptions.Item>
+          </Descriptions>
+        </Panel>
+      </div>
 
-      <Card
-        title="Agent"
-        size="small"
-        style={{ flex: 1, minWidth: 340, background: 'var(--surface)' }}
-        styles={{ header: { color: 'var(--text-sec)', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }, body: { padding: '8px 16px' } }}
-      >
-        <Descriptions column={1} size="small" colon={false}
-          labelStyle={{ color: 'var(--text-dim)', width: 130, fontSize: 10.5, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}
-          contentStyle={{ fontFamily: 'var(--mono)', fontSize: 11.5, color: 'var(--text)' }}
-        >
-          <Descriptions.Item label="Version">{getField(stateData, 'Agent.Core.version', 'version')}</Descriptions.Item>
-          <Descriptions.Item label="State">
-            <StateTag value={getField(stateData, 'Agent.Core.status', 'state')} greenWhen={['Enabled']} />
-          </Descriptions.Item>
-          <Descriptions.Item label="Mode">{getField(stateData, 'Agent.Core.status', 'mode')}</Descriptions.Item>
-          <Descriptions.Item label="EPM Status">
-            <StateTag value={getField(stateData, 'Agent.Core.status', 'epm_status')} greenWhen={['Up']} />
-          </Descriptions.Item>
-          <Descriptions.Item label="Last Config">{getField(stateData, 'Agent.Core.status', 'last_successful_configuration')}</Descriptions.Item>
-          <Descriptions.Item label="GlobalProtect">{getField(stateData, 'Agent.Core.status', 'globalprotect_status')}</Descriptions.Item>
-          <Descriptions.Item label="Username">{getField(stateData, 'Agent.Core.status', 'username')}</Descriptions.Item>
-        </Descriptions>
-      </Card>
+      <div style={{ flex: 1, minWidth: 340 }}>
+        <Panel title="Agent">
+          <Descriptions column={1} size="small" colon={false}
+            labelStyle={{ color: 'var(--text-dim)', width: 130, fontSize: 10.5, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}
+            contentStyle={{ fontFamily: 'var(--mono)', fontSize: 11.5, color: 'var(--text)' }}
+          >
+            <Descriptions.Item label="Version">{getField(stateData, 'Agent.Core.version', 'version')}</Descriptions.Item>
+            <Descriptions.Item label="State">
+              <StateTag value={getField(stateData, 'Agent.Core.status', 'state')} greenWhen={['Enabled']} />
+            </Descriptions.Item>
+            <Descriptions.Item label="Mode">{getField(stateData, 'Agent.Core.status', 'mode')}</Descriptions.Item>
+            <Descriptions.Item label="EPM Status">
+              <StateTag value={getField(stateData, 'Agent.Core.status', 'epm_status')} greenWhen={['Up']} />
+            </Descriptions.Item>
+            <Descriptions.Item label="Last Config">{getField(stateData, 'Agent.Core.status', 'last_successful_configuration')}</Descriptions.Item>
+            <Descriptions.Item label="GlobalProtect">{getField(stateData, 'Agent.Core.status', 'globalprotect_status')}</Descriptions.Item>
+            <Descriptions.Item label="Username">{getField(stateData, 'Agent.Core.status', 'username')}</Descriptions.Item>
+          </Descriptions>
+        </Panel>
+      </div>
     </div>
   );
 }
