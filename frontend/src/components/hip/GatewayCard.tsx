@@ -68,7 +68,7 @@ export function GatewayCard({ gateways }: Props) {
       <HipCard title="Gateways" extra={extra}>
         <RawBlock
           label="gateways — parsed model"
-          text={JSON.stringify(gateways, null, 2)}
+          text={gateways.length > 0 ? JSON.stringify(gateways, null, 2) : undefined}
           emptyNote="No gateway data in this bundle."
         />
       </HipCard>
@@ -100,8 +100,6 @@ export function GatewayCard({ gateways }: Props) {
 
       {shown.map((g, i) => (
         <div
-          // `Math.random()` as a key would remount every unnamed row on every
-          // render; the array index is stable across renders of this list.
           key={g.gateway ?? i}
           style={{
             display: 'flex', alignItems: 'center', gap: 10,
@@ -131,11 +129,8 @@ export function GatewayCard({ gateways }: Props) {
         <button
           type="button"
           onClick={() => setShowAll((v) => !v)}
-          style={{
-            marginTop: 10, background: 'transparent', cursor: 'pointer',
-            border: '1px solid var(--border)', color: 'var(--text-sec)',
-            fontSize: 11, padding: '5px 11px',
-          }}
+          className="hip-ghost-btn"
+          style={{ marginTop: 10 }}
         >
           {showAll ? 'Show fewer' : `Show all ${sorted.length}`}
         </button>

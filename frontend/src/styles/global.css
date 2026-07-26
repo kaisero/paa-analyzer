@@ -106,3 +106,35 @@ body {
   animation: fade-in 0.4s ease-out;
 }
 
+/* HIP page: inline `style` objects can't express :hover or :last-child, so
+   these three rules are shared CSS instead. */
+
+/* Shared ghost-button control (checklist expand/collapse, gateway show-all,
+   host-info interfaces toggle). */
+.hip-ghost-btn {
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--text-sec);
+  border: 1px solid var(--border);
+  background: transparent;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.hip-ghost-btn:hover {
+  color: var(--text);
+  border-color: var(--accent-border);
+}
+
+/* Checklist rows: rule under each row, none under the last. */
+.hip-row {
+  border-bottom: 1px solid var(--border-soft);
+}
+.hip-row:last-child {
+  border-bottom: none;
+}
+
+/* Hover affordance on expandable checklist row summaries. */
+.hip-row-summary:hover {
+  background: var(--row-hover);
+}
+

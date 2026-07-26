@@ -23,7 +23,7 @@ export function ChecklistRow({
   status, name, verdict, stats, recede = false, expandable, open, onToggle, children,
 }: Props) {
   return (
-    <div style={{ borderTop: '1px solid var(--border-soft)' }}>
+    <div className="hip-row">
       <div
         role={expandable ? 'button' : undefined}
         tabIndex={expandable ? 0 : undefined}
@@ -33,6 +33,7 @@ export function ChecklistRow({
             ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(); } }
             : undefined
         }
+        className={expandable ? 'hip-row-summary' : undefined}
         style={{
           display: 'flex', alignItems: 'center', gap: 12,
           padding: '10px 14px',

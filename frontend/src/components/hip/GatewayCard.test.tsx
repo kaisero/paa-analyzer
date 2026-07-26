@@ -41,4 +41,12 @@ describe('GatewayCard', () => {
     renderWithProviders(<GatewayCard gateways={windows.gateways} />);
     expect(screen.getByText(/no gateway data/i)).toBeInTheDocument();
   });
+
+  it('shows the empty note in JSON view too, not an empty array literal', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<GatewayCard gateways={windows.gateways} />);
+    await user.click(screen.getByText('JSON'));
+    expect(screen.getByText(/no gateway data/i)).toBeInTheDocument();
+    expect(screen.queryByText('[]')).not.toBeInTheDocument();
+  });
 });
