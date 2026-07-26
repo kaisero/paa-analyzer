@@ -3,6 +3,15 @@
 Built only from codes actually observed in the HIP fixtures
 (backend/tests/fixtures/hip/). All lookups are total functions: unknown ids
 return None, they never raise.
+
+Not every observed code is catalogued, though: the Windows fixture's two
+OPSWAT errors (CollectComplianceDataForPatchManagement, Category: 12) both
+carry Method: 1012, which is deliberately absent from `_METHOD_QUERIES` /
+`_METHOD_ATTRIBUTES` below. No grounded description of what 1012 queries is
+available -- inventing one would violate the no-fabrication rule -- so those
+errors' `method_name` resolves to None and their tooltip shows the bare code
+and method instead of an explanation. Add it if a real bundle or official
+OESIS documentation ever grounds its meaning.
 """
 
 from __future__ import annotations
@@ -44,6 +53,12 @@ _METHOD_QUERIES: dict[int, str] = {
 # product's key attribute. Kept beside _METHOD_QUERIES because it is indexed
 # by the same four method ids observed in the fixtures; an uncatalogued
 # method (e.g. Windows' 1012) covers nothing, so it never suppresses a value.
+#
+# Cross-reference: the attribute names here must stay in step with
+# status._KEY_ATTRIBUTES by hand -- that list is the judgement-order
+# vocabulary over the same attribute names; this one is the error-coverage
+# vocabulary. A drift between the two means an error stops covering the
+# attribute it should suppress.
 _METHOD_ATTRIBUTES: dict[int, str] = {
     1001: "real-time-protection",
     1004: "last-full-scan-time",

@@ -33,6 +33,15 @@ from paa_analyzer.hip.codes import method_attribute
 
 # The attribute a product's verdict is based on, in precedence order. No
 # product in either fixture reports more than one of these.
+#
+# Cross-reference: this list and codes._METHOD_ATTRIBUTES are two separate
+# vocabularies over the same attribute names (judgement order here vs. which
+# attribute an OPSWAT method's error covers there) and must be kept in step
+# by hand -- if an attribute is added here with no corresponding method
+# mapping in codes.py, an error on that attribute would silently fail to
+# suppress a value it should mark unknown. (A third, purely cosmetic copy
+# for display order/labels lives in frontend/src/components/hip/
+# ProductRow.tsx's ATTR_LABELS/ATTR_PRIORITY.)
 _KEY_ATTRIBUTES = ("real-time-protection", "is-enabled", "drives")
 
 _DRIVES = "drives"
