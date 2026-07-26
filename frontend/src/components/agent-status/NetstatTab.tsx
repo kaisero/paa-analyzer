@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { Table, Tag, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import type { StateEntry } from '../../api/types';
+import type { ViewMode } from '../common/ViewToggle';
 import { RawJsonView } from './RawJsonView';
 
 interface Connection {
@@ -14,7 +15,7 @@ interface Connection {
 
 interface Props {
   entry: StateEntry | undefined;
-  viewMode: 'Table' | 'Raw' | 'JSON';
+  viewMode: ViewMode;
 }
 
 const mono = { fontFamily: '"JetBrains Mono", monospace', fontSize: 11 };
@@ -93,7 +94,7 @@ export function NetstatTab({ entry, viewMode }: Props) {
     return <div style={{ color: 'var(--text-dim)', fontSize: 12, padding: 16 }}>No network connection data available.</div>;
   }
 
-  if (viewMode !== 'Table') {
+  if (viewMode !== 'View') {
     return <RawJsonView entry={entry} viewMode={viewMode} />;
   }
 

@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
 import type { StateEntry } from '../../api/types';
+import type { ViewMode } from '../common/ViewToggle';
 
 interface Props {
   entry: StateEntry | undefined;
-  viewMode: 'Raw' | 'JSON';
+  viewMode: Exclude<ViewMode, 'View'>;
 }
 
 const preStyle = {

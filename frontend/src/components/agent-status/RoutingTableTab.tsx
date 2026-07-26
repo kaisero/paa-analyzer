@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Table, Segmented, Tooltip } from 'antd';
 import type { StateEntry } from '../../api/types';
+import type { ViewMode } from '../common/ViewToggle';
 import { RawJsonView } from './RawJsonView';
 
 // macOS route entry
@@ -23,7 +24,7 @@ interface WinRoute {
 
 interface Props {
   entry: StateEntry | undefined;
-  viewMode: 'Table' | 'Raw' | 'JSON';
+  viewMode: ViewMode;
 }
 
 // macOS routing flags descriptions
@@ -109,7 +110,7 @@ export function RoutingTableTab({ entry, viewMode }: Props) {
     return <div style={{ color: 'var(--text-dim)', fontSize: 12, padding: 16 }}>No routing data available.</div>;
   }
 
-  if (viewMode !== 'Table') {
+  if (viewMode !== 'View') {
     return <RawJsonView entry={entry} viewMode={viewMode} />;
   }
 

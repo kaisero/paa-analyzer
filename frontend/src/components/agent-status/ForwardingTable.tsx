@@ -111,17 +111,12 @@ export function ForwardingTable() {
   ];
 
   return (
-    <div>
-      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)', marginBottom: 12 }}>
-        Forwarding Profile
-      </div>
-      <Table
-        dataSource={profile.rules}
-        columns={columns}
-        rowKey="priority"
-        size="small"
-        pagination={false}
-      />
-    </div>
+    <Table
+      dataSource={profile.rules}
+      columns={columns}
+      rowKey="priority"
+      size="small"
+      pagination={false}
+    />
   );
 }

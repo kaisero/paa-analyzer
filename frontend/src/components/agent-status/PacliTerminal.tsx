@@ -1,20 +1,24 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { AutoComplete, Segmented, Spin } from 'antd';
+import { AutoComplete, Spin } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useStateKeys, useStateEntry } from '../../api/hooks';
+import type { ViewMode } from '../common/ViewToggle';
 
 interface ActiveEntry {
   command: string;
   stateKey: string;
 }
 
-export function PacliTerminal() {
+interface Props {
+  viewMode: ViewMode;
+}
+
+export function PacliTerminal({ viewMode }: Props) {
   const { sessionId } = useParams<{ sessionId: string }>();
   const { data: keysData } = useStateKeys(sessionId);
 
   const [input, setInput] = useState('');
   const [activeEntry, setActiveEntry] = useState<ActiveEntry | null>(null);
-  const [viewMode, setViewMode] = useState<'Raw' | 'JSON'>('Raw');
   const outputRef = useRef<HTMLDivElement>(null);
 
   // Build autocomplete options from state keys that have a pacli_command
@@ -97,18 +101,6 @@ export function PacliTerminal() {
 
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>
-          PACli Terminal
-        </div>
-        <Segmented
-          size="small"
-          options={['Raw', 'JSON']}
-          value={viewMode}
-          onChange={(v) => setViewMode(v as 'Raw' | 'JSON')}
-        />
-      </div>
-
       {/* Terminal output area */}
       <div
         ref={outputRef}

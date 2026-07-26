@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Spin } from 'antd';
 import { useStateBatch } from '../api/hooks';
@@ -6,13 +7,27 @@ import { FeaturesPanel } from '../components/agent-status/FeaturesPanel';
 import { SystemDetails } from '../components/agent-status/SystemDetails';
 import { ForwardingTable } from '../components/agent-status/ForwardingTable';
 import { PacliTerminal } from '../components/agent-status/PacliTerminal';
+import { ViewToggle } from '../components/common/ViewToggle';
+import type { ViewMode } from '../components/common/ViewToggle';
 
-function SectionTitle({ children }: { children: React.ReactNode }) {
+function SectionTitle({ children, right }: { children: React.ReactNode; right?: React.ReactNode }) {
   return (
-    <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em',
-      textTransform: 'uppercase', borderLeft: '3px solid var(--accent)',
-      paddingLeft: 10, margin: '28px 0 14px', color: 'var(--text-sec)' }}>
-      {children}
+    <div
+      style={{
+        display: 'flex', alignItems: 'center', gap: 12,
+        margin: '28px 0 14px',
+      }}
+    >
+      <div
+        style={{
+          fontSize: 11, fontWeight: 700, letterSpacing: '0.14em',
+          textTransform: 'uppercase', borderLeft: '3px solid var(--accent)',
+          paddingLeft: 10, color: 'var(--text-sec)',
+        }}
+      >
+        {children}
+      </div>
+      {right && <div style={{ marginLeft: 'auto' }}>{right}</div>}
     </div>
   );
 }
@@ -38,6 +53,8 @@ export function AgentStatusPage() {
   const { sessionId } = useParams<{ sessionId: string }>();
   const { data, isLoading } = useStateBatch(sessionId, BATCH_KEYS);
   const stateData = data?.data;
+  const [detailsView, setDetailsView] = useState<ViewMode>('View');
+  const [terminalView, setTerminalView] = useState<ViewMode>('Raw');
 
   if (isLoading && !stateData) {
     return (
@@ -65,12 +82,18 @@ export function AgentStatusPage() {
         <OverviewCards stateData={stateData} loading={isLoading} />
         <SectionTitle>Modules</SectionTitle>
         <FeaturesPanel stateData={stateData} loading={isLoading} />
-        <SectionTitle>System Details</SectionTitle>
-        <SystemDetails />
+        <SectionTitle right={<ViewToggle modes={['View', 'Raw', 'JSON']} value={detailsView} onChange={setDetailsView} />}>
+          System Details
+        </SectionTitle>
+        <SystemDetails viewMode={detailsView} />
+
         <SectionTitle>Forwarding Profile</SectionTitle>
         <ForwardingTable />
-        <SectionTitle>PACLI Terminal</SectionTitle>
-        <PacliTerminal />
+
+        <SectionTitle right={<ViewToggle modes={['Raw', 'JSON']} value={terminalView} onChange={setTerminalView} />}>
+          PACLI Terminal
+        </SectionTitle>
+        <PacliTerminal viewMode={terminalView} />
       </div>
     </div>
   );
