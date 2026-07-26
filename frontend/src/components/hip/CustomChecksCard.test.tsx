@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { hipFixture } from '../../test/handlers';
+import hipFixture from '../../test/fixtures/hip.json';
 import type { HipData } from '../../api/types';
 import { CustomChecksCard } from './CustomChecksCard';
 
