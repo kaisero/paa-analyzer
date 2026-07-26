@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { screen, within } from '@testing-library/react';
+import { fireEvent, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { http, HttpResponse } from 'msw';
 import { renderWithProviders } from '../../test/wrapper';
+import { server } from '../../test/handlers';
 import hipFixture from '../../test/fixtures/hip.json';
 import type { HipData } from '../../api/types';
 import { HipReportPanel } from './HipReportPanel';
@@ -15,10 +17,10 @@ describe('HipReportPanel', () => {
     expect(screen.getByRole('heading', { name: 'HIP Report' })).toBeInTheDocument();
     expect(screen.getByText('System')).toBeInTheDocument();
     expect(screen.getByText('Gateways')).toBeInTheDocument();
-    // The checklist title stays "Compliance Checklist" in every view mode
-    // (Task 7); the category count is a separate note, not part of the title.
-    expect(screen.getByText('Compliance Checklist')).toBeInTheDocument();
-    expect(screen.getByText(/Missing Patches ·/)).toBeInTheDocument();
+    // The checklist and patches titles stay fixed in every view mode
+    // (Tasks 7-8); their counts are separate notes, not part of the title.
+    expect(screen.getByText('Compliance Checklist', { selector: '.ant-card-head-title' })).toBeInTheDocument();
+    expect(screen.getByText('Missing Patches', { selector: '.ant-card-head-title' })).toBeInTheDocument();
   });
 
   it('lands with every checklist row folded', () => {
@@ -44,13 +46,57 @@ describe('HipReportPanel', () => {
     expect(screen.getByText('No custom checks collected for this platform.')).toBeInTheDocument();
   });
 
-  it('lays the header cards out side by side without stretching the gateway card', () => {
+  it('gives HipCard no inline height, so a shorter header card cannot be stretched to fill its grid row', () => {
+    // I1: HipCard used to declare `height: '100%'`. Once HipReportPanel made
+    // the `.ant-card` the direct grid item, that percentage resolved against
+    // the grid row's block size (the taller card), filling the shorter card
+    // with dead space regardless of `alignItems: 'start'` on the grid
+    // container — a declared height overrides align-self. jsdom cannot
+    // measure the resulting layout, so this test cannot assert the visual
+    // outcome directly; it pins the actual mechanism instead. The grid
+    // container still needs `alignItems: 'start'` (so a card's height stays
+    // content-driven rather than stretching to `1fr` in the first place) —
+    // that half is checked here too, but it is not sufficient on its own.
     renderWithProviders(<HipReportPanel hip={macos} sessionId="s1" />);
-    // alignItems: 'start' (Step 3) is load-bearing: without it the gateway
-    // card stretches to the system card's height and renders as a large
-    // empty box on a bundle with no gateways.
-    const headerCards = screen.getByText('System').closest('.ant-card')!.parentElement!;
+    const systemCard = screen.getByText('System').closest('.ant-card') as HTMLElement;
+    const gatewayCard = screen.getByText('Gateways').closest('.ant-card') as HTMLElement;
+    expect(systemCard.style.height).toBe('');
+    expect(gatewayCard.style.height).toBe('');
+    const headerCards = systemCard.parentElement!;
     expect(headerCards.style.display).toBe('grid');
     expect(headerCards.style.alignItems).toBe('start');
+  });
+
+  it('dedupes the raw-document fetch when both modules switch to XML', async () => {
+    // I4: this claim ("TanStack Query dedupes on queryKey, so this is still
+    // one request even when both modules want XML at once") was previously
+    // asserted only in comments in ComplianceChecklist.tsx and
+    // MissingPatchesPanel.tsx — nothing failed if it stopped being true.
+    let requestCount = 0;
+    server.use(
+      http.get('/api/v1/sessions/:id/hip/cycles/:index/raw', ({ params }) => {
+        requestCount += 1;
+        const raw = (hipFixture.macosRaw as Record<string, unknown>)[params.index as string];
+        return HttpResponse.json({ data: raw });
+      }),
+    );
+    renderWithProviders(<HipReportPanel hip={macos} sessionId="s1" />);
+    const checklistCard = screen
+      .getByText('Compliance Checklist', { selector: '.ant-card-head-title' })
+      .closest('.ant-card') as HTMLElement;
+    const patchesCard = screen
+      .getByText('Missing Patches', { selector: '.ant-card-head-title' })
+      .closest('.ant-card') as HTMLElement;
+
+    // Flip both modules to XML in the same tick, before either fetch
+    // resolves — `fireEvent` (unlike `userEvent`) doesn't await anything
+    // between the two clicks, so the shared queryKey has to dedupe the
+    // in-flight request rather than each panel firing its own.
+    fireEvent.click(within(checklistCard).getByText('XML'));
+    fireEvent.click(within(patchesCard).getByText('XML'));
+    await screen.findByText('hip-report — PACompliance');
+    await screen.findByText('missing-patches — PAComplianceMp');
+
+    expect(requestCount).toBe(1);
   });
 });

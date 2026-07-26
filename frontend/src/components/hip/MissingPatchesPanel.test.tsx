@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { http, HttpResponse } from 'msw';
 import { renderWithProviders } from '../../test/wrapper';
+import { server } from '../../test/handlers';
 import hipFixture from '../../test/fixtures/hip.json';
 import type { HipData } from '../../api/types';
 import { MissingPatchesPanel } from './MissingPatchesPanel';
@@ -46,5 +49,29 @@ describe('MissingPatchesPanel', () => {
     renderPanel(windows);
     expect(windows.cycles[0].counts.missing_patches).toBe(0);
     expect(screen.getByText(/no missing patches/i)).toBeInTheDocument();
+  });
+
+  it('flips to XML and renders the labelled missing-patches document', async () => {
+    const user = userEvent.setup();
+    renderPanel(macos);
+    await user.click(screen.getByText('XML'));
+    expect(await screen.findByText('missing-patches — PAComplianceMp')).toBeInTheDocument();
+    expect(screen.queryByText(/no missing-patches document/i)).not.toBeInTheDocument();
+  });
+
+  it('shows the "no missing-patches document" note on Windows, which ships none', async () => {
+    // The default handler only ever serves the macOS raw slice; override it
+    // with the Windows raw slice (windowsRaw.raw_patches_xml is null in the
+    // real parser output) to exercise the platform this note exists for.
+    server.use(
+      http.get('/api/v1/sessions/:id/hip/cycles/:index/raw', ({ params }) => {
+        const raw = (hipFixture.windowsRaw as Record<string, unknown>)[params.index as string];
+        return HttpResponse.json({ data: raw });
+      }),
+    );
+    const user = userEvent.setup();
+    renderPanel(windows);
+    await user.click(screen.getByText('XML'));
+    expect(await screen.findByText(/no missing-patches document/i)).toBeInTheDocument();
   });
 });

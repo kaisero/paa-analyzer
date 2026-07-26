@@ -37,12 +37,24 @@ export function MissingPatchesPanel({ cycle, sessionId }: Props) {
   const categoryNames = owned.map((o) => o.category);
   const source = categories.find((c) => c.patches_source)?.patches_source ?? null;
 
+  // The panel title stays "Missing Patches" in every view mode, matching
+  // ComplianceChecklist (Task 7) — the count is a note beside the toggle
+  // instead of baked into the title, so the header doesn't change shape
+  // when the view mode changes.
+  const countNote = (
+    <span style={{ fontFamily: 'var(--sans)', fontWeight: 400, fontSize: 11, color: 'var(--text-dim)' }}>
+      {patches.length} patch{patches.length === 1 ? '' : 'es'}
+    </span>
+  );
   const extra = (
-    <ModuleToggle modes={['Grid', 'XML', 'JSON']} value={view} onChange={setView} />
+    <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+      {countNote}
+      <ModuleToggle modes={['Grid', 'XML', 'JSON']} value={view} onChange={setView} />
+    </div>
   );
 
   return (
-    <HipCard title={`Missing Patches · ${patches.length}`} extra={extra}>
+    <HipCard title="Missing Patches" extra={extra}>
       {view === 'Grid' && (
         patches.length > 0
           ? <MissingPatchesTable patches={patches} source={source} categoryNames={categoryNames} />
