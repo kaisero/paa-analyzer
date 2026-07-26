@@ -176,21 +176,68 @@ def gateway_list(text: str, **_: Any) -> Record:
     return {"agent_location": location, "gateways": gateways}
 
 
+_HIP_TABLE_DASHES = re.compile(r"^-+(?:\s+-+)*\s*$")
+_HIP_DASH_RUN = re.compile(r"-+")
+
+
+def _hip_status_kind(status: str | None) -> str:
+    """Classify a HIP gateway's (possibly source-truncated) status text.
+
+    The agent truncates the Status column to its display width, so a real
+    value can be cut mid-word (e.g. "Failed to send HIP report to Finl") --
+    matching is by prefix/substring, never equality.
+    """
+    if status is None:
+        return "unknown"
+    if status.startswith("Successfully sent HIP report"):
+        return "success"
+    if status.startswith("HIP report is not needed"):
+        return "not-needed"
+    if status.startswith("Failed to send HIP report"):
+        return "failed"
+    return "unknown"
+
+
 def hip_status(text: str, tz: str | None = None, **_: Any) -> Record:
+    """Parse `pacli_hip_status.log`.
+
+    Two table layouts are observed in the wild: a legacy 2-column form
+    (Gateway / Last HIP Report) and the current 3-column form (Name / Time /
+    Status). Neither carries a reliable header keyword to flip into table
+    mode on -- the 3-column form has no "Last HIP Report" header at all --
+    but both carry a dashed separator line under the header, which anchors
+    the table and, via its dash runs, gives the exact column boundaries
+    (more reliable than a fixed-width split, since gateway names vary in
+    length). A 2-column table yields gateways with `status: None` /
+    `status_kind: "unknown"`; a 3-column table also yields `status` /
+    `status_kind`.
+    """
     data: Record = {"collection": "", "next_check": None, "gateways": []}
-    in_table = False
+    column_starts: list[int] | None = None
     for line in text.splitlines():
         if line.startswith("HIP Collection:"):
             data["collection"] = line.split(":", 1)[1].strip()
         elif line.startswith("Next HIP Check:"):
             data["next_check"] = format_ts(parse_ts(line.split(":", 1)[1].strip(), tz))
-        elif "Last HIP Report" in line:
-            in_table = True
-        elif in_table and line.strip() and not line.startswith("-"):
-            name = line[:24].strip()
-            ts_raw = line[24:].strip()
+        elif _HIP_TABLE_DASHES.match(line):
+            column_starts = [m.start() for m in _HIP_DASH_RUN.finditer(line)]
+        elif column_starts and line.strip():
+            cols = []
+            for i, start in enumerate(column_starts):
+                end = column_starts[i + 1] if i + 1 < len(column_starts) else None
+                cols.append(line[start:end].strip())
+            name = cols[0] if cols else ""
+            ts_raw = cols[1] if len(cols) > 1 else ""
+            status = cols[2] if len(cols) > 2 else None
             if name and ts_raw:
-                data["gateways"].append({"gateway": name, "last_report": format_ts(parse_ts(ts_raw, tz))})
+                data["gateways"].append(
+                    {
+                        "gateway": name,
+                        "last_report": format_ts(parse_ts(ts_raw, tz)),
+                        "status": status,
+                        "status_kind": _hip_status_kind(status),
+                    }
+                )
     return data
 
 

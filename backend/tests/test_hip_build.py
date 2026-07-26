@@ -50,42 +50,20 @@ def windows_logs() -> dict[str, Any]:
 
 def hip_status_state() -> dict[str, Any]:
     """The `Agent.Compliance.hip_status` state record for the macOS bundle,
-    sourced from the redacted `pacli_hip_status.log` fixture committed
-    alongside the other HIP fixtures.
-
-    `collection` / `next_check` are parsed for real via `parsers.hip_status`
-    -- it reads those two lines correctly today. The gateway rows are not:
-    `parsers.hip_status`'s table detection looks for a "Last HIP Report"
-    header, but this bundle's current table layout is `Name / Time / Status`
-    (see fixture lines 4-5), so `in_table` is never set and parsing yields
-    `gateways: []` for this file. That is Task 5's fix, not this one's.
-
-    Until then, the two gateway rows used below are transcribed by hand from
-    the fixture's own committed bytes, each cited by line number so the value
-    is auditable against the file in this repo rather than an external bundle:
-      - fixtures/hip/pacli_hip_status.log:8 -- "Finland ... 2026-07-14
-        13:17:24, GMT+0200" -> 11:17:24 UTC.
-      - fixtures/hip/pacli_hip_status.log:12 -- "South Korea ... 2026-06-16
-        10:30:01, GMT+0200" -> 08:30:01 UTC.
-
-    TODO(Task 5): once parsers.hip_status() reads the Name/Time/Status table,
-    replace the hand-transcribed gateways below with
-    hip_status(fixture_text, tz="+0200")["gateways"] and drop this docstring's
-    caveat -- `status` / `status_kind` should also become tested for real then.
+    parsed for real via `parsers.hip_status` from the redacted
+    `pacli_hip_status.log` fixture committed alongside the other HIP
+    fixtures -- collection, next_check and all ten gateway rows (with their
+    real, possibly source-truncated, status/status_kind) included.
     """
     fixture_text = (FIXTURES / "pacli_hip_status.log").read_text()
     parsed = hip_status(fixture_text, tz="+0200")
-    assert parsed["gateways"] == []  # confirms the Task 5 gap this docstring describes
 
     return {
         HIP_STATUS_KEY: {
             "data": {
                 "collection": parsed["collection"],
                 "next_check": parsed["next_check"],
-                "gateways": [
-                    {"gateway": "Finland", "last_report": "2026-07-14T11:17:24+00:00"},
-                    {"gateway": "South Korea", "last_report": "2026-06-16T08:30:01+00:00"},
-                ],
+                "gateways": parsed["gateways"],
             }
         }
     }
@@ -153,7 +131,7 @@ class TestEmptyShape:
         assert data["_raw"] == {}
         assert data["collection"] == "Enabled"
         # No cycle to measure against, so nothing to compare a report time to.
-        assert [g["age_days"] for g in data["gateways"]] == [None, None]
+        assert [g["age_days"] for g in data["gateways"]] == [None] * 10
 
     def test_empty_input_yields_the_empty_shape(self):
         assert build_hip_data({}, {}, "unknown") == {
@@ -178,14 +156,39 @@ class TestGateways:
         # Newest cycle started 2026-07-25T15:07:43.640Z; ages are relative to
         # that, never to time.time(), so they stay stable forever.
         assert [(g["gateway"], g["last_report"], g["age_days"]) for g in macos["gateways"]] == [
+            ("EPM", "2026-07-25T13:08:01+00:00", 0.1),
+            ("Austria", "2026-07-25T13:08:01+00:00", 0.1),
             ("Finland", "2026-07-14T11:17:24+00:00", 11.2),
+            ("Germany Central", "2026-07-20T12:16:47+00:00", 5.1),
+            ("Israel-gw", "2026-07-14T11:43:58+00:00", 11.1),
+            ("Netherlands Central", "2026-07-15T05:42:22+00:00", 10.4),
             ("South Korea", "2026-06-16T08:30:01+00:00", 39.3),
+            ("UK", "2026-07-14T10:50:57+00:00", 11.2),
+            ("US Northwest", "2026-07-14T16:03:11+00:00", 11.0),
+            ("amsterdam-gw", "2026-07-22T05:30:27+00:00", 3.4),
         ]
 
-    def test_status_fields_default_to_none_until_the_state_parser_supplies_them(self, macos):
-        gateway = macos["gateways"][0]
-        assert gateway["status"] is None
-        assert gateway["status_kind"] is None
+    def test_status_fields_are_real_for_each_status_kind(self, macos):
+        # The real fixture exercises all three observed status forms,
+        # including both truncated "Failed to send HIP report to <gateway>"
+        # rows -- see parsers.hip_status.
+        by_gateway = {g["gateway"]: (g["status"], g["status_kind"]) for g in macos["gateways"]}
+        assert by_gateway["EPM"] == ("Successfully sent HIP report", "success")
+        assert by_gateway["Austria"] == ("HIP report is not needed", "not-needed")
+        assert by_gateway["Finland"] == ("Failed to send HIP report to Finl", "failed")
+        assert by_gateway["South Korea"] == ("Failed to send HIP report to Sout", "failed")
+
+    def test_status_fields_default_to_none_when_the_state_parser_omits_them(self):
+        # A 2-column (legacy) hip_status table carries no Status column, so
+        # build_hip_data must default status/status_kind to None rather than
+        # error -- simulate that here by dropping the keys the real 3-column
+        # fixture supplies.
+        state = hip_status_state()
+        gateways = state[HIP_STATUS_KEY]["data"]["gateways"]
+        gateways[0] = {k: v for k, v in gateways[0].items() if k not in ("status", "status_kind")}
+        data = build_hip_data(macos_logs(), state, "macos")
+        assert data["gateways"][0]["status"] is None
+        assert data["gateways"][0]["status_kind"] is None
 
     def test_status_fields_are_passed_through_when_present(self):
         state = hip_status_state()
