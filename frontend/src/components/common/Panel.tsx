@@ -24,9 +24,16 @@ export function Panel({ title, extra, bodyPadding = '8px 16px', children }: Prop
       size="small"
       title={title}
       extra={extra}
-      style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
+      // height:100% so panels sitting side by side in a grid or flex row match
+      // each other — the shorter one stretches rather than leaving a ragged
+      // bottom edge. In a column (the full-width HIP panels) the percentage
+      // resolves against an indefinite height, i.e. to auto, so it is inert.
+      style={{ background: 'var(--surface)', borderColor: 'var(--border)', height: '100%' }}
       styles={{
-        header: {
+        // The type treatment belongs on the title, not the header: `header`
+        // also wraps the `extra` slot, so putting uppercase and letter-spacing
+        // there deformed every control passed into it.
+        title: {
           color: 'var(--text-sec)',
           fontSize: 11,
           fontWeight: 700,

@@ -46,7 +46,7 @@ describe('HipReportPanel', () => {
     expect(screen.getByText('No custom checks collected for this platform.')).toBeInTheDocument();
   });
 
-  it('gives Panel no inline height, so a shorter header card cannot be stretched to fill its grid row', () => {
+  it('stretches the two header cards to a matching height', () => {
     // I1: Panel used to declare `height: '100%'`. Once HipReportPanel made
     // the `.ant-card` the direct grid item, that percentage resolved against
     // the grid row's block size (the taller card), filling the shorter card
@@ -60,11 +60,14 @@ describe('HipReportPanel', () => {
     renderWithProviders(<HipReportPanel hip={macos} sessionId="s1" />);
     const systemCard = screen.getByText('System').closest('.ant-card') as HTMLElement;
     const gatewayCard = screen.getByText('Gateways').closest('.ant-card') as HTMLElement;
-    expect(systemCard.style.height).toBe('');
-    expect(gatewayCard.style.height).toBe('');
+    // Cards sitting side by side match each other: Panel sets height:100% and
+    // the grid stretches its items, so the shorter one fills the row rather
+    // than leaving a ragged bottom edge.
+    expect(systemCard.style.height).toBe('100%');
+    expect(gatewayCard.style.height).toBe('100%');
     const headerCards = systemCard.parentElement!;
     expect(headerCards.style.display).toBe('grid');
-    expect(headerCards.style.alignItems).toBe('start');
+    expect(headerCards.style.alignItems).toBe('stretch');
   });
 
   it('dedupes the raw-document fetch when both modules switch to Raw', async () => {

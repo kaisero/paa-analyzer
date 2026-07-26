@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Checkbox, Menu, Tag } from 'antd';
 import type { MenuProps } from 'antd';
 import type { LogSource } from '../../api/types';
+import { useTheme } from '../../contexts/ThemeContext';
+import { FOOTER_BAR_HEIGHT } from '../log-viewer/LogPagination';
 
 interface SidebarProps {
   sessionId: string;
@@ -23,6 +25,7 @@ export function Sidebar({
   selectedSources,
   setSelectedSources,
 }: SidebarProps) {
+  const { isDark } = useTheme();
   const [width, setWidth] = useState(260);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const resizing = useRef(false);
@@ -333,7 +336,9 @@ export function Sidebar({
           /* Normal mode with antd Menu */
           <Menu
             mode="inline"
-            theme="dark"
+            // Follow the app theme: a hardcoded dark menu painted
+            // white text on the light sidebar, i.e. white on white.
+            theme={isDark ? 'dark' : 'light'}
             selectedKeys={selectedKeys}
             onClick={handleMenuClick}
             items={buildMenuItems()}
@@ -365,9 +370,12 @@ export function Sidebar({
 
       {/* Side footer */}
       <div style={{
-        padding: '10px 14px', borderTop: '1px solid var(--border-soft)',
+        // Height pinned so this bar lines up with the log pagination bar
+        // beside it; see FOOTER_BAR_HEIGHT in LogPagination.
+        height: FOOTER_BAR_HEIGHT, display: 'flex', alignItems: 'center',
+        padding: '0 14px', borderTop: '1px solid var(--border-soft)',
         fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text-dim)',
-        lineHeight: 1.7, flexShrink: 0,
+        flexShrink: 0,
       }}>
         {totalErrors.toLocaleString()} errors · {totalWarnings.toLocaleString()} warnings
       </div>

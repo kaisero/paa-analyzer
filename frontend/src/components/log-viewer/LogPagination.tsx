@@ -2,6 +2,9 @@ import { Pagination, Select, Typography, Flex } from 'antd';
 
 const PAGE_SIZES = [100, 250, 500] as const;
 
+/** Shared with the sidebar's footer bar so the two align. */
+export const FOOTER_BAR_HEIGHT = 37;
+
 interface LogPaginationProps {
   page: number;
   pageSize: number;
@@ -28,7 +31,10 @@ export function LogPagination({
       justify="space-between"
       align="center"
       style={{
-        padding: '8px 16px',
+        // Matched to the sidebar's footer bar so the two line up along the
+        // bottom of the screen. Taken from the shorter of the two.
+        height: FOOTER_BAR_HEIGHT,
+        padding: '0 16px',
         background: 'var(--surface)',
         borderTop: '1px solid var(--border)',
         flexShrink: 0,

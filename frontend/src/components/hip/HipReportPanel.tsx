@@ -25,7 +25,9 @@ export function HipReportPanel({ hip, sessionId }: Props) {
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))',
           gap: 16,
-          alignItems: 'start',
+          // stretch (the grid default): the two header cards match heights
+          // rather than leaving a ragged bottom edge.
+          alignItems: 'stretch',
           marginBottom: 20,
         }}
       >
