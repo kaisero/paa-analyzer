@@ -13,7 +13,7 @@ describe('MissingPatchesTable', () => {
       <MissingPatchesTable patches={patchMgmt.missing_patches} source={patchMgmt.patches_source} />,
     );
 
-    // No more HipCard chrome, so no "missing patches (2)" title to assert.
+    // No more Panel chrome, so no "missing patches (2)" title to assert.
     expect(screen.getByText('from PAComplianceMp')).toBeInTheDocument();
     expect(screen.queryByText('Category')).not.toBeInTheDocument();
 

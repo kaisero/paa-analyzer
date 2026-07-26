@@ -31,12 +31,12 @@ describe('HipReportPanel', () => {
   it('each module switches view independently', async () => {
     const user = userEvent.setup();
     renderWithProviders(<HipReportPanel hip={macos} sessionId="s1" />);
-    // HipCard renders the title into the antd Card's own header element;
+    // Panel renders the title into the antd Card's own header element;
     // `.closest('div')` on the title text returns that same div (it holds no
     // toggle) — scope to the whole card instead.
     const systemCard = screen.getByText('System').closest('.ant-card') as HTMLElement;
     await user.click(within(systemCard).getByText('JSON'));
-    // The checklist stays in Grid: its rows are still listed.
+    // The checklist stays in View: its rows are still listed.
     expect(screen.getByText('Anti Malware')).toBeInTheDocument();
   });
 
@@ -46,8 +46,8 @@ describe('HipReportPanel', () => {
     expect(screen.getByText('No custom checks collected for this platform.')).toBeInTheDocument();
   });
 
-  it('gives HipCard no inline height, so a shorter header card cannot be stretched to fill its grid row', () => {
-    // I1: HipCard used to declare `height: '100%'`. Once HipReportPanel made
+  it('gives Panel no inline height, so a shorter header card cannot be stretched to fill its grid row', () => {
+    // I1: Panel used to declare `height: '100%'`. Once HipReportPanel made
     // the `.ant-card` the direct grid item, that percentage resolved against
     // the grid row's block size (the taller card), filling the shorter card
     // with dead space regardless of `alignItems: 'start'` on the grid
@@ -67,9 +67,9 @@ describe('HipReportPanel', () => {
     expect(headerCards.style.alignItems).toBe('start');
   });
 
-  it('dedupes the raw-document fetch when both modules switch to XML', async () => {
+  it('dedupes the raw-document fetch when both modules switch to Raw', async () => {
     // I4: this claim ("TanStack Query dedupes on queryKey, so this is still
-    // one request even when both modules want XML at once") was previously
+    // one request even when both modules want Raw at once") was previously
     // asserted only in comments in ComplianceChecklist.tsx and
     // MissingPatchesPanel.tsx — nothing failed if it stopped being true.
     let requestCount = 0;
@@ -88,12 +88,12 @@ describe('HipReportPanel', () => {
       .getByText('Missing Patches', { selector: '.ant-card-head-title' })
       .closest('.ant-card') as HTMLElement;
 
-    // Flip both modules to XML in the same tick, before either fetch
+    // Flip both modules to Raw in the same tick, before either fetch
     // resolves — `fireEvent` (unlike `userEvent`) doesn't await anything
     // between the two clicks, so the shared queryKey has to dedupe the
     // in-flight request rather than each panel firing its own.
-    fireEvent.click(within(checklistCard).getByText('XML'));
-    fireEvent.click(within(patchesCard).getByText('XML'));
+    fireEvent.click(within(checklistCard).getByText('Raw'));
+    fireEvent.click(within(patchesCard).getByText('Raw'));
     await screen.findByText('hip-report — PACompliance');
     await screen.findByText('missing-patches — PAComplianceMp');
 

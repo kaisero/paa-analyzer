@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { Spin } from 'antd';
 import { useHipRaw } from '../../api/hooks';
 import type { HipCycle, MissingPatch } from '../../api/types';
-import { HipCard } from './HipCard';
+import { Panel } from '../common/Panel';
+import { ViewToggle } from '../common/ViewToggle';
+import type { ViewMode } from '../common/ViewToggle';
 import { MissingPatchesTable } from './MissingPatchesTable';
-import { ModuleToggle } from './ModuleToggle';
-import type { HipViewMode } from './ModuleToggle';
 import { RawBlock } from './RawBlock';
 
 interface Props {
@@ -14,15 +14,15 @@ interface Props {
 }
 
 export function MissingPatchesPanel({ cycle, sessionId }: Props) {
-  const [view, setView] = useState<HipViewMode>('Grid');
+  const [view, setView] = useState<ViewMode>('View');
 
   // ComplianceChecklist (Task 7) makes the identical call for the same
   // (sessionId, cycle.index) pair — TanStack Query dedupes on queryKey, so
-  // this is still one request even when both modules want XML at once.
+  // this is still one request even when both modules want Raw at once.
   const { data: rawData, isLoading: rawLoading } = useHipRaw(
     sessionId,
     String(cycle.index),
-    view === 'XML',
+    view === 'Raw',
   );
   const rawPatchesXml = rawData?.data.raw_patches_xml;
 
@@ -49,20 +49,20 @@ export function MissingPatchesPanel({ cycle, sessionId }: Props) {
   const extra = (
     <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
       {countNote}
-      <ModuleToggle modes={['Grid', 'XML', 'JSON']} value={view} onChange={setView} />
+      <ViewToggle modes={['View', 'Raw', 'JSON']} value={view} onChange={setView} />
     </div>
   );
 
   return (
-    <HipCard title="Missing Patches" extra={extra}>
-      {view === 'Grid' && (
+    <Panel title="Missing Patches" extra={extra}>
+      {view === 'View' && (
         patches.length > 0
           ? <MissingPatchesTable patches={patches} source={source} categoryNames={categoryNames} />
           : <div style={{ color: 'var(--text-dim)', fontSize: 12 }}>
               No missing patches were reported for this cycle.
             </div>
       )}
-      {view === 'XML' && (
+      {view === 'Raw' && (
         rawLoading
           ? <div style={{ display: 'flex', justifyContent: 'center', padding: 32 }}><Spin /></div>
           : <RawBlock
@@ -78,6 +78,6 @@ export function MissingPatchesPanel({ cycle, sessionId }: Props) {
           emptyNote="No missing patches."
         />
       )}
-    </HipCard>
+    </Panel>
   );
 }

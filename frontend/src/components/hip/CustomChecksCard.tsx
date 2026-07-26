@@ -78,7 +78,7 @@ interface Props {
 }
 
 /**
- * Renders whatever the custom-check subtree contains — no `HipCard`: it now
+ * Renders whatever the custom-check subtree contains — no `Panel`: it now
  * sits inside a `ChecklistRow`, whose verdict line already states the kind,
  * so the old `extra={kind}` chrome goes with the card. Nothing else about
  * this component changes: the shape still differs per platform (`plist` on

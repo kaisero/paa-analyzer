@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import type { HipGateway } from '../../api/types';
-import { HipCard } from './HipCard';
-import { ModuleToggle } from './ModuleToggle';
-import type { HipViewMode } from './ModuleToggle';
+import { Panel } from '../common/Panel';
+import { ViewToggle } from '../common/ViewToggle';
+import type { ViewMode } from '../common/ViewToggle';
 import { RawBlock } from './RawBlock';
 
 const COLLAPSED_ROWS = 5;
@@ -51,7 +51,7 @@ interface Props {
 }
 
 export function GatewayCard({ gateways }: Props) {
-  const [view, setView] = useState<HipViewMode>('Grid');
+  const [view, setView] = useState<ViewMode>('View');
   const [showAll, setShowAll] = useState(false);
 
   const sorted = [...gateways].sort(
@@ -61,23 +61,23 @@ export function GatewayCard({ gateways }: Props) {
   const count = (kind: HipGateway['status_kind']) =>
     gateways.filter((g) => g.status_kind === kind).length;
 
-  const extra = <ModuleToggle modes={['Grid', 'JSON']} value={view} onChange={setView} />;
+  const extra = <ViewToggle modes={['View', 'JSON']} value={view} onChange={setView} />;
 
   if (view === 'JSON') {
     return (
-      <HipCard title="Gateways" extra={extra}>
+      <Panel title="Gateways" extra={extra}>
         <RawBlock
           label="gateways — parsed model"
           text={gateways.length > 0 ? JSON.stringify(gateways, null, 2) : undefined}
           emptyNote="No gateway data in this bundle."
         />
-      </HipCard>
+      </Panel>
     );
   }
 
   if (gateways.length === 0) {
     return (
-      <HipCard title="Gateways" extra={extra}>
+      <Panel title="Gateways" extra={extra}>
         <div style={{ fontSize: 12 }}>
           <div style={{ fontWeight: 600 }}>No gateway data in this bundle.</div>
           <div style={{ color: 'var(--text-dim)', marginTop: 4 }}>
@@ -86,12 +86,12 @@ export function GatewayCard({ gateways }: Props) {
             This bundle reported zero gateways.
           </div>
         </div>
-      </HipCard>
+      </Panel>
     );
   }
 
   return (
-    <HipCard title="Gateways" extra={extra}>
+    <Panel title="Gateways" extra={extra}>
       <div style={{ display: 'flex', gap: 16, fontFamily: 'var(--mono)', fontSize: 11, marginBottom: 10 }}>
         <span><b style={{ color: 'var(--ok)' }}>{count('success')}</b> sent</span>
         <span><b style={{ color: 'var(--text-dim)' }}>{count('not-needed')}</b> not needed</span>
@@ -135,6 +135,6 @@ export function GatewayCard({ gateways }: Props) {
           {showAll ? 'Show fewer' : `Show all ${sorted.length}`}
         </button>
       )}
-    </HipCard>
+    </Panel>
   );
 }

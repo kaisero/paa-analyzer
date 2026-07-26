@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import type { HipReport } from '../../api/types';
-import { HipCard } from './HipCard';
+import { Panel } from '../common/Panel';
+import { ViewToggle } from '../common/ViewToggle';
+import type { ViewMode } from '../common/ViewToggle';
 import { HostInfoCard } from './HostInfoCard';
-import { ModuleToggle } from './ModuleToggle';
-import type { HipViewMode } from './ModuleToggle';
 import { RawBlock } from './RawBlock';
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export function SystemCard({ report }: Props) {
-  const [view, setView] = useState<HipViewMode>('Grid');
+  const [view, setView] = useState<ViewMode>('View');
 
   // HostInfoCard no longer shows its own report-version chrome (companion
   // edit below), so SystemCard carries it in its own `extra` instead.
@@ -22,12 +22,12 @@ export function SystemCard({ report }: Props) {
           report v{report.version}
         </span>
       )}
-      <ModuleToggle modes={['Grid', 'JSON']} value={view} onChange={setView} />
+      <ViewToggle modes={['View', 'JSON']} value={view} onChange={setView} />
     </div>
   );
 
   return (
-    <HipCard title="System" extra={extra}>
+    <Panel title="System" extra={extra}>
       {view === 'JSON' ? (
         <RawBlock
           label="host_info — parsed model"
@@ -41,6 +41,6 @@ export function SystemCard({ report }: Props) {
       ) : (
         <div style={{ color: 'var(--text-dim)', fontSize: 12 }}>No host info in this report.</div>
       )}
-    </HipCard>
+    </Panel>
   );
 }

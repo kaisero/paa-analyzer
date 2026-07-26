@@ -30,10 +30,10 @@ describe('SystemCard', () => {
     expect(screen.getByText('en0')).toBeInTheDocument();
   });
 
-  it('switches to JSON without offering XML', async () => {
+  it('switches to JSON without offering Raw', async () => {
     const user = userEvent.setup();
     renderWithProviders(<SystemCard report={macos.cycles[0].report!} />);
-    expect(screen.queryByText('XML')).not.toBeInTheDocument();
+    expect(screen.queryByText('Raw')).not.toBeInTheDocument();
     await user.click(screen.getByText('JSON'));
     expect(screen.getByText(/"host_name"/)).toBeInTheDocument();
   });

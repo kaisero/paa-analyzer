@@ -3,11 +3,11 @@ import type { CSSProperties } from 'react';
 import { Spin } from 'antd';
 import { useHipRaw } from '../../api/hooks';
 import type { HipCycle, OpswatError } from '../../api/types';
+import { Panel } from '../common/Panel';
+import { ViewToggle } from '../common/ViewToggle';
+import type { ViewMode } from '../common/ViewToggle';
 import { CustomChecksCard } from './CustomChecksCard';
-import { HipCard } from './HipCard';
 import { MissingPatchesTable } from './MissingPatchesTable';
-import { ModuleToggle } from './ModuleToggle';
-import type { HipViewMode } from './ModuleToggle';
 import { ProductRow } from './ProductRow';
 import { RawBlock } from './RawBlock';
 import { ChecklistRow } from './ChecklistRow';
@@ -38,17 +38,17 @@ interface Props {
 }
 
 export function ComplianceChecklist({ cycle, sessionId }: Props) {
-  const [view, setView] = useState<HipViewMode>('Grid');
+  const [view, setView] = useState<ViewMode>('View');
   const [open, setOpen] = useState<Set<string>>(new Set());
 
-  // Only XML needs the raw document; JSON renders the structured model.
+  // Only Raw needs the raw document; JSON renders the structured model.
   // MissingPatchesPanel (Task 8) makes the identical call for the same
   // (sessionId, cycle.index) pair — TanStack Query dedupes on queryKey, so
-  // this is still one request even when both modules want XML at once.
+  // this is still one request even when both modules want Raw at once.
   const { data: rawData, isLoading: rawLoading } = useHipRaw(
     sessionId,
     String(cycle.index),
-    view === 'XML',
+    view === 'Raw',
   );
   const rawXml = rawData?.data.raw_xml;
 
@@ -60,14 +60,14 @@ export function ComplianceChecklist({ cycle, sessionId }: Props) {
       return next;
     });
 
-  const toggle = <ModuleToggle modes={['Grid', 'XML', 'JSON']} value={view} onChange={setView} />;
+  const toggle = <ViewToggle modes={['View', 'Raw', 'JSON']} value={view} onChange={setView} />;
 
-  // The panel title stays "Compliance Checklist" in every view mode — Grid
+  // The panel title stays "Compliance Checklist" in every view mode — View
   // used to bake the category count into the title ("Categories · 7") while
-  // XML/JSON showed the plain title, so switching modes changed the header's
+  // Raw/JSON showed the plain title, so switching modes changed the header's
   // shape. The count is now a separate note next to the toggle instead. It
-  // is only meaningful when a report exists, which XML and JSON must handle
-  // too (unlike Grid, they must not bail out on a missing report — a
+  // is only meaningful when a report exists, which Raw and JSON must handle
+  // too (unlike View, they must not bail out on a missing report — a
   // truncated cycle is exactly when raw XML matters most).
   const countNote = report ? (
     <span style={{ fontFamily: 'var(--sans)', fontWeight: 400, fontSize: 11, color: 'var(--text-dim)' }}>
@@ -75,9 +75,9 @@ export function ComplianceChecklist({ cycle, sessionId }: Props) {
     </span>
   ) : null;
 
-  if (view === 'XML') {
+  if (view === 'Raw') {
     return (
-      <HipCard
+      <Panel
         title="Compliance Checklist"
         extra={<div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>{countNote}{toggle}</div>}
       >
@@ -90,13 +90,13 @@ export function ComplianceChecklist({ cycle, sessionId }: Props) {
             emptyNote="No hip-report document was captured for this cycle."
           />
         )}
-      </HipCard>
+      </Panel>
     );
   }
 
   if (view === 'JSON') {
     return (
-      <HipCard
+      <Panel
         title="Compliance Checklist"
         extra={<div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>{countNote}{toggle}</div>}
       >
@@ -115,20 +115,20 @@ export function ComplianceChecklist({ cycle, sessionId }: Props) {
             emptyNote="No custom checks in this report."
           />
         </div>
-      </HipCard>
+      </Panel>
     );
   }
 
-  // Grid needs a real report from here on — this guard sits after the
-  // XML/JSON returns so a truncated cycle can still be inspected as raw XML.
+  // View needs a real report from here on — this guard sits after the
+  // Raw/JSON returns so a truncated cycle can still be inspected as raw XML.
   if (!report) {
     return (
-      <HipCard title="Compliance Checklist" extra={<div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>{countNote}{toggle}</div>}>
+      <Panel title="Compliance Checklist" extra={<div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>{countNote}{toggle}</div>}>
         <div style={{ color: 'var(--text-dim)', fontSize: 12 }}>
           This cycle carries no HIP report — the log was most likely truncated by
           rotation before the report was written.
         </div>
-      </HipCard>
+      </Panel>
     );
   }
 
@@ -146,7 +146,7 @@ export function ComplianceChecklist({ cycle, sessionId }: Props) {
   const ccEntries = cc?.entries?.length ?? 0;
 
   return (
-    <HipCard title="Compliance Checklist" extra={controls} bodyPadding="0">
+    <Panel title="Compliance Checklist" extra={controls} bodyPadding="0">
       {report.categories.map((category) => {
         const key = category.name ?? '';
         const errs = categoryErrors(cycle.opswat_errors, category.name);
@@ -192,7 +192,7 @@ export function ComplianceChecklist({ cycle, sessionId }: Props) {
             )}
             {patches.length > 0 && (
               <div style={{ marginTop: 12 }}>
-                {/* MissingPatchesTable lost its own HipCard title (Task 8), so
+                {/* MissingPatchesTable lost its own Panel title (Task 8), so
                     the in-row heading the prototype renders has to live here. */}
                 <div style={sectionHeading}>Missing Patches ({patches.length})</div>
                 <MissingPatchesTable patches={patches} source={category.patches_source} />
@@ -219,6 +219,6 @@ export function ComplianceChecklist({ cycle, sessionId }: Props) {
             keeps the expression itself well-typed.) */}
         {cc && <CustomChecksCard customChecks={cc} />}
       </ChecklistRow>
-    </HipCard>
+    </Panel>
   );
 }

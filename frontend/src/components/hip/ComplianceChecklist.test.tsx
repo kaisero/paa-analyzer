@@ -87,7 +87,7 @@ describe('ComplianceChecklist', () => {
   it('flips to XML and renders the labelled hip-report document', async () => {
     const user = userEvent.setup();
     renderList(macos);
-    await user.click(screen.getByText('XML'));
+    await user.click(screen.getByText('Raw'));
     const label = await screen.findByText('hip-report — PACompliance');
     // A real document rendered, not the empty-state note.
     expect(screen.queryByText(/no hip-report document/i)).not.toBeInTheDocument();
@@ -101,7 +101,7 @@ describe('ComplianceChecklist', () => {
     // entirely — exactly the cycle where raw XML matters most.
     const noReport = { ...macos.cycles[0], report: null };
     renderWithProviders(<ComplianceChecklist cycle={noReport} sessionId="s1" />);
-    expect(screen.getByText('XML')).toBeInTheDocument();
+    expect(screen.getByText('Raw')).toBeInTheDocument();
     expect(screen.getByText('JSON')).toBeInTheDocument();
     expect(screen.getByText(/carries no HIP report/)).toBeInTheDocument();
   });

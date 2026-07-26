@@ -12,8 +12,9 @@ const macos = hipFixture.macos as unknown as HipData;
 const windows = hipFixture.windows as unknown as HipData;
 
 function renderPanel(hip: HipData) {
-  // sessionId is real but view stays Grid in every test below, so useHipRaw
-  // stays disabled and no MSW handler is needed for this suite.
+  // sessionId is real; the default MSW handler serves the macOS raw slice for
+  // every raw-view test below, and only the Windows-specific test overrides
+  // it with the Windows raw slice.
   return renderWithProviders(
     <MissingPatchesPanel cycle={hip.cycles[0]} sessionId="s1" />,
   );
@@ -40,9 +41,9 @@ describe('MissingPatchesPanel', () => {
     expect(screen.getAllByText('Patch Management').length).toBe(2);
   });
 
-  it('always offers an XML view, even before a document is fetched', () => {
+  it('always offers a Raw view, even before a document is fetched', () => {
     renderPanel(macos);
-    expect(screen.getByText('XML')).toBeInTheDocument();
+    expect(screen.getByText('Raw')).toBeInTheDocument();
   });
 
   it('reports an empty patch list plainly', () => {
@@ -51,10 +52,10 @@ describe('MissingPatchesPanel', () => {
     expect(screen.getByText(/no missing patches/i)).toBeInTheDocument();
   });
 
-  it('flips to XML and renders the labelled missing-patches document', async () => {
+  it('flips to Raw and renders the labelled missing-patches document', async () => {
     const user = userEvent.setup();
     renderPanel(macos);
-    await user.click(screen.getByText('XML'));
+    await user.click(screen.getByText('Raw'));
     expect(await screen.findByText('missing-patches — PAComplianceMp')).toBeInTheDocument();
     expect(screen.queryByText(/no missing-patches document/i)).not.toBeInTheDocument();
   });
@@ -71,7 +72,7 @@ describe('MissingPatchesPanel', () => {
     );
     const user = userEvent.setup();
     renderPanel(windows);
-    await user.click(screen.getByText('XML'));
+    await user.click(screen.getByText('Raw'));
     expect(await screen.findByText(/no missing-patches document/i)).toBeInTheDocument();
   });
 });
