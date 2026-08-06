@@ -16,3 +16,7 @@ uploads/
 prototype/
 docs/plans
 docs/specs
+
+# Local Compose override (copy of docker-compose.dev.yml) — machine-specific,
+# and must never apply to a plain `docker compose up` outside a dev checkout.
+docker-compose.override.yml
