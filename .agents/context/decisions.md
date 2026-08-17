@@ -386,3 +386,83 @@ both of those cases. Covered by `backend/tests/test_spa_routing.py`,
 mounting `SpaStaticFiles` over a throwaway temp directory rather than
 through `create_app()` (which only mounts anything when a build is
 present).
+
+## 17. Dev Compose override ships as a tracked template, not as `docker-compose.override.yml` · 2026-08-06
+
+`docker compose up` builds only when no image with the configured tag exists.
+`docker-compose.yml` pins `image: paa-analyzer:latest` alongside `build: .`, so
+once that tag exists locally every subsequent `up` reuses it and never re-reads
+the source — edits appeared to vanish until someone remembered `--build`.
+
+`docker-compose.dev.yml` fixes the inner loop instead of the symptom: it
+bind-mounts `backend/` and `paa_analyzer/` over the copies the Dockerfile
+`COPY`s in, and replaces the production CMD with uvicorn `--reload`. This works
+because `uv sync` installs the project **editable** — site-packages holds only
+`_editable_impl_paa_analyzer.pth` pointing at `/app`, so `backend` and
+`paa_analyzer` resolve to `/app/backend` and `/app/paa_analyzer`, exactly the
+mount targets. Verified end-to-end: a host-side edit to an existing endpoint was
+served by the container ~1s later, with no rebuild. `watchfiles` is present in
+the runtime image despite `uv sync --no-dev`, because it arrives via the
+`uvicorn[standard]` extra, which is a *main* dependency.
+
+**Why a tracked `docker-compose.dev.yml` plus a gitignored copy, rather than
+committing `docker-compose.override.yml` itself.** `docker-compose.override.yml`
+is the filename Compose merges with no flags — committing it would make *every*
+`docker compose up`, anywhere, silently run a dev configuration with the source
+bind-mounted and the reloader attached. Keeping the override filename gitignored
+makes activation an explicit local `cp`, while the template still travels with
+the repo. Rejected: `-f docker-compose.yml -f docker-compose.dev.yml`, which
+keeps the dev loop flag-laden and easy to forget; and Compose `develop.watch`,
+which rebuilds the image per change rather than avoiding the rebuild.
+
+`restart: "no"` overrides the base file's `unless-stopped` — while editing, an
+import-time crash should leave the container down with a readable traceback
+rather than restart-looping over it.
+
+**Scope: backend only.** The UI is a static `vite build` written to
+`/app/frontend/dist` at image build time (there is no node process in the
+runtime image to reload), so frontend changes still need `--build`, or the
+existing host-side `npm run dev` on :5173 proxying `/api` to :8000.
+
+**Gotcha found while verifying this**, worth recording because it will mislead
+the next person testing a route: appending a new `@app.get(...)` *after*
+`create_app()` returns produces a 404, not a working route. Decision 16's
+`SpaStaticFiles` is mounted at `/` inside `create_app()`, Starlette matches
+routes in registration order, and that mount 404s anything under `api/`. Probe
+hot reload by changing an **existing** endpoint's behaviour instead.
+
+## 18. Dependabot targets `develop` and auto-merges patch/minor only · 2026-08-17
+
+Both Dependabot ecosystems (`uv`, `github-actions`) now set
+`target-branch: "develop"`. Without it Dependabot opens against the default
+branch, which is `main` — and `main` is protected by the `block-main-push` and
+`main-protection` rulesets, so every dependency PR landed on a branch that
+cannot take direct integration. Integration happens on `develop`; that is where
+updates belong.
+
+`.github/workflows/dependabot-auto-merge.yml` then enables GitHub's own
+auto-merge on those PRs. It merges nothing itself — auto-merge waits for the
+checks `develop` marks required (Lint, Type-check, Tests (Python 3.14), Docs,
+Gitleaks) and squashes only once they are all green. **The required-checks list
+is load-bearing:** drop it and auto-merge has nothing to wait for, so this
+becomes "merge immediately". For the same reason the trigger is scoped to
+`branches: [develop]` — a Dependabot PR against any unprotected branch is left
+alone rather than merged unguarded.
+
+Patch and minor only. A major bump is where a green suite is least reassuring
+(breaking changes surface at runtime, not in CI), so those stay open and get a
+comment saying so — silence would read identically to broken automation. For a
+grouped update `fetch-metadata` reports the group's highest semver change, so
+one major holds the whole PR back.
+
+The `permissions:` block grants `contents: write` / `pull-requests: write`
+because Dependabot-triggered runs get a read-only `GITHUB_TOKEN` by default.
+The job never checks out or executes the PR's code, so the elevated token never
+runs anything Dependabot proposed.
+
+**Known gap:** `frontend/package-lock.json` is not covered by any ecosystem, so
+npm dependencies are not tracked. Adding `npm` is deliberately deferred — `ci.yml`
+runs no frontend job, so an npm PR would auto-merge against a suite that never
+builds or tests the frontend. Wire up frontend CI first.
+
+Mirrors the setup in the phantasos repo.
