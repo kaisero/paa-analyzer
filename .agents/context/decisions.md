@@ -430,3 +430,39 @@ the next person testing a route: appending a new `@app.get(...)` *after*
 `SpaStaticFiles` is mounted at `/` inside `create_app()`, Starlette matches
 routes in registration order, and that mount 404s anything under `api/`. Probe
 hot reload by changing an **existing** endpoint's behaviour instead.
+
+## 18. Dependabot targets `develop` and auto-merges patch/minor only · 2026-08-17
+
+Both Dependabot ecosystems (`uv`, `github-actions`) now set
+`target-branch: "develop"`. Without it Dependabot opens against the default
+branch, which is `main` — and `main` is protected by the `block-main-push` and
+`main-protection` rulesets, so every dependency PR landed on a branch that
+cannot take direct integration. Integration happens on `develop`; that is where
+updates belong.
+
+`.github/workflows/dependabot-auto-merge.yml` then enables GitHub's own
+auto-merge on those PRs. It merges nothing itself — auto-merge waits for the
+checks `develop` marks required (Lint, Type-check, Tests (Python 3.14), Docs,
+Gitleaks) and squashes only once they are all green. **The required-checks list
+is load-bearing:** drop it and auto-merge has nothing to wait for, so this
+becomes "merge immediately". For the same reason the trigger is scoped to
+`branches: [develop]` — a Dependabot PR against any unprotected branch is left
+alone rather than merged unguarded.
+
+Patch and minor only. A major bump is where a green suite is least reassuring
+(breaking changes surface at runtime, not in CI), so those stay open and get a
+comment saying so — silence would read identically to broken automation. For a
+grouped update `fetch-metadata` reports the group's highest semver change, so
+one major holds the whole PR back.
+
+The `permissions:` block grants `contents: write` / `pull-requests: write`
+because Dependabot-triggered runs get a read-only `GITHUB_TOKEN` by default.
+The job never checks out or executes the PR's code, so the elevated token never
+runs anything Dependabot proposed.
+
+**Known gap:** `frontend/package-lock.json` is not covered by any ecosystem, so
+npm dependencies are not tracked. Adding `npm` is deliberately deferred — `ci.yml`
+runs no frontend job, so an npm PR would auto-merge against a suite that never
+builds or tests the frontend. Wire up frontend CI first.
+
+Mirrors the setup in the phantasos repo.
