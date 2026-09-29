@@ -14,6 +14,7 @@ def _build_store_with_session(sid="test123"):
         {"id": sid, "filename": "test.zip", "file_size": 1000, "parse_status": "complete"},
         result["logs"],
         result["state"],
+        result["hip"],
     )
     return st
 
@@ -56,15 +57,16 @@ class TestSessionLifecycle:
         assert "test123" not in st._dbs
         assert "test123" not in st._log_meta
         assert "test123" not in st._state
+        assert "test123" not in st._hip
 
     def test_multiple_sessions_independent(self):
         from backend.tests.conftest import build_sample_zip
 
         st = SessionStore()
         result = parse_zip(build_sample_zip())
-        st.add_session({"id": "a", "filename": "a.zip"}, result["logs"], result["state"])
+        st.add_session({"id": "a", "filename": "a.zip"}, result["logs"], result["state"], result["hip"])
         result2 = parse_zip(build_sample_zip())
-        st.add_session({"id": "b", "filename": "b.zip"}, result2["logs"], result2["state"])
+        st.add_session({"id": "b", "filename": "b.zip"}, result2["logs"], result2["state"], result2["hip"])
         assert len(st.list_sessions()) == 2
         st.delete_session("a")
         assert st.get_session("a") is None

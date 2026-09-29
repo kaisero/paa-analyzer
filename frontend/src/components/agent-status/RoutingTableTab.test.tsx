@@ -30,14 +30,14 @@ const winEntry: StateEntry = {
 
 describe('RoutingTableTab — format detection', () => {
   it('renders macOS columns when data has flags field', () => {
-    render(<RoutingTableTab entry={macEntry} viewMode="Table" />);
+    render(<RoutingTableTab entry={macEntry} viewMode="View" />);
     expect(screen.getByText('Flags')).toBeInTheDocument();
     expect(screen.queryByText('Netmask')).not.toBeInTheDocument();
     expect(screen.getByText('default')).toBeInTheDocument();
   });
 
   it('renders Windows IPv4 with CIDR notation (no Netmask column)', () => {
-    render(<RoutingTableTab entry={winEntry} viewMode="Table" />);
+    render(<RoutingTableTab entry={winEntry} viewMode="View" />);
     // Netmask merged into Network column as CIDR: 0.0.0.0/0
     expect(screen.queryByText('Netmask')).not.toBeInTheDocument();
     expect(screen.getByText('Network')).toBeInTheDocument();
@@ -46,7 +46,7 @@ describe('RoutingTableTab — format detection', () => {
   });
 
   it('uses Windows IPv6 columns with Destination for IPv6 tab', () => {
-    render(<RoutingTableTab entry={winEntry} viewMode="Table" />);
+    render(<RoutingTableTab entry={winEntry} viewMode="View" />);
     const ipv6Btn = screen.getByText('IPv6');
     ipv6Btn.click();
     // IPv6 has Destination, Gateway, Interface, Metric
@@ -57,7 +57,7 @@ describe('RoutingTableTab — format detection', () => {
   });
 
   it('shows empty message when entry is undefined', () => {
-    render(<RoutingTableTab entry={undefined} viewMode="Table" />);
+    render(<RoutingTableTab entry={undefined} viewMode="View" />);
     expect(screen.getByText('No routing data available.')).toBeInTheDocument();
   });
 });

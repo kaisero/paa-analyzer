@@ -1,4 +1,5 @@
-import { Badge, Card, Spin } from 'antd';
+import { Table } from 'antd';
+import type { TableColumnsType } from 'antd';
 import type { StateBatchResponse } from '../../api/types';
 
 interface Props {
@@ -61,55 +62,82 @@ const FEATURES: FeatureConfig[] = [
   },
 ];
 
+interface ModuleRow {
+  key: string;
+  label: string;
+  active: boolean;
+  status: string;
+  details: string | undefined;
+}
+
+const columns: TableColumnsType<ModuleRow> = [
+  {
+    title: 'Module',
+    dataIndex: 'label',
+    key: 'label',
+    width: 200,
+    render: (v: string) => <strong style={{ fontSize: 12 }}>{v}</strong>,
+  },
+  {
+    title: 'Status',
+    dataIndex: 'status',
+    key: 'status',
+    width: 160,
+    render: (v: string, r: ModuleRow) => (
+      <span
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 6,
+          fontFamily: 'var(--mono)',
+          fontSize: 11,
+          fontWeight: 600,
+        }}
+      >
+        <span
+          style={{
+            width: 8,
+            height: 8,
+            borderRadius: '50%',
+            flexShrink: 0,
+            background: r.active ? 'var(--ok)' : 'var(--err)',
+            boxShadow: r.active ? '0 0 5px var(--ok)' : '0 0 5px var(--err)',
+          }}
+        />
+        <span style={{ color: r.active ? 'var(--ok)' : 'var(--err)' }}>{v}</span>
+      </span>
+    ),
+  },
+  {
+    title: 'Details',
+    dataIndex: 'details',
+    key: 'details',
+    render: (v: string | undefined) => (
+      <span style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text-sec)' }}>
+        {v || '—'}
+      </span>
+    ),
+  },
+];
+
 export function FeaturesPanel({ stateData, loading }: Props) {
-  if (loading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', padding: 48 }}>
-        <Spin />
-      </div>
-    );
-  }
+  const rows: ModuleRow[] = FEATURES.map((feat) => {
+    const entry = stateData?.[feat.stateKey];
+    const { active, status, details } = entry
+      ? feat.getStatus(entry.data)
+      : { active: false, status: 'No Data', details: undefined };
+    return { key: feat.label, label: feat.label, active, status, details };
+  });
 
   return (
-    <div>
-      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)', marginBottom: 12 }}>
-        Modules
-      </div>
-      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-        {FEATURES.map((feat) => {
-          const entry = stateData?.[feat.stateKey];
-          const { active, status, details } = entry
-            ? feat.getStatus(entry.data)
-            : { active: false, status: 'No Data', details: undefined };
-
-          return (
-            <Card
-              key={feat.label}
-              size="small"
-              style={{
-                flex: '1 1 180px',
-                maxWidth: 240,
-                background: 'var(--surface)',
-                borderColor: 'var(--border)',
-              }}
-              styles={{ body: { padding: '12px 16px' } }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                <Badge status={active ? 'success' : 'error'} />
-                <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)' }}>{feat.label}</span>
-              </div>
-              <div style={{ fontSize: 12, color: 'var(--text2)', fontFamily: '"JetBrains Mono", monospace' }}>
-                {status}
-              </div>
-              {details && (
-                <div style={{ fontSize: 11, color: 'var(--text3)', fontFamily: '"JetBrains Mono", monospace', marginTop: 2 }}>
-                  {details}
-                </div>
-              )}
-            </Card>
-          );
-        })}
-      </div>
-    </div>
+    <Table<ModuleRow>
+      dataSource={rows}
+      columns={columns}
+      rowKey="key"
+      size="small"
+      bordered
+      pagination={false}
+      loading={loading}
+    />
   );
 }

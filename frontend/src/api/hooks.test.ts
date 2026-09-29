@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { server } from '../test/handlers';
-import { useLogs, useStateBatch, useSession } from './hooks';
+import { useLogs, useStateBatch, useSession, useHipRaw } from './hooks';
 import { TestWrapper } from '../test/wrapper';
 
 describe('useLogs — query param construction', () => {
@@ -111,6 +111,32 @@ describe('useSession', () => {
   it('is disabled when id is undefined', () => {
     const { result } = renderHook(
       () => useSession(undefined),
+      { wrapper: TestWrapper },
+    );
+    expect(result.current.isFetching).toBe(false);
+  });
+});
+
+describe('useHipRaw', () => {
+  it('is disabled when enabled flag is false', () => {
+    const { result } = renderHook(
+      () => useHipRaw('s1', '0', false),
+      { wrapper: TestWrapper },
+    );
+    expect(result.current.isFetching).toBe(false);
+  });
+
+  it('is disabled when index is undefined', () => {
+    const { result } = renderHook(
+      () => useHipRaw('s1', undefined, true),
+      { wrapper: TestWrapper },
+    );
+    expect(result.current.isFetching).toBe(false);
+  });
+
+  it('is disabled when sessionId is undefined', () => {
+    const { result } = renderHook(
+      () => useHipRaw(undefined, '0', true),
       { wrapper: TestWrapper },
     );
     expect(result.current.isFetching).toBe(false);

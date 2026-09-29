@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Button, Checkbox, Menu } from 'antd';
+import { Button, Checkbox, Menu, Tag } from 'antd';
 import type { MenuProps } from 'antd';
 import type { LogSource } from '../../api/types';
+import { useTheme } from '../../contexts/ThemeContext';
+import { FOOTER_BAR_HEIGHT } from '../log-viewer/LogPagination';
 
 interface SidebarProps {
   sessionId: string;
@@ -23,9 +25,14 @@ export function Sidebar({
   selectedSources,
   setSelectedSources,
 }: SidebarProps) {
+  const { isDark } = useTheme();
   const [width, setWidth] = useState(260);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const resizing = useRef(false);
+
+  useEffect(() => {
+    document.documentElement.style.setProperty('--sidebar-width', `${width}px`);
+  }, [width]);
 
   const onResizeStart = useCallback(
     (e: React.MouseEvent) => {
@@ -65,6 +72,7 @@ export function Sidebar({
   const sortedGroupKeys = Array.from(groups.keys()).sort();
 
   const totalErrors = logSources.reduce((sum, s) => sum + (s.levels['error'] ?? 0), 0);
+  const totalWarnings = logSources.reduce((sum, s) => sum + (s.levels['warning'] ?? 0), 0);
   const allSourceKeys = logSources.map((s) => s.source);
 
   // Custom View actions
@@ -143,7 +151,7 @@ export function Sidebar({
           <span>All Logs</span>
           <span style={{ display: 'flex', gap: 4, flexShrink: 0, marginLeft: 6, alignItems: 'center' }}>
             {totalErrors > 0 && (
-              <span title={`${totalErrors.toLocaleString()} errors`} style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--red)', flexShrink: 0 }} />
+              <Tag color="error" style={{ fontSize: 9, padding: '0 3px', margin: '0 0 0 2px', lineHeight: '16px' }}>{totalErrors.toLocaleString()}</Tag>
             )}
           </span>
         </span>
@@ -160,7 +168,7 @@ export function Sidebar({
             style={{
               fontSize: 12,
               fontFamily: "'JetBrains Mono', monospace",
-              color: 'var(--green)',
+              color: 'var(--ok)',
             }}
           >
             Custom View ({selectedSources.size})
@@ -200,10 +208,10 @@ export function Sidebar({
                 </span>
                 <span style={{ display: 'flex', gap: 4, flexShrink: 0, marginLeft: 6, alignItems: 'center' }}>
                   {errors > 0 && (
-                    <span title={`${errors.toLocaleString()} errors`} style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--red)', flexShrink: 0 }} />
+                    <Tag color="error" style={{ fontSize: 9, padding: '0 3px', margin: '0 0 0 2px', lineHeight: '16px' }}>{errors.toLocaleString()}</Tag>
                   )}
                   {warnings > 0 && (
-                    <span title={`${warnings.toLocaleString()} warnings`} style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--yellow)', flexShrink: 0 }} />
+                    <Tag color="warning" style={{ fontSize: 9, padding: '0 3px', margin: '0 0 0 2px', lineHeight: '16px' }}>{warnings.toLocaleString()}</Tag>
                   )}
                 </span>
               </span>
@@ -255,6 +263,15 @@ export function Sidebar({
         onMouseLeave={(e) => { if (!resizing.current) { (e.currentTarget as HTMLDivElement).style.background = ''; (e.currentTarget as HTMLDivElement).style.opacity = ''; } }}
       />
 
+      {/* Section heading */}
+      <div style={{
+        padding: '12px 16px 6px', fontSize: 10, fontWeight: 700,
+        letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--text-dim)',
+        flexShrink: 0, borderBottom: '1px solid var(--border-soft)',
+      }}>
+        Log Sources
+      </div>
+
       {/* Scrollable body */}
       <div style={{ flex: 1, overflowY: 'auto', padding: selecting ? 8 : 0 }}>
         {selecting ? (
@@ -269,7 +286,7 @@ export function Sidebar({
                   !allSourceKeys.every((k) => selectedSources.has(k))
                 }
               />
-              <span style={{ fontSize: 11, color: 'var(--text3)' }}>
+              <span style={{ fontSize: 11, color: 'var(--text-dim)' }}>
                 {allSourceKeys.every((k) => selectedSources.has(k)) ? 'Deselect all' : 'Select all'}
               </span>
             </SelectionRow>
@@ -290,7 +307,7 @@ export function Sidebar({
                     />
                     <span style={{
                       fontSize: 10, fontWeight: 600, textTransform: 'uppercase',
-                      letterSpacing: '0.08em', color: 'var(--text3)',
+                      letterSpacing: '0.08em', color: 'var(--text-dim)',
                     }}>
                       {groupKey}
                     </span>
@@ -304,7 +321,7 @@ export function Sidebar({
                         <span title={f.key} style={{
                           overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                           flex: 1, fontSize: 12, fontFamily: "'JetBrains Mono', monospace",
-                          color: 'var(--text2)',
+                          color: 'var(--text-sec)',
                         }}>
                           {f.displayName}
                         </span>
@@ -319,7 +336,9 @@ export function Sidebar({
           /* Normal mode with antd Menu */
           <Menu
             mode="inline"
-            theme="dark"
+            // Follow the app theme: a hardcoded dark menu painted
+            // white text on the light sidebar, i.e. white on white.
+            theme={isDark ? 'dark' : 'light'}
             selectedKeys={selectedKeys}
             onClick={handleMenuClick}
             items={buildMenuItems()}
@@ -348,6 +367,18 @@ export function Sidebar({
           </Button>
         </div>
       )}
+
+      {/* Side footer */}
+      <div style={{
+        // Height pinned so this bar lines up with the log pagination bar
+        // beside it; see FOOTER_BAR_HEIGHT in LogPagination.
+        height: FOOTER_BAR_HEIGHT, display: 'flex', alignItems: 'center',
+        padding: '0 14px', borderTop: '1px solid var(--border-soft)',
+        fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text-dim)',
+        flexShrink: 0,
+      }}>
+        {totalErrors.toLocaleString()} errors · {totalWarnings.toLocaleString()} warnings
+      </div>
     </div>
   );
 }

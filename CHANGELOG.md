@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.0.2] - 2026-09-29
+
+### Added
+
+- **HIP tab**: See the Host Information Profile a gateway uses to allow or deny access as a readable compliance checklist, including missing patches and when each gateway last received a report.
+- **Backend hot reload**: Run the backend in Docker Compose so code changes apply on save, without rebuilding the image.
+
+### Changed
+
+- **One interface**: Both diagnostic pages share one darker, cyan look and the same View / Raw / JSON controls.
+
+### Fixed
+
+- Session links no longer return a 404 when refreshed or shared
+- The log viewer menu is readable in light mode
+
 ## [0.0.1] - 2026-07-15
 
 ### Added

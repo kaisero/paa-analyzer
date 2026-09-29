@@ -60,6 +60,27 @@ The container builds the React UI and runs the FastAPI backend, which serves bot
 API and the built UI on port 8000 — no separate frontend server or second container
 needed. The sections below run the app from source, mainly for development.
 
+> **Note — picking up your changes in Docker.** `docker compose up` reuses the
+> existing `paa-analyzer:latest` image and will keep serving the code as it was
+> when that image was built. Pass `--build` to rebuild, or enable the development
+> override for a hot-reload loop with no rebuilds at all:
+>
+> ```bash
+> cp docker-compose.dev.yml docker-compose.override.yml   # once
+> docker compose up                                       # from now on
+> ```
+>
+> Compose merges `docker-compose.override.yml` automatically, so a plain
+> `docker compose up` now bind-mounts `backend/` and `paa_analyzer/` into the
+> container and runs uvicorn with `--reload` — saving a `.py` file restarts the
+> server in about a second. The copy is gitignored, so it stays local to your
+> checkout; `docker-compose.dev.yml` is the tracked template. Delete the copy to
+> go back to the production configuration.
+>
+> This covers the **backend only**. The React UI is a static `vite build` baked
+> into the image, so frontend changes still need `docker compose up --build` — or
+> run `cd frontend && npm run dev` on the host (see [Development](#development)).
+
 ### Prerequisites
 
 - Python 3.14 with [uv](https://docs.astral.sh/uv/)

@@ -1,21 +1,24 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { AutoComplete, Segmented, Spin } from 'antd';
+import { AutoComplete, Spin } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useStateKeys, useStateEntry } from '../../api/hooks';
+import type { ViewMode } from '../common/ViewToggle';
 
-interface HistoryEntry {
+interface ActiveEntry {
   command: string;
   stateKey: string;
 }
 
-export function PacliTerminal() {
+interface Props {
+  viewMode: ViewMode;
+}
+
+export function PacliTerminal({ viewMode }: Props) {
   const { sessionId } = useParams<{ sessionId: string }>();
   const { data: keysData } = useStateKeys(sessionId);
 
   const [input, setInput] = useState('');
-  const [history, setHistory] = useState<HistoryEntry[]>([]);
-  const [activeEntry, setActiveEntry] = useState<HistoryEntry | null>(null);
-  const [viewMode, setViewMode] = useState<'Raw' | 'JSON'>('Raw');
+  const [activeEntry, setActiveEntry] = useState<ActiveEntry | null>(null);
   const outputRef = useRef<HTMLDivElement>(null);
 
   // Build autocomplete options from state keys that have a pacli_command
@@ -37,19 +40,17 @@ export function PacliTerminal() {
     activeEntry?.stateKey,
   );
 
-  // Scroll to bottom when new output appears
+  // Scroll to top when a new command is run
   useEffect(() => {
     if (outputRef.current) {
-      outputRef.current.scrollTop = outputRef.current.scrollHeight;
+      outputRef.current.scrollTop = 0;
     }
-  }, [history, stateData]);
+  }, [activeEntry]);
 
   const handleSelect = useCallback((value: string) => {
     const match = pacliCommands.find((c) => c.command === value);
     if (match) {
-      const entry = { command: match.command, stateKey: match.stateKey };
-      setHistory((prev) => [...prev, entry]);
-      setActiveEntry(entry);
+      setActiveEntry({ command: match.command, stateKey: match.stateKey });
       setInput('');
     }
   }, [pacliCommands]);
@@ -67,24 +68,24 @@ export function PacliTerminal() {
     }
   }, [input, pacliCommands, handleSelect]);
 
-  const renderOutput = (isActive: boolean) => {
-    if (isActive && stateLoading) {
+  const renderOutput = () => {
+    if (stateLoading) {
       return <Spin size="small" style={{ marginLeft: 8 }} />;
     }
 
-    const data = isActive ? stateData?.data : undefined;
+    const data = stateData?.data;
     if (!data) return null;
 
     if (viewMode === 'Raw') {
       if (data.raw_text) {
         return (
-          <pre style={{ margin: '4px 0 16px 0', whiteSpace: 'pre-wrap', color: 'var(--text2)', fontSize: 12 }}>
+          <pre style={{ margin: '4px 0 16px 0', whiteSpace: 'pre-wrap', color: 'var(--text-sec)', fontSize: 12 }}>
             {data.raw_text}
           </pre>
         );
       }
       return (
-        <div style={{ margin: '4px 0 16px 0', color: 'var(--text3)', fontSize: 11, fontStyle: 'italic' }}>
+        <div style={{ margin: '4px 0 16px 0', color: 'var(--text-dim)', fontSize: 11, fontStyle: 'italic' }}>
           Raw text not available — re-upload bundle to enable
         </div>
       );
@@ -92,7 +93,7 @@ export function PacliTerminal() {
 
     // JSON mode
     return (
-      <pre style={{ margin: '4px 0 16px 0', whiteSpace: 'pre-wrap', color: 'var(--text2)', fontSize: 12 }}>
+      <pre style={{ margin: '4px 0 16px 0', whiteSpace: 'pre-wrap', color: 'var(--text-sec)', fontSize: 12 }}>
         {JSON.stringify(data.data, null, 2)}
       </pre>
     );
@@ -100,25 +101,13 @@ export function PacliTerminal() {
 
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>
-          PACli Terminal
-        </div>
-        <Segmented
-          size="small"
-          options={['Raw', 'JSON']}
-          value={viewMode}
-          onChange={(v) => setViewMode(v as 'Raw' | 'JSON')}
-        />
-      </div>
-
       {/* Terminal output area */}
       <div
         ref={outputRef}
         style={{
           background: 'var(--bg)',
           border: '1px solid var(--border)',
-          borderRadius: 8,
+          borderRadius: 0,
           padding: 16,
           fontFamily: '"JetBrains Mono", monospace',
           fontSize: 12,
@@ -129,29 +118,26 @@ export function PacliTerminal() {
         }}
       >
         {/* Welcome message */}
-        {history.length === 0 && (
-          <div style={{ color: 'var(--text3)', marginBottom: 8 }}>
+        {!activeEntry && (
+          <div style={{ color: 'var(--text-dim)', marginBottom: 8 }}>
             Type a pacli command to view its output. Use autocomplete to browse available commands.
           </div>
         )}
 
-        {/* Command history */}
-        {history.map((entry, idx) => {
-          const isActive = idx === history.length - 1 && entry.stateKey === activeEntry?.stateKey;
-          return (
-            <div key={idx}>
-              <div style={{ color: 'var(--green)' }}>
-                <span style={{ color: 'var(--blue)', marginRight: 8 }}>$</span>
-                {entry.command}
-              </div>
-              {renderOutput(isActive)}
+        {/* Current command + output */}
+        {activeEntry && (
+          <div>
+            <div style={{ color: 'var(--ok)', marginBottom: 4 }}>
+              <span style={{ color: 'var(--accent)', marginRight: 8 }}>$</span>
+              {activeEntry.command}
             </div>
-          );
-        })}
+            {renderOutput()}
+          </div>
+        )}
 
         {/* Input line */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ color: 'var(--blue)', flexShrink: 0 }}>$</span>
+          <span style={{ color: 'var(--accent)', flexShrink: 0 }}>$</span>
           <AutoComplete
             value={input}
             onChange={setInput}

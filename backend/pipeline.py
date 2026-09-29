@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from paa_analyzer import parsers, parsers_win
+from paa_analyzer.hip import build_hip_data
 from paa_analyzer.taxonomy import (
     LOG_SOURCES,
     PACLI_FILES,
@@ -120,6 +121,12 @@ def parse_zip(data: bytes, on_progress: ProgressCallback | None = None) -> dict[
         all_logs[key]["entries"].sort(key=lambda e: e.get("timestamp") or 0)
         all_logs[key]["_meta"]["entry_count"] = len(all_logs[key]["entries"])
 
+    # Built here, before the store ingests: SessionStore.add_session() frees
+    # each log source's parsed `entries` list to reduce peak memory, so this
+    # is the last point at which the compliance log entries build_hip_data
+    # needs are still intact.
+    hip_data = build_hip_data(all_logs, all_state, platform, tz_offset)
+
     progress("storing", 95, "Building session...")
 
     elapsed_ms = int((time.monotonic() - start) * 1000)
@@ -130,11 +137,12 @@ def parse_zip(data: bytes, on_progress: ProgressCallback | None = None) -> dict[
         "total_log_sources": len(all_logs),
         "total_log_entries": total_entries,
         "total_state_files": len(all_state),
+        "total_hip_cycles": len(hip_data["cycles"]),
         "skipped": len(skipped),
         "errors": len(errors),
     }
 
-    return {"state": all_state, "logs": all_logs, "manifest": manifest}
+    return {"state": all_state, "logs": all_logs, "manifest": manifest, "hip": hip_data}
 
 
 def _parse_file(

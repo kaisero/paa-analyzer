@@ -1,0 +1,51 @@
+# Development override template — NOT applied automatically.
+#
+# Copy it into place once, and `docker compose up` picks it up from then on:
+#
+#     cp docker-compose.dev.yml docker-compose.override.yml
+#     docker compose up
+#
+# `docker-compose.override.yml` is gitignored, so the copy stays yours: you get
+# hot reload locally without every `docker compose up` in CI, or on a teammate's
+# machine, silently running a dev configuration. This file is the shared, tracked
+# template; the copy is the local switch that turns it on.
+#
+# Why a copy instead of `-f docker-compose.yml -f docker-compose.dev.yml`: the
+# override filename is the one Compose merges by default, so the dev loop stays a
+# bare `docker compose up` with no flags to remember.
+services:
+  paa-analyzer:
+    # Mount the source over the copies baked into the image (Dockerfile COPYs
+    # them at build time). `uv sync` installs the project editable, so the venv
+    # at /app/.venv resolves imports through these mounts — no rebuild needed to
+    # pick up a Python change.
+    volumes:
+      - ./backend:/app/backend
+      - ./paa_analyzer:/app/paa_analyzer
+
+    # The production CMD runs uvicorn without --reload (see Dockerfile). Add it
+    # here so saving a .py file restarts the server in place. watchfiles comes in
+    # via the uvicorn[standard] extra, which is a main dependency, so it is
+    # present even though the image installs with --no-dev.
+    command:
+      - /app/.venv/bin/uvicorn
+      - backend.main:app
+      - --host
+      - "0.0.0.0"
+      - --port
+      - "8000"
+      - --reload
+      - --reload-dir
+      - /app/backend
+      - --reload-dir
+      - /app/paa_analyzer
+
+    # A crash-on-import while editing should leave the container down so you see
+    # the traceback, rather than the base file's `unless-stopped` restart looping
+    # over it.
+    restart: "no"
+
+# NOTE: this covers the backend only. The React UI is a static `vite build`
+# baked into the image at /app/frontend/dist, so frontend edits still need
+# `docker compose up --build` — or, better, run `cd frontend && npm run dev` on
+# the host (port 5173, proxies /api to :8000) and leave the container to the API.

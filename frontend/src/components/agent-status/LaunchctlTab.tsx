@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { Table, Tag, Badge, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import type { StateEntry } from '../../api/types';
+import type { ViewMode } from '../common/ViewToggle';
 import { RawJsonView } from './RawJsonView';
 
 interface LaunchItem {
@@ -12,7 +13,7 @@ interface LaunchItem {
 
 interface Props {
   entry: StateEntry | undefined;
-  viewMode: 'Table' | 'Raw' | 'JSON';
+  viewMode: ViewMode;
 }
 
 const mono = { fontFamily: '"JetBrains Mono", monospace', fontSize: 11 };
@@ -36,7 +37,7 @@ const columns = [
           {v}
         </span>
       ) : (
-        <span style={{ ...mono, color: 'var(--text3)' }}>--</span>
+        <span style={{ ...mono, color: 'var(--text-dim)' }}>--</span>
       ),
     sorter: (a: LaunchItem, b: LaunchItem) => {
       if (a.pid !== null && b.pid === null) return -1;
@@ -64,7 +65,7 @@ const columns = [
     render: (v: string) => {
       const isPalo = v.includes('paloaltonetworks');
       return (
-        <span style={{ ...mono, fontWeight: isPalo ? 600 : 400, color: isPalo ? 'var(--blue)' : undefined }}>
+        <span style={{ ...mono, fontWeight: isPalo ? 600 : 400, color: isPalo ? 'var(--info)' : undefined }}>
           {v}
         </span>
       );
@@ -86,10 +87,10 @@ export function LaunchctlTab({ entry, viewMode }: Props) {
   }, [entry, search]);
 
   if (!entry) {
-    return <div style={{ color: 'var(--text3)', fontSize: 12, padding: 16 }}>No autostart data available.</div>;
+    return <div style={{ color: 'var(--text-dim)', fontSize: 12, padding: 16 }}>No autostart data available.</div>;
   }
 
-  if (viewMode !== 'Table') {
+  if (viewMode !== 'View') {
     return <RawJsonView entry={entry} viewMode={viewMode} />;
   }
 
@@ -97,7 +98,7 @@ export function LaunchctlTab({ entry, viewMode }: Props) {
     <div>
       <div style={{ marginBottom: 12 }}>
         <Input
-          prefix={<SearchOutlined style={{ color: 'var(--text3)' }} />}
+          prefix={<SearchOutlined style={{ color: 'var(--text-dim)' }} />}
           placeholder="Filter by label..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}

@@ -10,7 +10,7 @@ export function DashboardPage() {
     }}>
       <Empty
         description={
-          <span style={{ color: 'var(--text3)' }}>Dashboard coming soon</span>
+          <span style={{ color: 'var(--text-dim)' }}>Dashboard coming soon</span>
         }
         image={Empty.PRESENTED_IMAGE_SIMPLE}
       />

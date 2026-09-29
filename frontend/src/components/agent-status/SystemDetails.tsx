@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { Tabs, Segmented, Spin } from 'antd';
+import { Tabs, Spin } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useStateKeys, useStateBatch } from '../../api/hooks';
 import type { StateEntry } from '../../api/types';
+import type { ViewMode } from '../common/ViewToggle';
 import { SystemExtensionsTab } from './SystemExtensionsTab';
 import { RoutingTableTab } from './RoutingTableTab';
 import { LaunchctlTab } from './LaunchctlTab';
@@ -11,7 +11,6 @@ import { InstalledDriversTab } from './InstalledDriversTab';
 import { FirewallRulesTab } from './FirewallRulesTab';
 import { NetstatTab } from './NetstatTab';
 import { IpconfigTab } from './IpconfigTab';
-type ViewMode = 'Table' | 'Raw' | 'JSON';
 
 // Ordered list of tabs to show per OS — only keys listed here get a tab.
 // Order determines tab order in the UI.
@@ -34,10 +33,13 @@ const TAB_CONFIG: Array<{
   { key: 'System.Core.installed_drivers', label: 'Installed Drivers', view: (p) => <InstalledDriversTab {...p} /> },
 ];
 
-export function SystemDetails() {
+interface Props {
+  viewMode: ViewMode;
+}
+
+export function SystemDetails({ viewMode }: Props) {
   const { sessionId } = useParams<{ sessionId: string }>();
   const { data: keysData, isLoading: keysLoading } = useStateKeys(sessionId);
-  const [viewMode, setViewMode] = useState<ViewMode>('Table');
 
   // Get available System.* keys from the session
   const availableKeys = new Set(
@@ -70,20 +72,5 @@ export function SystemDetails() {
     children: <View entry={getEntry(key)} viewMode={viewMode} />,
   }));
 
-  return (
-    <div>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>
-          System Details
-        </div>
-        <Segmented
-          size="small"
-          options={['Table', 'Raw', 'JSON'] as ViewMode[]}
-          value={viewMode}
-          onChange={(v) => setViewMode(v as ViewMode)}
-        />
-      </div>
-      <Tabs type="card" items={tabItems} size="small" />
-    </div>
-  );
+  return <Tabs type="card" items={tabItems} size="small" />;
 }

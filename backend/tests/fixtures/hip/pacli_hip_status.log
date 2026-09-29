@@ -1,0 +1,15 @@
+
+HIP Collection: Enabled
+Next HIP Check: 2026-07-25 18:07:43, GMT+0200
+Name                    Time                             Status                            
+----------------------- -------------------------------- --------------------------------- 
+EPM                     2026-07-25 15:08:01, GMT+0200    Successfully sent HIP report     
+Austria                 2026-07-25 15:08:01, GMT+0200    HIP report is not needed         
+Finland                 2026-07-14 13:17:24, GMT+0200    Failed to send HIP report to Finl
+Germany Central         2026-07-20 14:16:47, GMT+0200    HIP report is not needed         
+Israel-gw               2026-07-14 13:43:58, GMT+0200    HIP report is not needed         
+Netherlands Central     2026-07-15 07:42:22, GMT+0200    HIP report is not needed         
+South Korea             2026-06-16 10:30:01, GMT+0200    Failed to send HIP report to Sout
+UK                      2026-07-14 12:50:57, GMT+0200    Successfully sent HIP report     
+US Northwest            2026-07-14 18:03:11, GMT+0200    HIP report is not needed         
+amsterdam-gw            2026-07-22 07:30:27, GMT+0200    HIP report is not needed         

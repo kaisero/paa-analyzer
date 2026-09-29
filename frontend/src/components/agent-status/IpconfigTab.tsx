@@ -1,6 +1,8 @@
-import { Card, Descriptions } from 'antd';
+import { Descriptions } from 'antd';
 import type { StateEntry } from '../../api/types';
+import type { ViewMode } from '../common/ViewToggle';
 import { RawJsonView } from './RawJsonView';
+import { Panel } from '../common/Panel';
 
 interface Adapter {
   name: string;
@@ -9,7 +11,7 @@ interface Adapter {
 
 interface Props {
   entry: StateEntry | undefined;
-  viewMode: 'Table' | 'Raw' | 'JSON';
+  viewMode: ViewMode;
 }
 
 const FIELD_LABELS: Record<string, string> = {
@@ -41,10 +43,10 @@ function formatValue(val: unknown): string {
 
 export function IpconfigTab({ entry, viewMode }: Props) {
   if (!entry) {
-    return <div style={{ color: 'var(--text3)', fontSize: 12, padding: 16 }}>No network configuration available.</div>;
+    return <div style={{ color: 'var(--text-dim)', fontSize: 12, padding: 16 }}>No network configuration available.</div>;
   }
 
-  if (viewMode !== 'Table') {
+  if (viewMode !== 'View') {
     return <RawJsonView entry={entry} viewMode={viewMode} />;
   }
 
@@ -55,14 +57,9 @@ export function IpconfigTab({ entry, viewMode }: Props) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       {/* Global config */}
       {data.global && Object.keys(data.global).length > 0 && (
-        <Card
-          title="Global Configuration"
-          size="small"
-          style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
-          styles={{ header: { borderBottom: '1px solid var(--border)', color: 'var(--text)', fontSize: 12 }, body: { padding: '8px 16px' } }}
-        >
+        <Panel title="Global Configuration">
           <Descriptions column={1} size="small" colon={false}
-            labelStyle={{ color: 'var(--text3)', width: 160, fontSize: 12 }}
+            labelStyle={{ color: 'var(--text-dim)', width: 160, fontSize: 12 }}
             contentStyle={{ color: 'var(--text)', fontFamily: '"JetBrains Mono", monospace', fontSize: 12 }}
           >
             {Object.entries(data.global).map(([key, val]) => (
@@ -71,20 +68,14 @@ export function IpconfigTab({ entry, viewMode }: Props) {
               </Descriptions.Item>
             ))}
           </Descriptions>
-        </Card>
+        </Panel>
       )}
 
       {/* Adapter cards */}
       {adapters.map((adapter, idx) => (
-        <Card
-          key={idx}
-          title={adapter.name}
-          size="small"
-          style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
-          styles={{ header: { borderBottom: '1px solid var(--border)', color: 'var(--text)', fontSize: 12, fontFamily: '"JetBrains Mono", monospace' }, body: { padding: '8px 16px' } }}
-        >
+        <Panel key={idx} title={adapter.name}>
           <Descriptions column={1} size="small" colon={false}
-            labelStyle={{ color: 'var(--text3)', width: 160, fontSize: 12 }}
+            labelStyle={{ color: 'var(--text-dim)', width: 160, fontSize: 12 }}
             contentStyle={{ color: 'var(--text)', fontFamily: '"JetBrains Mono", monospace', fontSize: 12 }}
           >
             {DISPLAY_FIELDS.map((field) => {
@@ -105,7 +96,7 @@ export function IpconfigTab({ entry, viewMode }: Props) {
                 </Descriptions.Item>
               ))}
           </Descriptions>
-        </Card>
+        </Panel>
       ))}
     </div>
   );
